@@ -14,9 +14,9 @@ import { DataTable } from '@/app/components/table/DataTable';
 import { valorantColumns } from './columns';
 import { gameStatsToModel } from '../../../utils';
 import { ValorantStats } from '../stats';
+import DropDown from '../../../components/buttons/DropDown';
 
 export default function Page() {
-  const [showRegion, setShowRegion] = React.useState(false);
   const [showAct, setShowAct] = React.useState(false);
   const [region, setRegion] = React.useState('ko');
   const [acts, setActs] = React.useState<Act[]>([]);
@@ -33,12 +33,12 @@ export default function Page() {
       const players: ValorantStats[] = rankData.players;
       const data = players.map((data: ValorantStats) => gameStatsToModel<ValorantStats>(data, 'val'));
 
-      debugger;
       setActs(acts);
       setActId(activatedId);
       setData(data);
 
       console.log(valorantColumns);
+      console.log('acts', acts);
       console.log('ranks', rankData);
       console.log('contents', contents);
     };
@@ -56,37 +56,28 @@ export default function Page() {
   return (
     <>
       <div>
-        <Popover open={showRegion} onOpenChange={setShowRegion}>
-          <PopoverTrigger asChild>
-            <Button variant="outline" role="combobox" aria-expanded={showRegion} className="w-[200px] justify-between">
-              {regions.find((currentRegion) => currentRegion.value === region)?.label}
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-0">
-            <Command>
-              <CommandGroup>
-                {regions.map((currentRegion) => (
-                  <CommandItem
-                    key={currentRegion.value}
-                    value={currentRegion.value}
-                    onSelect={(currentValue) => {
-                      setRegion(currentValue);
-                      setShowRegion(false);
-                    }}
-                  >
-                    <Check
-                      className={cn('mr-2 h-4 w-4', region === currentRegion.value ? 'opacity-100' : 'opacity-0')}
-                    />
-                    {currentRegion.label}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </Command>
-          </PopoverContent>
-        </Popover>
+        <DropDown
+          data={regions}
+          value={region}
+          keyField={'name'}
+          labelField={'label'}
+          onSelect={(selectedItem: string) => {
+            setRegion(selectedItem);
+          }}
+        ></DropDown>
 
-        <Popover open={showAct} onOpenChange={setShowAct}>
+        <DropDown
+          data={acts.filter((currentAct) => currentAct.type === 'act')}
+          value={actId}
+          keyField={'id'}
+          labelField={'name'}
+          getLabel={getActName}
+          onSelect={(selectedItem: string) => {
+            setActId(selectedItem);
+          }}
+        ></DropDown>
+
+        {/* <Popover open={showAct} onOpenChange={setShowAct}>
           <PopoverTrigger asChild>
             <Button variant="outline" role="combobox" aria-expanded={showAct} className="w-[200px] justify-between">
               {getActName(acts.find((currentAct) => currentAct.id === actId))}
@@ -114,7 +105,7 @@ export default function Page() {
               </CommandGroup>
             </Command>
           </PopoverContent>
-        </Popover>
+        </Popover> */}
       </div>
 
       <div className="flex flex-col">

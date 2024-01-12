@@ -1,26 +1,26 @@
 export const regions = [
   {
-    value: 'ko',
+    name: 'ko',
     label: '한국',
   },
   {
-    value: 'eu',
+    name: 'eu',
     label: '유럽',
   },
   {
-    value: 'na',
+    name: 'na',
     label: '북아메리카',
   },
   {
-    value: 'latam',
+    name: 'latam',
     label: '라틴아메리카',
   },
   {
-    value: 'br',
+    name: 'br',
     label: '브라질',
   },
   {
-    value: 'ap',
+    name: 'ap',
     label: '아시아태평양',
   },
 ];
