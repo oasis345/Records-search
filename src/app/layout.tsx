@@ -9,20 +9,11 @@ export const metadata: Metadata = {
   description: 'AI를 이용한 전적검색 사이트',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html>
-      <body className="bg-white dark:bg-black">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+      <body>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <RecoilRootWrapper>
             <div className="flex flex-col h-screen">
               <header className="bg-gray-200">
@@ -37,9 +28,7 @@ export default function RootLayout({
 
               <footer>
                 <div className="container mx-auto px-4">
-                  <p className="text-center text-gray-500">
-                    © 2023 My Blog. All rights reserved.
-                  </p>
+                  <p className="text-center text-gray-500">© 2023 My Blog. All rights reserved.</p>
                 </div>
               </footer>
             </div>

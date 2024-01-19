@@ -1,24 +1,20 @@
 import { ApiService } from './api.service';
 
 const API_KEY = process.env.NEXT_PUBLIC_VAL_API_KEY;
-const REGION_URL = 'kr.api.riotgames.com';
+const DEFAULT_REGION = process.env.NEXT_PUBLIC_DEFAULT_REGION;
 
 class ValService extends ApiService {
-  async getRanked(season: string, options?: { size?: number; startIndex?: number }): Promise<any> {
+  async getRanked(options: { season: string; region?: string; size?: number; startIndex?: number }): Promise<any> {
     return await this.get({
-      url: `${REGION_URL}/val/ranked/v1/leaderboards/by-act/${season}?api_key=${API_KEY}`,
-    });
-  }
-
-  async getStatus(): Promise<any> {
-    return await this.get({
-      url: `${REGION_URL}/val/status/v1/platform-data?api_key=${API_KEY}`,
+      url: `${options?.region ?? DEFAULT_REGION}.api.riotgames.com/val/ranked/v1/leaderboards/by-act/${
+        options.season
+      }?size=${options?.size ?? 200}&startIndex=${options?.startIndex ?? 0}&api_key=${API_KEY}`,
     });
   }
 
   async getContents(): Promise<any> {
     return await this.get({
-      url: `${REGION_URL}/val/content/v1/contents?api_key=${API_KEY}`,
+      url: `kr.api.riotgames.com/val/content/v1/contents?api_key=${API_KEY}`,
     });
   }
 }

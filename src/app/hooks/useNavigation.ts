@@ -1,4 +1,4 @@
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export interface RouteParams {
   title: string;
@@ -23,5 +23,6 @@ export const useNavigation = () => {
   return {
     title: getTitle(),
     getRouteParam,
+    router: useRouter(),
   };
 };

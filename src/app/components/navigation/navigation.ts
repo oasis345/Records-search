@@ -11,7 +11,18 @@ export const navigation: NavigationModel = {
     {
       name: 'lol',
       label: '리그오브레전드',
-      menus: [],
+      menus: [
+        {
+          name: 'lol',
+          path: '/lol',
+          label: '홈',
+        },
+        {
+          name: 'leaderboards',
+          path: '/lol/leaderboards',
+          label: '랭킹',
+        },
+      ],
     },
     {
       name: 'val',

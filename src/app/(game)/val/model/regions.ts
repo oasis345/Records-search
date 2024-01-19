@@ -1,6 +1,6 @@
 export const regions = [
   {
-    name: 'ko',
+    name: 'kr',
     label: '한국',
   },
   {

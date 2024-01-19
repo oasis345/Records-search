@@ -1,8 +1,13 @@
 export default class RestDataService {
   protected async get(options: { url: string; params?: any }) {
-    const response = await fetch(`https://${options.url}`);
-    const data = await response.json();
+    try {
+      const response = await fetch(`https://${options.url}`, { cache: 'force-cache' });
+      const data = await response.json();
 
-    return data;
+      return data;
+    } catch (error) {
+      console.error(error);
+      throw new Error(error);
+    }
   }
 }

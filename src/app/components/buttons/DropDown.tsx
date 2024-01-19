@@ -24,15 +24,18 @@ export default function DropDown({
   onSelect: (selectedItem: any) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const selectedData = data.find((currentData) => currentData[keyField] === value);
+  const onSelected = (selectedValue: string) => {
+    onSelect(selectedValue);
+    setOpen(false);
+  };
 
   return (
     <>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" role="combobox" aria-expanded={open} className="w-[200px] justify-between">
-            {getLabel?.(data.find((currentData) => currentData[keyField] === value)) ??
-              data.find((currentData) => currentData[keyField] === value)?.[labelField] ??
-              'undefined'}
+            {getLabel?.(selectedData) ?? selectedData?.[labelField] ?? 'undefined'}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -40,7 +43,7 @@ export default function DropDown({
           <Command>
             <CommandGroup>
               {data.map((currentData) => (
-                <CommandItem key={currentData[keyField]} value={currentData[keyField]} onSelect={onSelect}>
+                <CommandItem key={currentData[keyField]} value={currentData[keyField]} onSelect={onSelected}>
                   <Check
                     className={cn('mr-2 h-4 w-4', value === currentData[keyField] ? 'opacity-100' : 'opacity-0')}
                   />

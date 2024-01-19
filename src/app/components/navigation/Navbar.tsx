@@ -8,9 +8,7 @@ import { useNavigation } from '@/app/hooks/useNavigation';
 
 export default function Navbar() {
   const { title } = useNavigation();
-  const menus =
-    navigation.titles.find((menuTitle) => menuTitle.name === title)?.menus ??
-    navigation.menus;
+  const menus = navigation.titles.find((menuTitle) => menuTitle.name === title)?.menus ?? navigation.menus;
 
   return (
     <>
@@ -19,10 +17,7 @@ export default function Navbar() {
           <ul className="flex space-x-4">
             {navigation.titles.map((title) => (
               <li key={title.name}>
-                <Link
-                  href={`/${title.name}`}
-                  className="text-gray-500 hover:text-gray-700"
-                >
+                <Link href={`/${title.name}`} className="text-gray-500 hover:text-gray-700">
                   {title.label}
                 </Link>
               </li>
@@ -37,10 +32,7 @@ export default function Navbar() {
           <ul className="flex space-x-4">
             {menus.map((menu) => (
               <li key={menu.name}>
-                <Link
-                  href={menu.path}
-                  className="text-gray-500 hover:text-gray-700"
-                >
+                <Link href={menu.path} className="text-gray-500 hover:text-gray-700">
                   {menu.label}
                 </Link>
               </li>

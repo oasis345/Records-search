@@ -4,21 +4,26 @@ export class ProxyApiService<T extends ApiService> extends ApiService {
   constructor(public apiService: T) {
     super();
   }
-
-  async getRanked(season: string, options?: { size?: number; startIndex?: number }): Promise<any> {
-    const result = await this.apiService.getRanked(season, options);
+  async getAccount<T>(options: { name: string; region?: string; tag?: string }): Promise<T> {
+    const result = await this.apiService.getAccount?.(options);
 
     return result;
   }
 
-  async getStatus(): Promise<any> {
-    const result = await this.apiService.getStatus();
+  async getRanked(options: any): Promise<any> {
+    const result = await this.apiService.getRanked(options);
+
+    return result;
+  }
+
+  async getMatches(id: string): Promise<any> {
+    const result = await this.apiService.getMatches?.(id);
 
     return result;
   }
 
   async getContents(): Promise<any> {
-    const result = await this.apiService.getContents();
+    const result = await this.apiService.getContents?.();
 
     return result;
   }

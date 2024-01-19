@@ -3,10 +3,6 @@ import { DefaultGameStats } from './gameStats';
 
 export const defaultStatsColumns: ColumnDef<DefaultGameStats>[] = [
   {
-    accessorKey: 'rank',
-    header: '#',
-  },
-  {
     accessorKey: 'name',
     header: '이름',
   },
@@ -20,6 +16,6 @@ export const defaultStatsColumns: ColumnDef<DefaultGameStats>[] = [
   },
   {
     accessorKey: 'totalWins',
-    header: '승리 횟수',
+    header: '승리',
   },
 ];
