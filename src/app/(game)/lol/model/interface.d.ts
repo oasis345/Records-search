@@ -2,7 +2,7 @@ export interface AccountInfo {
   accountId: string;
   id: string;
   name: string;
-  profileIconId: number;
+  profileIconId: string;
   puuid: string;
   revisionDate: number;
   summonerLevel: number;
@@ -10,18 +10,18 @@ export interface AccountInfo {
 
 // TypeScript 형식의 JSON 정의
 
-export interface MatchDto {
-  metadata: MetadataDto;
-  info: InfoDto;
+export interface Match {
+  metadata: Metadata;
+  info: Info;
 }
 
-interface MetadataDto {
+interface Metadata {
   dataVersion: string;
   matchId: string;
   participants: string[];
 }
 
-interface InfoDto {
+interface Info {
   gameCreation: number;
   gameDuration: number;
   gameEndTimestamp?: number;
@@ -32,78 +32,84 @@ interface InfoDto {
   gameType: string;
   gameVersion: string;
   mapId: number;
-  participants: ParticipantDto[];
+  participants: Participant[];
   platformId: string;
   queueId: number;
-  teams: TeamDto[];
+  teams: Team[];
   tournamentCode: string;
 }
 
-interface ParticipantDto {
+export interface Participant {
   assists: number;
-  // ... (기타 필드들)
-
-  // PerksDto
-  perks: PerksDto;
-
-  // ObjectivesDto
-  objectives: ObjectivesDto;
-
-  // ObjectiveDto
-  baron: ObjectiveDto;
-  champion: ObjectiveDto;
-  dragon: ObjectiveDto;
-  inhibitor: ObjectiveDto;
-  riftHerald: ObjectiveDto;
-  tower: ObjectiveDto;
+  kills: number;
+  deaths: number;
+  puuid: string;
+  win?: boolean;
+  teamId: number;
+  championName: string;
+  riotIdGameName: string;
+  item0: string;
+  item1: string;
+  item2: string;
+  item3: string;
+  item4: string;
+  item5: string;
+  perks: Perks;
+  objectives: Objectives;
+  baron: Objective;
+  champion: Objective;
+  dragon: Objective;
+  inhibitor: Objective;
+  riftHerald: Objective;
+  tower: Objective;
 }
 
-interface PerksDto {
-  statPerks: PerkStatsDto;
-  styles: PerkStyleDto[];
+interface Perks {
+  statPerks: PerkStats;
+  styles: PerkStyle[];
 }
 
-interface PerkStatsDto {
+interface PerkStats {
   defense: number;
   flex: number;
   offense: number;
 }
 
-interface PerkStyleDto {
+interface PerkStyle {
   description: string;
-  selections: PerkStyleSelectionDto[];
+  selections: PerkStyleSelection[];
   style: number;
 }
 
-interface PerkStyleSelectionDto {
+interface PerkStyleSelection {
   perk: number;
   var1: number;
   var2: number;
   var3: number;
 }
 
-interface TeamDto {
-  bans: BanDto[];
-  objectives: ObjectivesDto;
+interface Team {
+  bans: Ban[];
+  objectives: Objectives;
   teamId: number;
   win: boolean;
 }
 
-interface BanDto {
+interface Ban {
   championId: number;
   pickTurn: number;
 }
 
-interface ObjectivesDto {
-  baron: ObjectiveDto;
-  champion: ObjectiveDto;
-  dragon: ObjectiveDto;
-  inhibitor: ObjectiveDto;
-  riftHerald: ObjectiveDto;
-  tower: ObjectiveDto;
+interface Objectives {
+  baron: Objective;
+  champion: Objective;
+  dragon: Objective;
+  inhibitor: Objective;
+  riftHerald: Objective;
+  tower: Objective;
 }
 
-interface ObjectiveDto {
+interface Objective {
   first: boolean;
   kills: number;
   // ... (기타 필드들)

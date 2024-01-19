@@ -1,6 +1,6 @@
-import { Game } from '../(game)/defaultModel/interface';
-import { LolStats } from '../(game)/lol/model/stats';
-import { ValorantStats } from '../(game)/val/model/stats';
+import { Game } from './interface';
+import { LolStats } from '../lol/model/stats';
+import { ValorantStats } from '../val/model/stats';
 
 export function gameStatsToModel<T>(data: any, type: Game): T {
   switch (type) {
