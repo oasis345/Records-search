@@ -1,10 +1,12 @@
 'use client';
 import DropDown from '@/app/components/buttons/DropDown';
-import SearchBar from '../../components/shared/SearchBar';
+import SearchBar from '@/app/components/shared/SearchBar';
 import { regions } from './model/regions';
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigation } from '@/app/hooks/useNavigation';
+import { AspectRatio } from '@radix-ui/react-aspect-ratio';
+import Image from 'next/image';
 
 export default function Page() {
   const [searchValue, setSearchValue] = React.useState('');
@@ -16,7 +18,7 @@ export default function Page() {
   };
   return (
     <div className="flex flex-col">
-      <div className="flex">
+      <div className="flex justify-center mb-5">
         <DropDown
           data={regions}
           value={region}
@@ -29,6 +31,9 @@ export default function Page() {
         <SearchBar value={searchValue} onChange={setSearchValue} placeholder={'플레이어 이름'} />
         <Button onClick={onclick}>검색</Button>
       </div>
+      <AspectRatio ratio={16 / 9}>
+        <Image fill src="/lol_banner.jpg" alt="Image" className="rounded-md" priority />
+      </AspectRatio>
     </div>
   );
 }

@@ -1,7 +1,7 @@
+'use client';
 import React from 'react';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface ProfileCardProps {
   imageSrc: string;
@@ -11,11 +11,14 @@ interface ProfileCardProps {
 const ProfileCard: React.FC<ProfileCardProps> = ({ imageSrc, name }) => {
   return (
     <Card>
-      <div className="flex">
-        <Image width={120} height={120} src={imageSrc} alt="Profile Image" />
-        {name}
-        <Button>전적갱신</Button>
-      </div>
+      <CardHeader>
+        <CardTitle>
+          <div className="flex">
+            <Image width={120} height={120} src={imageSrc} alt="Profile Image" priority />
+            <div>{name}</div>
+          </div>
+        </CardTitle>
+      </CardHeader>
     </Card>
   );
 };

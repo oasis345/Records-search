@@ -2,7 +2,7 @@ import RestDataService from './rest.data.service';
 
 export interface ApiService {
   getContents?(): Promise<any>;
-  getMatchIds?(id: string): Promise<string[]>;
+  getMatches?(id: string, start?: number): Promise<string[]>;
   getAccount?(options: { name: string; region?: string; tag?: string }): Promise<any>;
 }
 

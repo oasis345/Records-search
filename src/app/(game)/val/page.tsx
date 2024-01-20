@@ -1,4 +1,4 @@
-import SearchBar from '../../components/shared/SearchBar';
+import SearchBar from '@/app/components/shared/SearchBar';
 
 export default function Page() {
   return (

@@ -1,6 +1,6 @@
 import { ApiService } from './api.service';
 
-const API_KEY = process.env.NEXT_PUBLIC_VAL_API_KEY;
+const API_KEY = process.env.NEXT_PUBLIC_RIOT_API_KEY;
 const DEFAULT_REGION = process.env.NEXT_PUBLIC_DEFAULT_REGION;
 
 class ValService extends ApiService {

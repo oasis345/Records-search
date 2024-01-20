@@ -16,8 +16,8 @@ export class ProxyApiService<T extends ApiService> extends ApiService {
     return result;
   }
 
-  async getMatches(id: string): Promise<any> {
-    const result = await this.apiService.getMatches?.(id);
+  async getMatches(id: string, start?: number): Promise<any> {
+    const result = await this.apiService.getMatches?.(id, start);
 
     return result;
   }

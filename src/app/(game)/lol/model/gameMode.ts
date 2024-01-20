@@ -7,7 +7,7 @@ export const gameMode = [
   },
   {
     key: 'ARAM',
-    label: '무작위 총력전',
+    label: '총력전',
   },
   {
     key: 'CHERRY',

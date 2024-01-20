@@ -31,7 +31,7 @@ class LolService extends ApiService {
 
   async getMatches(id: string, start?: number): Promise<any> {
     const matchIds = await this.get({
-      url: `asia.${LOL_API_BASE_URL}/match/v5/matches/by-puuid/${id}/ids/?count=10&api_key=${API_KEY}`,
+      url: `asia.${LOL_API_BASE_URL}/match/v5/matches/by-puuid/${id}/ids?start=${start}&count=5&api_key=${API_KEY}`,
     });
 
     const matchPromises = matchIds.map((matchId: string) => {
