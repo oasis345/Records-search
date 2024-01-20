@@ -2,13 +2,14 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useRecoilState } from 'recoil';
 import { searchHistories, SearchHistories } from '@/app/store/searchHistories';
 import { favoriteList } from '@/app/store/favoriteList';
 import { Button } from '@/components/ui/button';
 import { Star, Trash } from 'lucide-react';
+import { useNavigation } from '@/app/hooks/useNavigation';
 
 export default function SearchBar({
   value,
@@ -22,6 +23,8 @@ export default function SearchBar({
   const [isOpen, setIsOpen] = React.useState(false);
   const [histories, setHistories] = useRecoilState(searchHistories);
   const [favorites, setFavorites] = useRecoilState(favoriteList);
+  const { router } = useNavigation();
+
   const CONTENTS_CLASS_NAME = 'flex items-center justify-between w-full hover:bg-gray-100 dark:hover:bg-gray-500';
 
   const onSearch = (event) => {
@@ -38,7 +41,10 @@ export default function SearchBar({
     setFavorites([...favorites, history]);
   };
 
-  useEffect(() => {}, []);
+  const onclick = async (history: SearchHistories) => {
+    const { region, name } = history;
+    router.push(`/lol/profile/${region}/${name}`);
+  };
 
   return (
     <div className="w-96">
@@ -54,7 +60,7 @@ export default function SearchBar({
               <CardContent>
                 {histories.map((history) => (
                   <div key={history.name + history.region} className={CONTENTS_CLASS_NAME}>
-                    <p>{history.name}</p>
+                    <p onClick={() => onclick(history)}>{history.name}</p>
                     <div>
                       <Button variant="ghost" size="icon" onClick={() => addFavorites(history)}>
                         <Star className="h-4 w-4" />
@@ -71,7 +77,7 @@ export default function SearchBar({
               <CardContent>
                 {favorites.map((favorite) => (
                   <div key={favorite.name + favorite.region} className={CONTENTS_CLASS_NAME}>
-                    <p>{favorite.name}</p>
+                    <p onClick={() => onclick(favorite)}>{favorite.name}</p>
                     <div>
                       <Button variant="ghost" size="icon" onClick={() => removeItem(favorites, setFavorites, favorite)}>
                         <Trash className="h-4 w-4" />

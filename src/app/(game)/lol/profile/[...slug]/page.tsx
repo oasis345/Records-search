@@ -4,7 +4,7 @@ import { lolService } from '@/app/services/lol.service';
 import { ProxyApiService } from '@/app/services/proxy.api.service';
 import { RiotService } from '@/app/services/riot.service';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { AccountInfo, Match, Participant } from '../../model/interface';
 import Image from 'next/image';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -35,7 +35,12 @@ export default function Page({ params }: { params: any }) {
       const result = await service.getAccount<AccountInfo>({ region, name });
       const latestDragonApiVersion = await riotService.getLatestDragonApiVersion();
 
-      setHistories([...histories, { name: result.name, region }]);
+      const storageItem = localStorage.getItem('histories');
+      if (storageItem) {
+        const exists = JSON.parse(storageItem).find((item) => item.name === name);
+        if (!exists) setHistories([...histories, { name: result.name, region }]);
+      }
+
       setDragonApiVersion(latestDragonApiVersion);
       setAccountInfo(result);
       fetchMatchData(result.puuid);
