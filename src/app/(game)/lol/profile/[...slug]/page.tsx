@@ -14,7 +14,7 @@ import { secondsToMinutesAndSeconds } from '@/app/utils/utils';
 import { Button } from '@/components/ui/button';
 import ProfileCard from '@/app/components/card/ProfileCard';
 import { useRecoilState } from 'recoil';
-import { searchHistories } from '@/app/store/searchHistories';
+import { searchHistoryState } from '@/app/store/searchHistoryState';
 
 export default function Page({ params }: { params: any }) {
   const [accountInfo, setAccountInfo] = React.useState<AccountInfo>({} as AccountInfo);
@@ -23,7 +23,7 @@ export default function Page({ params }: { params: any }) {
   const service = new ProxyApiService(lolService);
   const riotService = new RiotService();
   const [isNotFound, setIsNotFound] = React.useState(false);
-  const [histories, setHistories] = useRecoilState(searchHistories);
+  const [histories, setHistories] = useRecoilState(searchHistoryState);
 
   useEffect(() => {
     fetchData();
@@ -35,11 +35,8 @@ export default function Page({ params }: { params: any }) {
       const result = await service.getAccount<AccountInfo>({ region, name });
       const latestDragonApiVersion = await riotService.getLatestDragonApiVersion();
 
-      const storageItem = localStorage.getItem('histories');
-      if (storageItem) {
-        const exists = JSON.parse(storageItem).find((item) => item.name === name);
-        if (!exists) setHistories([...histories, { name: result.name, region }]);
-      }
+      if (!histories.find((item) => item.name === result.name))
+        setHistories([...histories, { name: result.name, region }]);
 
       setDragonApiVersion(latestDragonApiVersion);
       setAccountInfo(result);
@@ -54,10 +51,9 @@ export default function Page({ params }: { params: any }) {
 
     if (matches.length === 0) {
       setMatches(matchData);
+    } else if (matchData.length > 0) {
+      setMatches([...matches, ...matchData]);
     }
-    // else if (matchData.length > 0) {
-    //   setMatches([...matches, ...matchData]);
-    // }
   };
 
   const getImgUrl = (category: 'profileIcon' | 'champion' | 'item', name: string | Number) => {

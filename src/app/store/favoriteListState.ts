@@ -1,9 +1,9 @@
 import { atom } from 'recoil';
-import { SearchHistories } from './searchHistories';
 import { localStorageEffect } from './utils';
+import { SearchItem } from '../type/interface';
 
-export const favoriteList = atom<SearchHistories[]>({
-  key: 'favoriteList',
+export const favoriteListState = atom<SearchItem[]>({
+  key: 'favoriteListState',
   default: [],
   effects: [localStorageEffect('favorites')],
 });
