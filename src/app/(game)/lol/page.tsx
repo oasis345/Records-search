@@ -5,8 +5,8 @@ import { regions } from './models/regions';
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigation } from '@/app/hooks/useNavigation';
-import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import Image from 'next/image';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 export default function Page() {
   const [searchValue, setSearchValue] = React.useState('');
