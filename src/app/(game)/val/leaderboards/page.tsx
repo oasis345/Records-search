@@ -44,7 +44,7 @@ export default function Page() {
       season: updatedActId ?? season ?? actId,
       region: updatedRegion ?? region,
     });
-    const data = rankData.players.map((data: ValorantStats) => gameStatsToModel<ValorantStats>(data, 'val'));
+    const data = rankData.players.map((data: ValorantStats) => gameStatsToModel(data, 'val'));
 
     if (updatedActId) setActId(updatedActId);
     if (updatedRegion) setRegion(updatedRegion);

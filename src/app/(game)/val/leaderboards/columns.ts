@@ -1,14 +1,17 @@
 import { ValorantStats } from '../model/stats';
 import { defaultStatsColumns } from '../../defaultModel/columns';
-import { ColumnDef } from '@tanstack/react-table';
 
-const columns: ColumnDef<ValorantStats>[] = [
+const columns = [
   {
     accessorKey: 'leaderboardRank',
     header: '#',
   },
   ...defaultStatsColumns,
-];
+] as {
+  accessorKey: string;
+  header: string;
+}[];
+
 const nameColumnIndex = columns.findIndex((column) => column.accessorKey === 'name');
 const customNameColumn = {
   accessorKey: 'name',
@@ -22,4 +25,4 @@ const customNameColumn = {
 };
 
 columns[nameColumnIndex] = customNameColumn;
-export const valorantColumns = columns as ColumnDef<ValorantStats>[];
+export const valorantColumns = columns;

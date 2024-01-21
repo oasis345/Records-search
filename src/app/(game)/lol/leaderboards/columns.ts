@@ -1,6 +1,4 @@
-import { LolStats } from '../models/stats';
 import { defaultStatsColumns } from '../../defaultModel/columns';
-import { ColumnDef } from '@tanstack/react-table';
 
 export const lolColumns = [
   ...defaultStatsColumns,
@@ -8,4 +6,7 @@ export const lolColumns = [
     accessorKey: 'losses',
     header: '패배',
   },
-] as ColumnDef<LolStats>[];
+] as {
+  accessorKey: string;
+  header: string;
+}[];

@@ -3,7 +3,7 @@
 import { lolService } from '@/app/services/lol.service';
 import { ProxyApiService } from '@/app/services/proxy.api.service';
 import { RiotService } from '@/app/services/riot.service';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import React, { useEffect } from 'react';
 import { SummonerInfo, Match, Participant } from '../../models/interface';
 import Image from 'next/image';

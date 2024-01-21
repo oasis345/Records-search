@@ -1,3 +1,10 @@
+class RestDataServiceError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'RestDataServiceError';
+  }
+}
+
 export default class RestDataService {
   protected async get(options: { url: string; params?: any }) {
     try {
@@ -7,7 +14,7 @@ export default class RestDataService {
       return data;
     } catch (error) {
       console.error(error);
-      throw new Error(error);
+      throw new RestDataServiceError('An error occurred in the RestDataService');
     }
   }
 }

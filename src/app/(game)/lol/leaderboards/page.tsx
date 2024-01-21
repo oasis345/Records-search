@@ -32,7 +32,7 @@ export default function Page() {
       division: 'I',
     };
     const result = await apiService.getRanked(options);
-    const data = result.map((data: LolStats) => gameStatsToModel<LolStats>(data, 'lol'));
+    const data = result.map((data: LolStats) => gameStatsToModel(data, 'lol'));
     setData(data);
   };
 

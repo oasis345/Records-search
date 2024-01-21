@@ -26,7 +26,7 @@ export default function SearchBar({
   const [favorites, setFavorites] = useRecoilState(favoriteListState);
   const { router } = useNavigation();
 
-  const handleSearchInputChange = (event) => {
+  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     onChange(value);
   };
@@ -86,7 +86,7 @@ export default function SearchBar({
                           toggleFavoriteStatus(history);
                         }}
                       >
-                        <Star className="h-4 w-4" style={{ color: isAlreadyAdded(history) ? 'red' : 'black' }} />
+                        <Star className="h-4 w-4" style={{ color: isAlreadyAdded(history) ? 'red' : '' }} />
                       </Button>
                       <Button
                         variant="ghost"
