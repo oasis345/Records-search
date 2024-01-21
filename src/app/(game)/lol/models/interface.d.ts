@@ -1,4 +1,4 @@
-export interface AccountInfo {
+export interface SummonerInfo {
   accountId: string;
   id: string;
   name: string;

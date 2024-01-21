@@ -2,12 +2,12 @@
 
 import { ProxyApiService } from '@/app/services/proxy.api.service';
 import React, { useEffect, useRef } from 'react';
-import { regions } from '../model/regions';
-import { tiers as tierData } from '../model/tiers';
+import { regions } from '../models/regions';
+import { tiers as tierData } from '../models/tiers';
 import { DataTable } from '@/app/components/table/DataTable';
 import { lolColumns } from './columns';
 import { gameStatsToModel } from '../../defaultModel/utils';
-import { LolStats } from '../model/stats';
+import { LolStats } from '../models/stats';
 import DropDown from '../../../components/buttons/DropDown';
 import useQueryParams from '@/app/hooks/useQueryParams';
 import { lolService } from '@/app/services/lol.service';

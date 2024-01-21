@@ -2,11 +2,6 @@ import React from 'react';
 import Image from 'next/image';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 
-interface ProfileCardProps {
-  imageSrc: string;
-  name: string;
-}
-
 const ProfileCard: React.FC<ProfileCardProps> = ({ imageSrc, name }) => {
   return (
     <Card>

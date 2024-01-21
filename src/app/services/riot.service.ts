@@ -1,6 +1,6 @@
 import RestDataService from './rest.data.service';
 
-const API_KEY = process.env.NEXT_PUBLIC_RIOT_API_KEY;
+const API_KEY = '';
 
 export class RiotService extends RestDataService {
   async getAccount({ region, name, tag }: { region: string; name: string; tag: string }): Promise<any> {

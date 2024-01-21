@@ -6,7 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import React, { useState } from 'react';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Dict } from '@/app/type/interface';
+import { Dict } from '@/app/types/interface';
 
 export default function DropDown({
   data,

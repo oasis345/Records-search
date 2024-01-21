@@ -5,19 +5,19 @@ import { ProxyApiService } from '@/app/services/proxy.api.service';
 import { RiotService } from '@/app/services/riot.service';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import React, { useEffect } from 'react';
-import { AccountInfo, Match, Participant } from '../../model/interface';
+import { SummonerInfo, Match, Participant } from '../../models/interface';
 import Image from 'next/image';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { gameMode } from '../../model/gameMode';
+import { gameMode } from '../../models/gameMode';
 import dayjs from '@/app/utils/dayjs';
-import { secondsToMinutesAndSeconds } from '@/app/utils/utils';
+import { secondsToMinutesAndSeconds } from '@/app/utils';
 import { Button } from '@/components/ui/button';
 import ProfileCard from '@/app/components/card/ProfileCard';
 import { useRecoilState } from 'recoil';
 import { searchHistoryState } from '@/app/store/searchHistoryState';
 
 export default function Page({ params }: { params: any }) {
-  const [accountInfo, setAccountInfo] = React.useState<AccountInfo>({} as AccountInfo);
+  const [accountInfo, setAccountInfo] = React.useState<SummonerInfo>({} as SummonerInfo);
   const [matches, setMatches] = React.useState<Match[]>([]);
   const [dragonApiVersion, setDragonApiVersion] = React.useState('');
   const service = new ProxyApiService(lolService);
@@ -32,7 +32,7 @@ export default function Page({ params }: { params: any }) {
   const fetchData = async () => {
     try {
       const [region, name] = decodeURI(params.slug).split(',');
-      const result = await service.getAccount<AccountInfo>({ region, name });
+      const result = await service.getAccount<SummonerInfo>({ region, name });
       const latestDragonApiVersion = await riotService.getLatestDragonApiVersion();
 
       if (!histories.find((item) => item.name === result.name))
@@ -75,10 +75,10 @@ export default function Page({ params }: { params: any }) {
 
   const TeamParticipants: React.FC<{ participants: Participant[] }> = ({ participants }) => {
     return (
-      <div className="w-40 grid gap-1">
+      <div className="grid w-40 gap-1">
         {participants.map((participant) => {
           return (
-            <div key={participant.puuid} className="flex">
+            <div key={participant.puuid} className="flex w-28">
               <Image
                 width={18}
                 height={18}
@@ -86,7 +86,7 @@ export default function Page({ params }: { params: any }) {
                 src={getImgUrl('champion', participant.championName)}
                 alt="Image"
               />
-              <p className="text-xs">{participant.riotIdGameName}</p>
+              <p className="text-xs text-ellipsis overflow-hidden text-nowrap">{participant.riotIdGameName}</p>
             </div>
           );
         })}
@@ -123,8 +123,10 @@ export default function Page({ params }: { params: any }) {
     const { kills, assists, deaths } = findMyMatchData(match);
 
     return (
-      <div>
-        <p>{`${kills} / ${deaths} / ${assists}`}</p>
+      <div className="flex flex-col items-center">
+        <div className="flex font-bold">
+          <p>{kills}</p>&nbsp;/&nbsp;<p className="text-red-500">{deaths}</p>&nbsp;/&nbsp;<p>{assists}</p>
+        </div>
         <p className="text-sm">{((kills + assists) / deaths).toFixed(2)} 평점</p>
       </div>
     );
@@ -138,11 +140,11 @@ export default function Page({ params }: { params: any }) {
     const durationSeconds = secondsToMinutesAndSeconds(match.info.gameDuration).remainingSeconds;
 
     return (
-      <div className="flex flex-col w-32 items-center">
-        <p>{isWin ? '승리' : '패배'}</p>
-        <p>{gameModeLabel ?? match.info.gameMode}</p>
-        <p>{formattedGameCreationDate}</p>
-        <p>{`${durationMinutes}분 ${durationSeconds}초`}</p>
+      <div className="flex md:flex-col lg:flex-col md:w-32 lg:w-32 w-full items-center">
+        <p className={`mx-1 font-bold ${isWin ? 'text-blue-500' : 'text-red-500'}`}>{isWin ? '승리' : '패배'}</p>
+        <p className="mx-1 text-sm">{gameModeLabel ?? match.info.gameMode}</p>
+        <p className="mx-1 text-xs">{`${durationMinutes}분 ${durationSeconds}초`}</p>
+        <p className="mx-1 text-xs">{formattedGameCreationDate}</p>
       </div>
     );
   };
@@ -163,13 +165,14 @@ export default function Page({ params }: { params: any }) {
             <Accordion type="multiple" className="w-full">
               {matches.map((match) => (
                 <AccordionItem key={match.metadata.matchId} value={match.metadata.matchId}>
-                  <div className="flex h-32 my-3 items-center">
+                  <div className="flex-col md:flex-row lg:flex-row flex my-2 items-center">
                     <MatchDetails match={match} />
 
                     <div className="w-full flex justify-around">
                       <Image
-                        width={64}
-                        height={64}
+                        width={52}
+                        height={52}
+                        layout="fixed"
                         src={getImgUrl('champion', findMyMatchData(match).championName)}
                         alt="Image"
                       />
@@ -179,7 +182,7 @@ export default function Page({ params }: { params: any }) {
                       </div>
                     </div>
 
-                    <div id="participants" className="flex w-80">
+                    <div id="participants" className="hidden w-80 md:flex lg:flex">
                       <TeamParticipants
                         participants={match.info.participants.filter(
                           (participant: Participant) => participant.teamId === 100

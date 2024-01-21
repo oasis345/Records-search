@@ -13,10 +13,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html suppressHydrationWarning>
       <body>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <RecoilRootWrapper>
             <div className="flex flex-col h-screen">
-              <header className="bg-gray-200">
+              <header>
                 <Navbar></Navbar>
               </header>
 
@@ -26,11 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </article>
               </main>
 
-              <footer>
-                <div className="container mx-auto px-4">
-                  <p className="text-center text-gray-500">© 2023 My Blog. All rights reserved.</p>
-                </div>
-              </footer>
+              <footer></footer>
             </div>
           </RecoilRootWrapper>
         </ThemeProvider>

@@ -24,22 +24,23 @@ export const navigation: NavigationModel = {
         },
       ],
     },
-    {
-      name: 'val',
-      label: '발로란트',
-      menus: [
-        {
-          name: 'val',
-          path: '/val',
-          label: '홈',
-        },
-        {
-          name: 'leaderboards',
-          path: '/val/leaderboards',
-          label: '랭킹',
-        },
-      ],
-    },
-    { name: 'tft', label: '전략적 팀 전투', menus: [] },
   ],
 };
+
+// {
+//   name: 'val',
+//   label: '발로란트',
+//   menus: [
+//     {
+//       name: 'val',
+//       path: '/val',
+//       label: '홈',
+//     },
+//     {
+//       name: 'leaderboards',
+//       path: '/val/leaderboards',
+//       label: '랭킹',
+//     },
+//   ],
+// },
+// { name: 'tft', label: '전략적 팀 전투', menus: [] },

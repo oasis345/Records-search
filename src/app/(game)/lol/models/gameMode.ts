@@ -1,6 +1,7 @@
 export const gameMode = [
   {
     key: 'CLASSIC',
+    label: '솔로 랭크',
   },
   {
     key: 'ODIN',

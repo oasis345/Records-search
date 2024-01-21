@@ -1,7 +1,7 @@
 'use client';
 import DropDown from '@/app/components/buttons/DropDown';
 import SearchBar from '@/app/components/shared/SearchBar';
-import { regions } from './model/regions';
+import { regions } from './models/regions';
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigation } from '@/app/hooks/useNavigation';
@@ -32,7 +32,7 @@ export default function Page() {
         <Button onClick={onclick}>검색</Button>
       </div>
       <AspectRatio ratio={16 / 9}>
-        <Image fill src="/lol_banner.jpg" alt="Image" className="rounded-md" priority />
+        <Image fill src="/lol_main.jpg" alt="Image" className="rounded-md" priority />
       </AspectRatio>
     </div>
   );

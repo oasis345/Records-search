@@ -10,7 +10,7 @@ import { favoriteListState } from '@/app/store/favoriteListState';
 import { Button } from '@/components/ui/button';
 import { Star, Trash } from 'lucide-react';
 import { useNavigation } from '@/app/hooks/useNavigation';
-import { SearchItem } from '@/app/type/interface';
+import { SearchItem } from '@/app/types/interface';
 
 export default function SearchBar({
   value,
@@ -41,7 +41,7 @@ export default function SearchBar({
     else removeItemFromList(favorites, setFavorites, history);
   };
 
-  const goToProfile = async (history: SearchItem) => {
+  const goToProfilePage = async (history: SearchItem) => {
     const { region, name } = history;
     router.push(`/lol/profile/${region}/${name}`);
   };
@@ -71,16 +71,30 @@ export default function SearchBar({
             <TabsContent value="histories">
               <CardContent>
                 {histories.map((history) => (
-                  <div key={history.name + history.region} className={historyItemClassName}>
-                    <p onClick={() => goToProfile(history)}>{history.name}</p>
+                  <div
+                    key={history.name + history.region}
+                    className={historyItemClassName}
+                    onClick={() => goToProfilePage(history)}
+                  >
+                    <p>{history.name}</p>
                     <div>
-                      <Button variant="ghost" size="icon" onClick={() => toggleFavoriteStatus(history)}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavoriteStatus(history);
+                        }}
+                      >
                         <Star className="h-4 w-4" style={{ color: isAlreadyAdded(history) ? 'red' : 'black' }} />
                       </Button>
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => removeItemFromList(histories, setHistories, history)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeItemFromList(histories, setHistories, history);
+                        }}
                       >
                         <Trash className="h-4 w-4" />
                       </Button>
@@ -92,13 +106,20 @@ export default function SearchBar({
             <TabsContent value="Favorites">
               <CardContent>
                 {favorites.map((favorite) => (
-                  <div key={favorite.name + favorite.region} className={historyItemClassName}>
-                    <p onClick={() => goToProfile(favorite)}>{favorite.name}</p>
+                  <div
+                    key={favorite.name + favorite.region}
+                    className={historyItemClassName}
+                    onClick={() => goToProfilePage(favorite)}
+                  >
+                    <p>{favorite.name}</p>
                     <div>
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => removeItemFromList(favorites, setFavorites, favorite)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeItemFromList(favorites, setFavorites, favorite);
+                        }}
                       >
                         <Trash className="h-4 w-4" />
                       </Button>
