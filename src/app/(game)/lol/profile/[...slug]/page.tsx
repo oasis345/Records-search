@@ -3,11 +3,9 @@
 import { lolService } from '@/app/services/lol.service';
 import { ProxyApiService } from '@/app/services/proxy.api.service';
 import { RiotService } from '@/app/services/riot.service';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import React, { useEffect } from 'react';
 import { SummonerInfo, Match, Participant } from '../../models/interface';
 import Image from 'next/image';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { gameMode } from '../../models/gameMode';
 import dayjs from '@/app/utils/dayjs';
 import { secondsToMinutesAndSeconds } from '@/app/utils';
@@ -15,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import ProfileCard from '@/app/components/card/ProfileCard';
 import { useRecoilState } from 'recoil';
 import { searchHistoryState } from '@/app/store/searchHistoryState';
+import { AccordionCard } from '@/app/components/card/AccordionCard';
 
 export default function Page({ params }: { params: any }) {
   const [accountInfo, setAccountInfo] = React.useState<SummonerInfo>({} as SummonerInfo);
@@ -149,6 +148,40 @@ export default function Page({ params }: { params: any }) {
     );
   };
 
+  const accordionItems: AccordionCardItemProps[] = matches.map((match) => {
+    return {
+      key: match.metadata.matchId,
+      header: <MatchDetails match={match} />,
+      content: (
+        <>
+          <Image
+            width={64}
+            height={64}
+            layout="fixed"
+            src={getImgUrl('champion', findMyMatchData(match).championName)}
+            alt="Image"
+          />
+          <Stats match={match} />
+          <div id="items" className="grid grid-cols-4 gap-1">
+            <Items match={match} />
+          </div>
+        </>
+      ),
+      subContent: (
+        <>
+          <TeamParticipants
+            participants={match.info.participants.filter((participant: Participant) => participant.teamId === 100)}
+          />
+
+          <TeamParticipants
+            participants={match.info.participants.filter((participant: Participant) => participant.teamId === 200)}
+          />
+        </>
+      ),
+      detail: <>미구현</>,
+    };
+  });
+
   return isNotFound ? (
     <div>존재하지 않는 유저입니다</div>
   ) : (
@@ -157,53 +190,8 @@ export default function Page({ params }: { params: any }) {
         {accountInfo.profileIconId && (
           <ProfileCard imageSrc={getImgUrl('profileIcon', accountInfo.profileIconId)} name={accountInfo.name} />
         )}
-        <Card>
-          <CardHeader>
-            <CardTitle>매치 이력</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Accordion type="multiple" className="w-full">
-              {matches.map((match) => (
-                <AccordionItem key={match.metadata.matchId} value={match.metadata.matchId}>
-                  <div className="flex-col md:flex-row lg:flex-row flex my-2 items-center">
-                    <MatchDetails match={match} />
 
-                    <div className="w-full flex justify-around">
-                      <Image
-                        width={64}
-                        height={64}
-                        layout="fixed"
-                        src={getImgUrl('champion', findMyMatchData(match).championName)}
-                        alt="Image"
-                      />
-                      <Stats match={match} />
-                      <div id="items" className="grid grid-cols-4 gap-1">
-                        <Items match={match} />
-                      </div>
-                    </div>
-
-                    <div id="participants" className="hidden w-80 md:flex lg:flex">
-                      <TeamParticipants
-                        participants={match.info.participants.filter(
-                          (participant: Participant) => participant.teamId === 100
-                        )}
-                      />
-
-                      <TeamParticipants
-                        participants={match.info.participants.filter(
-                          (participant: Participant) => participant.teamId === 200
-                        )}
-                      />
-                    </div>
-                    <AccordionTrigger />
-                  </div>
-
-                  <AccordionContent>미구현</AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </CardContent>
-        </Card>
+        <AccordionCard title="매치 이력" type="multiple" items={accordionItems}></AccordionCard>
         <Button className="w-full" onClick={() => fetchMatchData(accountInfo.puuid, matches.length)}>
           더 보기
         </Button>

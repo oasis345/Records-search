@@ -19,13 +19,15 @@ export default function Navbar() {
             <p className="text-lg text-gray-900 font-bold">logo</p>
           </Link>
           <ul className="flex space-x-4">
-            {navigation.titles.map((title) => (
-              <li key={title.name}>
-                <Link href={`/${title.name}`} className="text-gray-500 hover:text-gray-700">
-                  {title.label}
-                </Link>
-              </li>
-            ))}
+            {navigation.titles
+              .filter((title) => title.activated)
+              .map((title) => (
+                <li key={title.name}>
+                  <Link href={`/${title.name}`} className="text-gray-500 hover:text-gray-700">
+                    {title.label}
+                  </Link>
+                </li>
+              ))}
           </ul>
         </div>
         <ThemeToggle />

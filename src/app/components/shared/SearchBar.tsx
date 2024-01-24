@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useRecoilState } from 'recoil';
 import { searchHistoryState } from '@/app/store/searchHistoryState';
@@ -25,6 +25,21 @@ export default function SearchBar({
   const [histories, setHistories] = useRecoilState(searchHistoryState);
   const [favorites, setFavorites] = useRecoilState(favoriteListState);
   const { router } = useNavigation();
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleOutSideClick = (event: MouseEvent) => {
+      if (isOpen && !ref.current?.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener('mousedown', handleOutSideClick);
+
+    return () => {
+      window.removeEventListener('mousedown', handleOutSideClick);
+    };
+  }, [ref, isOpen]);
 
   const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -54,7 +69,7 @@ export default function SearchBar({
     'flex items-center justify-between cursor-pointer w-full hover:bg-gray-100 dark:hover:bg-gray-500';
 
   return (
-    <div className="w-96">
+    <div className="w-60" ref={ref}>
       <Input
         placeholder={placeholder}
         onChange={handleSearchInputChange}
