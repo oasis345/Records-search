@@ -38,7 +38,7 @@ export default function Page() {
 
   return (
     <>
-      <div>
+      <div className="flex">
         <DropDown
           data={regions}
           value={region}
@@ -60,9 +60,9 @@ export default function Page() {
             setQueryParam('tier', selectedItem);
           }}
         ></DropDown>
-        <div className="flex flex-col">
-          <DataTable columns={lolColumns} data={data}></DataTable>
-        </div>
+      </div>
+      <div className="flex flex-col">
+        <DataTable columns={lolColumns} data={data}></DataTable>
       </div>
     </>
   );

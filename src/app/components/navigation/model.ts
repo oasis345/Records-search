@@ -1,8 +1,10 @@
-export const navigation: NavigationModel = {
+import { Navigation } from './interface';
+
+export const navigation: Navigation = {
   menus: [
     {
       name: 'home',
-      path: '/',
+      href: '/',
       label: '홈',
     },
   ],
@@ -10,37 +12,56 @@ export const navigation: NavigationModel = {
   titles: [
     {
       name: 'lol',
-      label: '리그오브레전드',
+      label: 'League of legends',
+      href: '/lol',
       menus: [
         {
-          name: 'lol',
-          path: '/lol',
+          name: '/',
+          href: '/lol',
           label: '홈',
         },
         {
           name: 'leaderboards',
-          path: '/lol/leaderboards',
+          href: '/lol/leaderboards',
           label: '랭킹',
         },
       ],
+      activated: true,
+    },
+    {
+      name: 'val',
+      label: 'Valorant',
+      href: '/val',
+      menus: [],
+      activated: false,
+    },
+    {
+      name: 'tft',
+      label: 'Team Fight Tactics',
+      href: '/tft',
+      menus: [],
+      activated: false,
+    },
+    {
+      name: 'apex',
+      label: 'Apex Legends',
+      href: '/apex',
+      menus: [],
+      activated: false,
+    },
+    {
+      name: 'fortnite',
+      label: 'Fortnite',
+      href: '/fortnite',
+      menus: [],
+      activated: false,
+    },
+    {
+      name: 'pubg',
+      label: 'Battle Grounds',
+      href: '/pubg',
+      menus: [],
+      activated: false,
     },
   ],
 };
-
-// {
-//   name: 'val',
-//   label: '발로란트',
-//   menus: [
-//     {
-//       name: 'val',
-//       path: '/val',
-//       label: '홈',
-//     },
-//     {
-//       name: 'leaderboards',
-//       path: '/val/leaderboards',
-//       label: '랭킹',
-//     },
-//   ],
-// },
-// { name: 'tft', label: '전략적 팀 전투', menus: [] },

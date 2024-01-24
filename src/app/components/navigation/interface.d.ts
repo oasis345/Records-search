@@ -1,16 +1,23 @@
-interface NavigationModel {
-  titles: titles[];
-  menus: Menus[];
+export interface Navigation {
+  titles: Title[];
+  menus: Menu[];
 }
 
-type titles = {
+type Title = {
   name: string;
   label: string;
-  menus: Menus[];
+  menus: Menu[];
+  href: string;
+  activated?: boolean;
 };
 
-type Menus = {
+type Menu = {
   name: string;
-  path: string;
+  href: string;
   label: string;
 };
+
+interface NavigationCardProps {
+  minColWidth: number;
+  data: Array<Omit<Title, 'menus'> & { imageSrc: string }>;
+}

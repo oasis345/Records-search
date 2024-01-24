@@ -1,15 +1,12 @@
-import { games } from './(game)/defaultModel/model';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ResponsiveCard } from './components/card/ResponsiveCard';
+import { NavigationCard } from './components/navigation/NavigationCard';
+import { navigation } from './components/navigation/model';
 
 export default function App() {
-  const data = games.map((game) => {
-    const { activated, key, label } = game;
-
+  const data = navigation.titles.map((title) => {
     return {
-      activated,
-      imageSrc: `/${key}_banner.jpg`,
-      label,
+      ...title,
+      imageSrc: `/${title.name}_banner.jpg`,
     };
   });
 
@@ -22,7 +19,7 @@ export default function App() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ResponsiveCard minColWidth={150} data={data} />
+          <NavigationCard minColWidth={150} data={data} />
         </CardContent>
       </Card>
       <Card>

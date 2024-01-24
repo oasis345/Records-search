@@ -7,8 +7,9 @@ import ThemeToggle from './ThemeToggle';
 import { useNavigation } from '@/app/hooks/useNavigation';
 
 export default function Navbar() {
-  const { title } = useNavigation();
-  const menus = navigation.titles.find((menuTitle) => menuTitle.name === title)?.menus ?? navigation.menus;
+  const { currentTitle, currentMenu } = useNavigation();
+  console.log(currentMenu);
+  const menus = navigation.titles.find((title) => title.name === currentTitle)?.menus ?? navigation.menus;
 
   return (
     <div className="bg-gray-200">
@@ -30,13 +31,13 @@ export default function Navbar() {
         <ThemeToggle />
       </nav>
 
-      {title && (
+      {currentTitle && (
         <div className="px-4 py-2 text-lg">
           <nav>
             <ul className="flex space-x-4">
               {menus.map((menu) => (
-                <li key={menu.name}>
-                  <Link href={menu.path} className="text-gray-500 hover:text-gray-700">
+                <li key={menu.name} style={{ textDecoration: currentMenu === menu.name ? 'underline' : '' }}>
+                  <Link href={menu.href} className="text-gray-500 hover:text-gray-700">
                     {menu.label}
                   </Link>
                 </li>

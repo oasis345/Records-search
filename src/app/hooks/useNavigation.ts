@@ -2,27 +2,28 @@ import { usePathname, useRouter } from 'next/navigation';
 
 export interface RouteParams {
   title: string;
+  menu: string;
 }
 
 export const useNavigation = () => {
   const pathName = usePathname();
+  const router = useRouter();
 
-  const getRouteParam = (): RouteParams => {
+  const getRouteParams = (): RouteParams => {
     const result = pathName.match(/(\w+)/gi);
     const title = result?.[0] || '';
+    const menu = result?.[1] || '/';
 
     return {
       title,
+      menu,
     };
   };
 
-  const getTitle = () => {
-    return getRouteParam().title;
-  };
-
   return {
-    title: getTitle(),
-    getRouteParam,
-    router: useRouter(),
+    currentTitle: getRouteParams().title,
+    currentMenu: getRouteParams().menu,
+    getRouteParams,
+    router,
   };
 };

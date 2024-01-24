@@ -170,8 +170,8 @@ export default function Page({ params }: { params: any }) {
 
                     <div className="w-full flex justify-around">
                       <Image
-                        width={52}
-                        height={52}
+                        width={64}
+                        height={64}
                         layout="fixed"
                         src={getImgUrl('champion', findMyMatchData(match).championName)}
                         alt="Image"
