@@ -1,4 +1,4 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Accordion } from '@/components/ui/accordion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AccordionCardItem } from './AccordionCardItem';
 
@@ -10,7 +10,7 @@ export const AccordionCard: React.FC<AccordionCardProps> = ({ title, type, items
       </CardHeader>
       <CardContent>
         <Accordion type={type} className="w-full">
-          {items.map((item) => (
+          {items.map((item, index) => (
             <AccordionCardItem
               key={item.key}
               item={item}
