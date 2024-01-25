@@ -13,7 +13,6 @@ export const AccordionCard: React.FC<AccordionCardProps> = ({ title, type, items
           {items.map((item, index) => (
             <AccordionCardItem
               key={item.key}
-              item={item}
               header={item.header}
               content={item.content}
               subContent={item.subContent}
