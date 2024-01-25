@@ -151,6 +151,7 @@ export default function Page({ params }: { params: any }) {
   const accordionItems: AccordionCardItemProps[] = matches.map((match) => {
     return {
       key: match.metadata.matchId,
+      item: match,
       header: <MatchDetails match={match} />,
       content: (
         <>

@@ -16,6 +16,7 @@ export default function Page() {
   const onclick = async () => {
     router.push(`/lol/profile/${region}/${searchValue}`);
   };
+
   return (
     <div className="flex flex-col">
       <div className="flex justify-center mb-5">

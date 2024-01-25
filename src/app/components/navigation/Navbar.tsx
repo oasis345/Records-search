@@ -8,7 +8,6 @@ import { useNavigation } from '@/app/hooks/useNavigation';
 
 export default function Navbar() {
   const { currentTitle, currentMenu } = useNavigation();
-  console.log(currentMenu);
   const menus = navigation.titles.find((title) => title.name === currentTitle)?.menus ?? navigation.menus;
 
   return (
