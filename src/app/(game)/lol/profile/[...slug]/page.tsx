@@ -46,10 +46,9 @@ export default function Page({ params }: { params: any }) {
 
     if (matches.length === 0) {
       setMatches(matchData);
+    } else if (matchData.length > 0) {
+      setMatches([...matches, ...matchData]);
     }
-    // else if (matchData.length > 0) {
-    //   setMatches([...matches, ...matchData]);
-    // }
   };
 
   const findMyMatchData = (match: Match): Participant => {
