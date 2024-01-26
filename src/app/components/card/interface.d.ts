@@ -15,5 +15,5 @@ interface AccordionCardItemProps {
   header: React.ReactNode;
   content: React.ReactNode;
   subContent: React.ReactNode;
-  detail: React.ReactNode;
+  detail?: React.ReactNode;
 }

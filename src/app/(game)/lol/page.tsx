@@ -2,7 +2,7 @@
 import DropDown from '@/app/components/buttons/DropDown';
 import SearchBar from '@/app/components/shared/SearchBar';
 import { regions } from './models/regions';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigation } from '@/app/hooks/useNavigation';
 import Image from 'next/image';

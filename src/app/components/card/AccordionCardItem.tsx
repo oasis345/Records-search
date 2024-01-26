@@ -4,13 +4,15 @@ import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/
 export const AccordionCardItem: React.FC<AccordionCardItemProps> = ({ item, header, content, subContent, detail }) => {
   return (
     <AccordionItem value={item.key}>
-      <div className="flex-col md:flex-row lg:flex-row flex my-2 items-center">
-        {header}
-        <div className="w-full flex justify-around">{content}</div>
-        <div className="hidden w-80 md:flex lg:flex">{subContent}</div>
-        <AccordionTrigger />
+      <div className="flex-col md:flex-row lg:flex-row flex my-1 justify-between">
+        <div className="flex w-fit items-center">{header}</div>
+        <div className="flex w-full">{content}</div>
+        <div className="hidden md:flex lg:flex">{subContent}</div>
+        {<AccordionTrigger />}
       </div>
-      <AccordionContent>{detail}</AccordionContent>
+      {detail && <AccordionContent>{detail}</AccordionContent>}
     </AccordionItem>
   );
 };
+
+// className="hidden md:flex lg:flex"

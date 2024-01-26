@@ -21,6 +21,12 @@ interface Metadata {
   participants: string[];
 }
 
+export interface TeamStats {
+  totalKills: number;
+  totalAssists: number;
+  totalDeaths: number;
+}
+
 interface Info {
   gameCreation: number;
   gameDuration: number;
@@ -46,8 +52,14 @@ export interface Participant {
   puuid: string;
   win?: boolean;
   teamId: number;
+  playerSubteamId: number;
   championName: string;
   riotIdGameName: string;
+  riotIdTagline: string;
+  summonerName: string;
+  totalDamageDealtToChampions: number;
+  totalDamageTaken: number;
+  totalMinionsKilled: number;
   item0: string;
   item1: string;
   item2: string;
