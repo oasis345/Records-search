@@ -15,8 +15,12 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/riot.txt',
-        destination: '/api',
+        source: '/lol/riot.txt',
+        destination: '/certificate/lol',
+      },
+      {
+        source: '/val/riot.txt',
+        destination: '/certificate/val',
       },
     ];
   },

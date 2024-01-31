@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 export async function GET() {
-  const filePath = path.join(process.cwd(), 'src/app', 'riot.txt');
+  const filePath = path.join(process.cwd(), 'src/app/certificate/val', 'riot.txt');
   const fileBuffer = await fs.readFileSync(filePath);
 
   const headers = new Headers();
