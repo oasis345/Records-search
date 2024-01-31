@@ -11,6 +11,15 @@ const nextConfig = {
     config.experiments = { ...config.experiments, topLevelAwait: true };
     return config;
   },
+
+  async rewrites() {
+    return [
+      {
+        source: '/riot.txt',
+        destination: '/api',
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
