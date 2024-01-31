@@ -6,7 +6,7 @@ import { regions } from '../models/regions';
 import { tiers as tierData } from '../models/tiers';
 import { DataTable } from '@/app/components/table/DataTable';
 import { lolColumns } from './columns';
-import { gameStatsToModel } from '../../defaultModel/utils';
+import { gameStatsToModel } from '../../model/utils';
 import { LolStats } from '../models/stats';
 import DropDown from '../../../components/buttons/DropDown';
 import useQueryParams from '@/app/hooks/useQueryParams';

@@ -69,15 +69,15 @@ export default function SearchBar({
     'flex items-center justify-between cursor-pointer w-full hover:bg-gray-100 dark:hover:bg-gray-500';
 
   return (
-    <div className="w-60" ref={ref}>
+    <div className="w-96" ref={ref}>
       <Input
         placeholder={placeholder}
         onChange={handleSearchInputChange}
         value={value}
         onFocus={() => setIsOpen(true)}
       />
-      {isOpen && (
-        <Card className="absolute z-50" style={{ width: 'inherit' }}>
+      {isOpen && !value && (
+        <Card className="left-5 lg:left-auto md:left-auto absolute z-50" style={{ width: 'inherit' }}>
           <Tabs defaultValue="histories" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="histories">최근검색</TabsTrigger>
@@ -91,8 +91,8 @@ export default function SearchBar({
                     className={historyItemClassName}
                     onClick={() => goToProfilePage(history)}
                   >
-                    <p>{history.name}</p>
-                    <div>
+                    <p className="w-1/2 text-ellipsis overflow-hidden text-nowrap">{history.name}</p>
+                    <div className="flex">
                       <Button
                         variant="ghost"
                         size="icon"

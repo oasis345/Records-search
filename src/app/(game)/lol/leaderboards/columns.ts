@@ -1,4 +1,4 @@
-import { defaultStatsColumns } from '../../defaultModel/columns';
+import { defaultStatsColumns } from '../../model/columns';
 
 export const lolColumns = [
   ...defaultStatsColumns,

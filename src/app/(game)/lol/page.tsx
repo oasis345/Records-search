@@ -13,7 +13,7 @@ export default function Page() {
   const [region, setRegion] = React.useState('kr');
   const { router } = useNavigation();
 
-  const onclick = async () => {
+  const goProfile = async () => {
     router.push(`/lol/profile/${region}/${searchValue}`);
   };
 
@@ -30,7 +30,7 @@ export default function Page() {
           }}
         ></DropDown>
         <SearchBar value={searchValue} onChange={setSearchValue} placeholder={'플레이어 이름'} />
-        <Button onClick={onclick}>검색</Button>
+        <Button onClick={goProfile}>검색</Button>
       </div>
       <AspectRatio ratio={16 / 9}>
         <Image fill src="/lol_main.jpg" alt="Image" className="rounded-md" priority />

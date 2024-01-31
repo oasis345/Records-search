@@ -32,8 +32,19 @@ export const navigation: Navigation = {
       name: 'val',
       label: 'Valorant',
       href: '/val',
-      menus: [],
-      activated: false,
+      menus: [
+        {
+          name: '/',
+          href: '/val',
+          label: '홈',
+        },
+        {
+          name: 'leaderboards',
+          href: '/val/leaderboards',
+          label: '랭킹',
+        },
+      ],
+      activated: true,
     },
     {
       name: 'tft',

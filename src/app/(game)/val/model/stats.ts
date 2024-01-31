@@ -1,4 +1,4 @@
-import { DefaultGameStats } from '../../defaultModel/gameStats';
+import { DefaultGameStats } from '../../model/gameStats';
 
 export class ValorantStats extends DefaultGameStats {
   constructor(

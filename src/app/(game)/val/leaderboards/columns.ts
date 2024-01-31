@@ -1,5 +1,5 @@
 import { ValorantStats } from '../model/stats';
-import { defaultStatsColumns } from '../../defaultModel/columns';
+import { defaultStatsColumns } from '../../model/columns';
 
 const columns = [
   {

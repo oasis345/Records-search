@@ -21,6 +21,7 @@ export default function Page({ params }: { params: any }) {
   const [isNotFound, setIsNotFound] = React.useState(false);
   const [histories, setHistories] = useRecoilState(searchHistoryState);
   const service = new ProxyApiService(lolService);
+  const [region, name] = decodeURI(params.slug).split(',');
 
   useEffect(() => {
     fetchData();
@@ -28,7 +29,6 @@ export default function Page({ params }: { params: any }) {
 
   const fetchData = async () => {
     try {
-      const [region, name] = decodeURI(params.slug).split(',');
       const result = await service.getAccount<SummonerInfo>({ region, name });
       await riotService.init();
       if (!histories.find((item) => item.name === result.name))
@@ -46,9 +46,10 @@ export default function Page({ params }: { params: any }) {
 
     if (matches.length === 0) {
       setMatches(matchData);
-    } else if (matchData.length > 0) {
-      setMatches([...matches, ...matchData]);
     }
+    //  else if (matchData.length > 0) {
+    //   setMatches([...matches, ...matchData]);
+    // }
   };
 
   const findMyMatchData = (match: Match): Participant => {
@@ -57,10 +58,14 @@ export default function Page({ params }: { params: any }) {
 
   const TeamParticipants: React.FC<{ participants: Participant[] }> = ({ participants }) => {
     return (
-      <div className="grid w-40 gap-1">
+      <div className="hidden lg:grid md:grid grid w-40 gap-1">
         {participants.map((participant) => {
           return (
-            <div key={participant.puuid} className="flex w-28">
+            <div
+              key={participant.puuid}
+              className="flex w-28 cursor-pointer"
+              onClick={() => window.open(`/lol/profile/${region}/${participant.summonerName}`)}
+            >
               <Image
                 width={18}
                 height={18}
@@ -124,33 +129,35 @@ export default function Page({ params }: { params: any }) {
     isDetail,
   }) => {
     const { kills, assists, deaths, riotIdGameName, riotIdTagline, totalDamageTaken, totalMinionsKilled } = participant;
-
     const rating = ((kills + assists) / deaths).toFixed(2);
     const csPerMinute = (totalMinionsKilled / secondsToMinutes(match.info.gameDuration).minutes).toFixed(1);
 
     return (
       <div className="flex w-full p-2 items-center">
-        <div className="flex text-xs text-ellipsis text-nowrap items-center w-1/4">
+        <div className="flex text-xs text-nowrap items-center w-1/2">
           <Image
-            width={isDetail ? 34 : 52}
-            height={isDetail ? 34 : 52}
+            width={isDetail ? 34 : 48}
+            height={isDetail ? 34 : 48}
             src={riotService.getImageUrl('champion', participant.championName)}
             alt="Champion Image"
           />
-          {isDetail && <p>{`${riotIdGameName}#${riotIdTagline}`}</p>}
-        </div>
-        <div className="flex flex-col items-center w-1/4">
-          <div className="flex font-bold">
-            <p>{kills}</p> / <p className="text-red-500">{deaths}</p> / <p>{assists}</p>
+          <div className="items-center text-ellipsis overflow-hidden px-2 ">
+            {isDetail && <p>{`${riotIdGameName}`}</p>}
+            <div className="flex font-bold text-xs items-center" style={{ flexDirection: isDetail ? 'row' : 'column' }}>
+              <span className="flex">
+                <p>{kills}</p> / <p className="text-red-500">{deaths}</p> / <p>{assists}</p>
+              </span>
+
+              <p className="text-gray-400">&nbsp;{rating}평점</p>
+            </div>
           </div>
-          <p className="text-sm">{rating} 평점</p>
         </div>
-        <div className="flex flex-col items-center w-1/4">
+        <div className="flex flex-col items-center text-nowrap px-2 w-1/4">
           <p className="text-xs"> {`cs ${totalMinionsKilled} (${csPerMinute}/m)`} </p>
           <p className="text-xs"> {`${totalDamageTaken} 피해량`} </p>
         </div>
-        <div id="items" className="grid grid-cols-4 gap-1">
-          <Items participant={participant} size={24} />
+        <div id="items" className="grid grid-cols-4 gap-1 px-2">
+          <Items participant={participant} size={isDetail ? 20 : 24} />
         </div>
       </div>
     );
@@ -230,9 +237,13 @@ export default function Page({ params }: { params: any }) {
             <Detail key={index} match={match} participants={team.participants} teamStats={team.stats} />
           ));
         default:
-          return defaultModeTeams.map((team: any, index: number) => (
-            <Detail key={index} match={match} participants={team.participants} teamStats={team.stats} />
-          ));
+          return (
+            <div className="flex flex-col md:flex-row lg:flex-row">
+              {defaultModeTeams.map((team: any, index: number) => (
+                <Detail key={index} match={match} participants={team.participants} teamStats={team.stats} />
+              ))}
+            </div>
+          );
       }
     };
 

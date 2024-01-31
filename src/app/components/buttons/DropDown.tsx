@@ -31,15 +31,15 @@ export default function DropDown({
   };
 
   return (
-    <>
+    <div className="w-fit">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" role="combobox" aria-expanded={open} className="w-[200px] justify-between">
+          <Button variant="outline" role="combobox" aria-expanded={open} className="w-[160px] justify-between">
             {getLabel?.(selectedData) ?? selectedData?.[labelField] ?? 'undefined'}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
+        <PopoverContent className="w-[160px] p-0">
           <Command>
             <CommandGroup>
               {data.map((currentData) => (
@@ -54,6 +54,6 @@ export default function DropDown({
           </Command>
         </PopoverContent>
       </Popover>
-    </>
+    </div>
   );
 }
