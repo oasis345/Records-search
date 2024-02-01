@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "server-start",
+      "type": "node",
+      "request": "launch",
+      "args": ["./src/main.ts"],
+      // "runtimeExecutable": "ts-node",
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register",
+        "-r",
+        "tsconfig-paths/register"
+      ],
+      "outputCapture": "std",
+      "cwd": "${workspaceFolder}",
+      "env": { "NODE_ENV": "devepopment" }
+    }
+  ]
+}
