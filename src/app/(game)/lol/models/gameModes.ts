@@ -1,4 +1,4 @@
-export const gameMode = [
+export const gameModes = [
   {
     key: 'CLASSIC',
     label: '솔로 랭크',

@@ -8,8 +8,6 @@ export interface SummonerInfo {
   summonerLevel: number;
 }
 
-// TypeScript 형식의 JSON 정의
-
 export interface Match {
   metadata: Metadata;
   info: Info;
@@ -124,5 +122,4 @@ interface Objectives {
 interface Objective {
   first: boolean;
   kills: number;
-  // ... (기타 필드들)
 }

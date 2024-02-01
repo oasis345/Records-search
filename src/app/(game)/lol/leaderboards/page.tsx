@@ -1,6 +1,5 @@
 'use client';
 
-import { ProxyApiService } from '@/app/services/proxy.api.service';
 import React, { useEffect, useRef } from 'react';
 import { regions } from '../models/regions';
 import { tiers as tierData } from '../models/tiers';
@@ -10,10 +9,9 @@ import { gameStatsToModel } from '../../model/utils';
 import { LolStats } from '../models/stats';
 import DropDown from '../../../components/buttons/DropDown';
 import useQueryParams from '@/app/hooks/useQueryParams';
-import { lolService } from '@/app/services/lol.service';
+import { httpService } from '@/app/services/rest.data.service';
 
 export default function Page() {
-  const apiService = new ProxyApiService(lolService);
   const { searchParams, setQueryParam } = useQueryParams();
   const [region, setRegion] = React.useState('kr');
   const [tiers] = React.useState(tierData);
@@ -25,13 +23,13 @@ export default function Page() {
   }, [searchParams]);
 
   const fetchData = async () => {
-    const options = {
+    const params = {
       region,
       tier,
       queue: 'RANKED_SOLO_5x5',
       division: 'I',
     };
-    const result = await apiService.getRanked(options);
+    const result = await httpService.get({ url: '/api/lol/getLeaderBoard', params });
     const data = result.map((data: LolStats) => gameStatsToModel(data, 'lol'));
     setData(data);
   };

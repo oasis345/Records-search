@@ -14,7 +14,7 @@ export default function Page() {
   const { router } = useNavigation();
 
   const goProfile = async () => {
-    router.push(`/lol/profile/${region}/${searchValue}`);
+    router.push(`/lol/profile/${region}/${encodeURIComponent(searchValue)}`);
   };
 
   return (

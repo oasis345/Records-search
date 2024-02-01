@@ -1,12 +1,9 @@
 'use client';
 
-import { lolService } from '@/app/services/lol.service';
-import { ProxyApiService } from '@/app/services/proxy.api.service';
-import { riotService } from '@/app/services/riot.service';
 import React, { useEffect } from 'react';
 import { SummonerInfo, Match, Participant, TeamStats } from '../../models/interface';
 import Image from 'next/image';
-import { gameMode } from '../../models/gameMode';
+import { gameModes } from '../../models/gameModes';
 import dayjs from '@/app/utils/dayjs';
 import { secondsToMinutes } from '@/app/utils';
 import { Button } from '@/components/ui/button';
@@ -14,14 +11,18 @@ import ProfileCard from '@/app/components/card/ProfileCard';
 import { useRecoilState } from 'recoil';
 import { searchHistoryState } from '@/app/store/searchHistoryState';
 import { AccordionCard } from '@/app/components/card/AccordionCard';
+import { httpService } from '@/app/services/rest.data.service';
+import { riotService } from '@/app/services/riot.service';
+import { regions } from '../../models/regions';
+import { SearchItem } from '@/app/types/interface';
 
 export default function Page({ params }: { params: any }) {
-  const [accountInfo, setAccountInfo] = React.useState<SummonerInfo>({} as SummonerInfo);
+  const [summonerInfo, setSummonerInfo] = React.useState<SummonerInfo>({} as SummonerInfo);
   const [matches, setMatches] = React.useState<Match[]>([]);
   const [isNotFound, setIsNotFound] = React.useState(false);
-  const [histories, setHistories] = useRecoilState(searchHistoryState);
-  const service = new ProxyApiService(lolService);
-  const [region, name] = decodeURI(params.slug).split(',');
+  const [histories, setHistories] = useRecoilState<SearchItem[]>(searchHistoryState);
+  const [region, searchText] = decodeURIComponent(params.slug).split(',');
+  const { parent } = regions.find((item) => item.name === region)!;
 
   useEffect(() => {
     fetchData();
@@ -29,20 +30,24 @@ export default function Page({ params }: { params: any }) {
 
   const fetchData = async () => {
     try {
-      const result = await service.getAccount<SummonerInfo>({ region, name });
       await riotService.init();
-      if (!histories.find((item) => item.name === result.name))
-        setHistories([...histories, { name: result.name, region }]);
+      const summoner = await httpService.get({ url: '/api/lol/getSummoner', params: { region, name: searchText } });
 
-      setAccountInfo(result);
-      fetchMatchData(result.puuid);
+      if (!histories.find((item) => item.name === summonerInfo.name))
+        setHistories([...histories, { name: summoner.name, region }]);
+
+      setSummonerInfo(summoner);
+      fetchMatchData(summoner.puuid);
     } catch (error) {
       setIsNotFound(true);
     }
   };
 
-  const fetchMatchData = async (id: string, start: number = 0) => {
-    const matchData: Match[] = await service.getMatches(id, start);
+  const fetchMatchData = async (puuid: string, start: number = 0) => {
+    const matchData: Match[] = await httpService.get({
+      url: '/api/lol/getMatches',
+      params: { region: parent, puuid, start },
+    });
 
     if (matches.length === 0) {
       setMatches(matchData);
@@ -52,7 +57,7 @@ export default function Page({ params }: { params: any }) {
   };
 
   const findMyMatchData = (match: Match): Participant => {
-    return match.info.participants.find((participant) => participant.puuid === accountInfo?.puuid)!;
+    return match.info.participants.find((participant) => participant.puuid === summonerInfo?.puuid)!;
   };
 
   const TeamParticipants: React.FC<{ participants: Participant[] }> = ({ participants }) => {
@@ -82,7 +87,7 @@ export default function Page({ params }: { params: any }) {
 
   const MatchResult: React.FC<{ match: Match; participant: Participant }> = ({ match, participant }) => {
     const { win } = participant;
-    const gameModeLabel = gameMode.find((mode) => mode.key === match.info.gameMode)?.label;
+    const gameModeLabel = gameModes.find((mode) => mode.key === match.info.gameMode)?.label;
     const formattedGameCreationDate = dayjs(match.info.gameCreation).format('MM월 DD일');
     const { minutes: durationMinutes, remainingSeconds: durationSeconds } = secondsToMinutes(match.info.gameDuration);
 
@@ -186,8 +191,6 @@ export default function Page({ params }: { params: any }) {
     );
   };
 
-  // playerSubteamId 아레나 팀
-
   const calculateTeamStats = (participants: Participant[]): TeamStats => {
     return participants.reduce<TeamStats>(
       (totals, participant) => {
@@ -279,14 +282,14 @@ export default function Page({ params }: { params: any }) {
   return isNotFound ? (
     <div>존재하지 않는 유저입니다</div>
   ) : (
-    accountInfo.profileIconId && (
+    summonerInfo.puuid && (
       <div>
         <ProfileCard
-          imageSrc={riotService.getImageUrl('profileIcon', accountInfo.profileIconId)}
-          name={accountInfo.name}
+          imageSrc={riotService.getImageUrl('profileIcon', summonerInfo.profileIconId)}
+          name={summonerInfo.name}
         />
         <AccordionCard title="매치 이력" type="multiple" items={accordionItems}></AccordionCard>
-        <Button className="w-full" onClick={() => fetchMatchData(accountInfo.puuid, matches.length)}>
+        <Button className="w-full" onClick={() => fetchMatchData(summonerInfo.puuid, matches.length)}>
           더 보기
         </Button>
       </div>
