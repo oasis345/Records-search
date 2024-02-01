@@ -33,7 +33,7 @@ export default function Page({ params }: { params: any }) {
       await riotService.init();
       const summoner = await httpService.get({ url: '/api/lol/getSummoner', params: { region, name: searchText } });
 
-      if (!histories.find((item) => item.name === summonerInfo.name))
+      if (!histories.find((item) => item.name === summoner.name))
         setHistories([...histories, { name: summoner.name, region }]);
 
       setSummonerInfo(summoner);
