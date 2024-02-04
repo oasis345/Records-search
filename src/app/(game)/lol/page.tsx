@@ -7,6 +7,9 @@ import Image from 'next/image';
 import { riotService } from '@/app/services/riot.service';
 import { BLUR_IMAGE_PATH } from '@/app/utils';
 
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
 export default async function Page() {
   await riotService.init();
   const result: Record<string, any> = await lolService.getRotationChampions();
