@@ -1,6 +1,6 @@
 import { defaultStatsColumns } from '../../model/columns';
 
-export const lolColumns = [...defaultStatsColumns] as {
+export const tftColumns = [...defaultStatsColumns] as {
   accessorKey: string;
   header: string;
 }[];

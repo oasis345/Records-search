@@ -4,9 +4,9 @@ import React, { useEffect, useRef } from 'react';
 import { regions } from '../model/regions';
 import { Act } from '../model/interface';
 import { DataTable } from '@/app/components/table/DataTable';
-import { valorantColumns } from './columns';
+// import { valorantColumns } from './columns';
 import { gameStatsToModel } from '../../model/utils';
-import { ValorantStats } from '../model/stats';
+// import { ValorantStats } from '../model/stats';
 import DropDown from '../../../components/buttons/DropDown';
 import useQueryParams from '@/app/hooks/useQueryParams';
 
@@ -14,7 +14,7 @@ export default function Page() {
   const [region, setRegion] = React.useState('kr');
   const [acts, setActs] = React.useState<Act[]>([]);
   const [actId, setActId] = React.useState('4401f9fd-4170-2e4c-4bc3-f3b4d7d150d1');
-  const [data, setData] = React.useState<ValorantStats[]>([]);
+  // const [data, setData] = React.useState<ValorantStats[]>([]);
   const tableRef = useRef();
   const { searchParams, setQueryParam } = useQueryParams();
 

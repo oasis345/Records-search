@@ -32,7 +32,18 @@ export const navigation: Navigation = {
       name: 'tft',
       label: 'Team Fight Tactics',
       href: '/tft',
-      menus: [],
+      menus: [
+        {
+          name: '/',
+          href: '/tft',
+          label: '홈',
+        },
+        {
+          name: 'leaderboard',
+          href: '/tft/leaderboard',
+          label: '랭킹',
+        },
+      ],
       activated: true,
     },
     {

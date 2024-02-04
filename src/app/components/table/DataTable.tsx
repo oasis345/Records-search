@@ -1,28 +1,45 @@
 'use client';
 
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable, getPaginationRowModel } from '@tanstack/react-table';
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+  getPaginationRowModel,
+  SortingState,
+  getSortedRowModel,
+} from '@tanstack/react-table';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon } from '@radix-ui/react-icons';
 import { forwardRef, useImperativeHandle } from 'react';
+import React from 'react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  sort?: SortingState;
 }
 
 export const DataTable = forwardRef(function DataTable<TData, TValue>(
-  { columns, data }: DataTableProps<TData, TValue>,
+  { columns, data, sort }: DataTableProps<TData, TValue>,
   ref: any,
 ) {
+  const [sorting, setSorting] = React.useState<SortingState>(sort ?? []);
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     initialState: { pagination: { pageSize: 100, pageIndex: 0 } },
     pageCount: Math.ceil(data.length / 100),
+    onSortingChange: setSorting,
+    state: {
+      sorting,
+    },
   });
 
   useImperativeHandle(

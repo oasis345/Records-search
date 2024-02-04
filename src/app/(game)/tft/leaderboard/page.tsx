@@ -4,9 +4,9 @@ import React, { useEffect } from 'react';
 import { regions } from '../../model/regions';
 import { tiers } from '../model/tiers';
 import { DataTable } from '@/app/components/table/DataTable';
-import { lolColumns } from './columns';
+import { tftColumns } from './columns';
 import { gameStatsToModel } from '../../model/utils';
-import { LoLStats } from '../model/stats';
+import { TFTStats } from '../model/stats';
 import { httpService } from '@/app/services/httpService';
 import DropDown from '../../../components/buttons/DropDown';
 import useQueryParams from '@/app/hooks/useQueryParams';
@@ -20,8 +20,8 @@ export default function Page() {
   useEffect(() => {
     const fetchData = async () => {
       const params = { region, tier };
-      const result = await httpService.get<LoLStats[]>({ url: '/api/lol/leaderboard', params });
-      const data = result.map((data: LoLStats) => gameStatsToModel<LoLStats>(data, 'lol'));
+      const result = await httpService.get<TFTStats[]>({ url: '/api/tft/leaderboard', params });
+      const data = result.map((data: TFTStats) => gameStatsToModel<TFTStats>(data, 'lol'));
 
       setData(data);
     };
@@ -55,7 +55,7 @@ export default function Page() {
         ></DropDown>
       </div>
       <div className="flex flex-col">
-        <DataTable columns={lolColumns} data={data}></DataTable>
+        <DataTable columns={tftColumns} data={data} sort={[{ id: 'score', desc: true }]}></DataTable>
       </div>
     </div>
   );

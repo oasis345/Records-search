@@ -9,14 +9,12 @@ import { useNavigation } from '../hooks/useNavigation';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function TitleHome({
-  title,
   selectItems,
   selectedItem,
   keyField,
   labelField,
   placeholder,
 }: {
-  title: string;
   selectItems: Dict[];
   selectedItem?: any;
   keyField: string;
@@ -25,16 +23,16 @@ export default function TitleHome({
 }) {
   const [searchValue, setSearchValue] = React.useState('');
   const [region, setRegion] = React.useState(selectedItem);
-  const { router } = useNavigation();
+  const { router, currentTitle } = useNavigation();
 
   const goProfile = async () => {
-    router.push(`/${title}/profile/${region}/${encodeURIComponent(searchValue)}`);
+    router.push(`/${currentTitle}/profile/${region}/${encodeURIComponent(searchValue)}`);
   };
 
   return (
     <div className="flex flex-col h-full">
       <div className="relative flex flex-col h-80 items-center justify-center">
-        <Image fill src="/lol_main.jpg" alt="Image" priority className="relative object-cover" />
+        <Image fill src={`/${currentTitle}_main.jpg`} alt="Image" priority className="relative object-cover" />
         <p className="relative text-6xl font-bold z-1 bottom-10">logo</p>
         <div className="relative w-full px-5 flex justify-center z-1">
           <DropDown

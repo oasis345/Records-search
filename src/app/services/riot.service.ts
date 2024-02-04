@@ -3,11 +3,13 @@ import { HttpService } from './httpService';
 export class RiotService extends HttpService {
   private dragonApiVersion: string = '';
   spells: Record<string, any> = {};
+  champions: Record<string, any> = {};
 
   async init() {
     if (this.dragonApiVersion) return;
     this.dragonApiVersion = await this.getLatestDragonApiVersion();
     this.spells = await this.getSpells(this.dragonApiVersion);
+    this.champions = await this.getChampions(this.dragonApiVersion);
   }
 
   private async getLatestDragonApiVersion() {
@@ -21,6 +23,14 @@ export class RiotService extends HttpService {
   private async getSpells(version: string) {
     const result = await this.get<Record<string, any>>({
       url: `https://ddragon.leagueoflegends.com/cdn/${version}/data/ko_KR/summoner.json`,
+    });
+
+    return Object.values(result.data);
+  }
+
+  private async getChampions(version: string) {
+    const result = await this.get<Record<string, any>>({
+      url: `https://ddragon.leagueoflegends.com/cdn/${version}/data/ko_KR/champion.json`,
     });
 
     return Object.values(result.data);
