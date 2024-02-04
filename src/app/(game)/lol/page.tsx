@@ -10,7 +10,7 @@ import { BLUR_IMAGE_PATH } from '@/app/utils';
 export default async function Page() {
   await riotService.init();
   const result: Record<string, any> = await lolService.getRotationChampions();
-
+  ('');
   return (
     <>
       <TitleHome selectItems={regions} selectedItem={'kr'} keyField="name" labelField="label" />
