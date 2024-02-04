@@ -10,10 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Test lint
+      - name: Test
         uses: actions/setup-node@v3
         with:
           node-version: 20.x
           cache: 'npm'
       - run: npm ci
       - run: npm test
+      - run: npm build
