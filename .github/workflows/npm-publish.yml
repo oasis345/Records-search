@@ -12,9 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Setup NodeJs 16.x
+      - name: Test lint
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
+          cache: 'npm'
       - run: npm ci
       - run: npm test
