@@ -1,7 +1,7 @@
 import { regions } from '../model/regions';
 import React, { useEffect } from 'react';
 import TitleHome from '../TitleHome';
-import { lolService } from '@/app/services/lol.service';
+// import { lolService } from '@/app/services/lol.service';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
 import { riotService } from '@/app/services/riot.service';
@@ -10,7 +10,7 @@ import { BLUR_IMAGE_PATH } from '@/app/utils';
 export default async function Page() {
   // await riotService.init();
   // const result: Record<string, any> = await lolService.getRotationChampions();
-  // ('');
+
   return (
     <>
       <TitleHome selectItems={regions} selectedItem={'kr'} keyField="name" labelField="label" />
