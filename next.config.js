@@ -10,11 +10,10 @@ const nextConfig = {
   },
 
   async rewrites() {
-    const protocol = process?.env.NODE_ENV === 'development' ? 'http' : 'https';
     return [
       {
         source: '/api/:path*',
-        destination: `${protocol}://127.0.0.1:3000/api/:path*`,
+        destination: `/api/:path*`,
       },
       {
         source: '/lol/riot.txt',

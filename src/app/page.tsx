@@ -22,13 +22,6 @@ export default function App() {
           <NavigationCard minColWidth={150} data={data} />
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            <p>News</p>
-          </CardTitle>
-        </CardHeader>
-      </Card>
     </div>
   );
 }

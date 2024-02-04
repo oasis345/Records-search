@@ -56,7 +56,7 @@ export default function TitleHome({
           <Button onClick={goProfile}>검색</Button>
         </div>
       </div>
-      <div className="container flex">
+      {/* <div className="container flex">
         <Card className="w-1/2">
           <CardHeader>
             <CardTitle>패치 노트</CardTitle>
@@ -74,7 +74,7 @@ export default function TitleHome({
             <p>Card Content</p>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
     </div>
   );
 }
