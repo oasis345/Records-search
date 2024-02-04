@@ -11,7 +11,7 @@ export class RiotService extends HttpService {
   }
 
   private async getLatestDragonApiVersion() {
-    const result = await this.get({
+    const result = await this.get<any[]>({
       url: 'https://ddragon.leagueoflegends.com/api/versions.json',
     });
 
@@ -19,7 +19,7 @@ export class RiotService extends HttpService {
   }
 
   private async getSpells(version: string) {
-    const result = await this.get({
+    const result = await this.get<Record<string, any>>({
       url: `https://ddragon.leagueoflegends.com/cdn/${version}/data/ko_KR/summoner.json`,
     });
 

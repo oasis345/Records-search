@@ -15,7 +15,7 @@ class LolService extends HttpService {
   }
 
   async getMatches(puuid: string, region: string, start?: string): Promise<any[]> {
-    const matchIds = await this.get({
+    const matchIds = await this.get<string[]>({
       url: `https://${region}.${LOL_API_BASE_URL}/match/v5/matches/by-puuid/${puuid}/ids`,
       params: { start, count: 6, api_key: API_KEY },
     });

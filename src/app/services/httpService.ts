@@ -1,5 +1,8 @@
 export class HttpServiceError extends Error {
-  constructor(message: string, statusCode: number) {
+  constructor(
+    message: string,
+    public statusCode: number,
+  ) {
     super(message);
     this.statusCode = statusCode;
   }
@@ -19,7 +22,7 @@ export class HttpService {
       }
 
       return result;
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpServiceError(error.message, error.status ?? 500);
     }
   }

@@ -61,7 +61,7 @@ export default function Page({ params }: { params: any }) {
   };
 
   const fetchMatch = async (puuid: string, start: number = 0) => {
-    const result: Match[] = await httpService.get({
+    const result = await httpService.get<Match[]>({
       url: '/api/lol/matches',
       params: { region: continent, puuid, start },
     });

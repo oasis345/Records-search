@@ -15,13 +15,13 @@ export default function Page() {
   const { searchParams, setQueryParam } = useQueryParams();
   const [region, setRegion] = React.useState(searchParams.get('region') ?? 'kr');
   const [tier, setTier] = React.useState(searchParams.get('tier')?.toUpperCase() ?? 'CHALLENGER');
-  const [data, setData] = React.useState([]);
+  const [data, setData] = React.useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const params = { region, tier };
-      const result = await httpService.get({ url: '/api/lol/leaderboard', params });
-      const data = result.map((data: LolStats) => gameStatsToModel(data, 'lol'));
+      const result = await httpService.get<LolStats[]>({ url: '/api/lol/leaderboard', params });
+      const data = result.map((data: LolStats) => gameStatsToModel<LolStats>(data, 'lol'));
 
       setData(data);
     };
