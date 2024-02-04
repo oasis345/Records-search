@@ -1,4 +1,4 @@
-export interface SummonerInfo {
+export interface Summoner {
   accountId: string;
   id: string;
   name: string;
@@ -64,6 +64,8 @@ export interface Participant {
   item3: string;
   item4: string;
   item5: string;
+  summoner1Id: number;
+  summoner2Id: number;
   perks: Perks;
   objectives: Objectives;
   baron: Objective;

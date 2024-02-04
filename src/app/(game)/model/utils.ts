@@ -1,4 +1,4 @@
-import { LolStats } from '../lol/models/stats';
+import { LolStats } from '../lol/model/stats';
 import { ValorantStats } from '../val/model/stats';
 import { Game } from './model';
 

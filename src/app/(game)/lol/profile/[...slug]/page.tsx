@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { SummonerInfo, Match, Participant, TeamStats } from '../../models/interface';
+import React, { useEffect, useMemo, useCallback } from 'react';
+import { Summoner, Match, Participant, TeamStats } from '../../model/interface';
 import Image from 'next/image';
-import { gameModes } from '../../models/gameModes';
+import { gameModes } from '../../model/gameModes';
 import dayjs from '@/app/utils/dayjs';
 import { secondsToMinutes } from '@/app/utils';
 import { Button } from '@/components/ui/button';
@@ -11,53 +11,70 @@ import ProfileCard from '@/app/components/card/ProfileCard';
 import { useRecoilState } from 'recoil';
 import { searchHistoryState } from '@/app/store/searchHistoryState';
 import { AccordionCard } from '@/app/components/card/AccordionCard';
-import { httpService } from '@/app/services/rest.data.service';
+import { httpService } from '@/app/services/httpService';
 import { riotService } from '@/app/services/riot.service';
-import { regions } from '../../models/regions';
+import { regions } from '../../../model/regions';
 import { SearchItem } from '@/app/types/interface';
+import { Card, CardHeader } from '@/components/ui/card';
+import { useNavigation } from '@/app/hooks/useNavigation';
+import { BLUR_IMAGE_PATH } from '@/app/utils';
 
 export default function Page({ params }: { params: any }) {
-  const [summonerInfo, setSummonerInfo] = React.useState<SummonerInfo>({} as SummonerInfo);
+  const [summoner, setSummoner] = React.useState<Summoner>({} as Summoner);
   const [matches, setMatches] = React.useState<Match[]>([]);
   const [isNotFound, setIsNotFound] = React.useState(false);
+  const [accordionItems, setAccordionItems] = React.useState<AccordionCardItemProps[]>([]);
+  const { router, currentTitle } = useNavigation();
   const [histories, setHistories] = useRecoilState<SearchItem[]>(searchHistoryState);
-  const [region, searchText] = decodeURIComponent(params.slug).split(',');
-  const { parent } = regions.find((item) => item.name === region)!;
+  const [region, searchText] = useMemo(() => decodeURIComponent(params.slug).split(','), [params.slug]);
+  const continent = useMemo(() => regions.find((item) => item.name === region)?.parent ?? 'asia', [region]);
 
   useEffect(() => {
-    fetchData();
+    init();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const fetchData = async () => {
+  const init = async () => {
+    await riotService.init();
+    const summoner = await fetchSummoner();
+
+    if (summoner?.puuid) {
+      setSummoner(summoner);
+
+      if (!histories.find((item) => item.name === summoner?.name))
+        setHistories([...histories, { title: currentTitle, name: summoner.name, region }]);
+
+      loadMatch(summoner);
+    }
+  };
+
+  const fetchSummoner = async () => {
     try {
-      await riotService.init();
-      const summoner = await httpService.get({ url: '/api/lol/getSummoner', params: { region, name: searchText } });
+      const result = await httpService.get<Summoner>({
+        url: '/api/lol/summoner',
+        params: { region, name: searchText },
+      });
 
-      if (!histories.find((item) => item.name === summoner.name))
-        setHistories([...histories, { name: summoner.name, region }]);
-
-      setSummonerInfo(summoner);
-      fetchMatchData(summoner.puuid);
+      return result;
     } catch (error) {
       setIsNotFound(true);
     }
   };
 
-  const fetchMatchData = async (puuid: string, start: number = 0) => {
-    const matchData: Match[] = await httpService.get({
-      url: '/api/lol/getMatches',
-      params: { region: parent, puuid, start },
+  const fetchMatch = async (puuid: string, start: number = 0) => {
+    const result: Match[] = await httpService.get({
+      url: '/api/lol/matches',
+      params: { region: continent, puuid, start },
     });
 
-    if (matches.length === 0) {
-      setMatches(matchData);
-    } else if (matchData.length > 0) {
-      setMatches([...matches, ...matchData]);
-    }
+    return result;
   };
 
-  const findMyMatchData = (match: Match): Participant => {
-    return match.info.participants.find((participant) => participant.puuid === summonerInfo?.puuid)!;
+  const loadMatch = async (summoner: Summoner) => {
+    const matchData = await fetchMatch(summoner.puuid, matches.length);
+    setMatches([...matches, ...matchData]);
+    setAccordionItems([...accordionItems, ...createAccordionItems(matchData, summoner)]);
   };
 
   const TeamParticipants: React.FC<{ participants: Participant[] }> = ({ participants }) => {
@@ -75,7 +92,9 @@ export default function Page({ params }: { params: any }) {
                 height={18}
                 style={{ height: '18px' }}
                 src={riotService.getImageUrl('champion', participant.championName)}
-                alt="Image"
+                alt="Participant Image"
+                placeholder="blur"
+                blurDataURL={BLUR_IMAGE_PATH}
               />
               <p className="text-xs text-ellipsis overflow-hidden text-nowrap">{participant.riotIdGameName}</p>
             </div>
@@ -86,15 +105,16 @@ export default function Page({ params }: { params: any }) {
   };
 
   const MatchResult: React.FC<{ match: Match; participant: Participant }> = ({ match, participant }) => {
+    const { info } = match;
     const { win } = participant;
-    const gameModeLabel = gameModes.find((mode) => mode.key === match.info.gameMode)?.label;
-    const formattedGameCreationDate = dayjs(match.info.gameCreation).format('MM월 DD일');
-    const { minutes: durationMinutes, remainingSeconds: durationSeconds } = secondsToMinutes(match.info.gameDuration);
+    const gameModeLabel = gameModes.find((mode) => mode.key === info.gameMode)?.label;
+    const formattedGameCreationDate = dayjs(info.gameCreation).format('MM월 DD일');
+    const { minutes: durationMinutes, remainingSeconds: durationSeconds } = secondsToMinutes(info.gameDuration);
 
     return (
       <div className="flex md:flex-col lg:flex-col md:w-32 lg:w-32 w-full items-center">
         <p className={`mx-1 font-bold ${win ? 'text-blue-500' : 'text-red-500'}`}>{win ? '승리' : '패배'}</p>
-        <p className="mx-1 text-sm">{gameModeLabel ?? match.info.gameMode}</p>
+        <p className="mx-1 text-sm">{gameModeLabel ?? info.gameMode}</p>
         <p className="mx-1 text-xs">{`${durationMinutes}분 ${durationSeconds}초`}</p>
         <p className="mx-1 text-xs">{formattedGameCreationDate}</p>
       </div>
@@ -118,8 +138,10 @@ export default function Page({ params }: { params: any }) {
             height={size}
             style={{ height: `${size}px` }}
             src={riotService.getImageUrl('item', itemNumber)}
-            alt="Image"
-          />
+            alt="Item Image"
+            placeholder="blur"
+            blurDataURL={BLUR_IMAGE_PATH}
+          />,
         );
       }
     }
@@ -137,15 +159,37 @@ export default function Page({ params }: { params: any }) {
     const csPerMinute = (totalMinionsKilled / secondsToMinutes(match.info.gameDuration).minutes).toFixed(1);
 
     return (
-      <div className="flex w-full p-2 items-center">
-        <div className="flex text-xs text-nowrap items-center w-1/2">
-          <Image
-            width={isDetail ? 34 : 48}
-            height={isDetail ? 34 : 48}
-            src={riotService.getImageUrl('champion', participant.championName)}
-            alt="Champion Image"
-          />
-          <div className="items-center text-ellipsis overflow-hidden px-2 ">
+      <div className="flex w-full p-2 items-center justify-between">
+        <div className="flex text-xs text-nowrap items-center grow shrink-0">
+          <div className="flex">
+            <Image
+              width={isDetail ? 34 : 48}
+              height={isDetail ? 34 : 48}
+              src={riotService.getImageUrl('champion', participant.championName)}
+              alt="Champion Image"
+              placeholder="blur"
+              blurDataURL={BLUR_IMAGE_PATH}
+            />
+            <div className="grid grid-cols-1 gap-1 px-1">
+              <Image
+                width={isDetail ? 15 : 22}
+                height={isDetail ? 15 : 22}
+                src={riotService.getImageUrl('spell', participant.summoner1Id)}
+                alt="spell_1"
+                placeholder="blur"
+                blurDataURL={BLUR_IMAGE_PATH}
+              />
+              <Image
+                width={isDetail ? 15 : 22}
+                height={isDetail ? 15 : 22}
+                src={riotService.getImageUrl('spell', participant.summoner2Id)}
+                alt="spell_2"
+                placeholder="blur"
+                blurDataURL={BLUR_IMAGE_PATH}
+              />
+            </div>
+          </div>
+          <div className="items-center text-ellipsis overflow-hidden grow">
             {isDetail && <p>{`${riotIdGameName}`}</p>}
             <div className="flex font-bold text-xs items-center" style={{ flexDirection: isDetail ? 'row' : 'column' }}>
               <span className="flex">
@@ -156,12 +200,12 @@ export default function Page({ params }: { params: any }) {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center text-nowrap px-2 w-1/4">
+        <div className="hidden lg:flex md:flex flex-col items-center text-nowrap px-2 grow">
           <p className="text-xs"> {`cs ${totalMinionsKilled} (${csPerMinute}/m)`} </p>
           <p className="text-xs"> {`${totalDamageTaken} 피해량`} </p>
         </div>
         <div id="items" className="grid grid-cols-4 gap-1 px-2">
-          <Items participant={participant} size={isDetail ? 20 : 24} />
+          <Items participant={participant} size={isDetail ? 22 : 28} />
         </div>
       </div>
     );
@@ -191,105 +235,93 @@ export default function Page({ params }: { params: any }) {
     );
   };
 
-  const calculateTeamStats = (participants: Participant[]): TeamStats => {
-    return participants.reduce<TeamStats>(
-      (totals, participant) => {
-        totals.totalKills += participant.kills;
-        totals.totalAssists += participant.assists;
-        totals.totalDeaths += participant.deaths;
-        return totals;
-      },
-      { totalKills: 0, totalAssists: 0, totalDeaths: 0 }
-    );
-  };
+  const createAccordionItems = (matches: Match[], summoner: Summoner) => {
+    return matches.map((match) => {
+      const {
+        metadata: { matchId },
+        info: { participants, ...info },
+      } = match;
+      const myInfo = match.info.participants.find((participant) => participant.puuid === summoner?.puuid)!;
+      const defaultModeTeamIds = [100, 200];
+      const getSeparatedTeams = (
+        participants: Participant[],
+        teamIds: number[],
+        filterFunc: (participant: Participant, id: number) => boolean,
+      ) => {
+        return teamIds.map((id) => {
+          const teams = participants.filter((participant) => filterFunc(participant, id));
+          return {
+            participants: teams,
+            stats: teams.reduce<TeamStats>(
+              (totals, participant) => {
+                totals.totalKills += participant.kills;
+                totals.totalAssists += participant.assists;
+                totals.totalDeaths += participant.deaths;
+                return totals;
+              },
+              { totalKills: 0, totalAssists: 0, totalDeaths: 0 },
+            ),
+          };
+        });
+      };
 
-  const getTeamParticipants = (
-    participants: Participant[],
-    filterFunc: (participant: Participant) => boolean
-  ): Participant[] => {
-    return participants.filter(filterFunc);
-  };
+      const defaultModeTeams = getSeparatedTeams(
+        participants,
+        defaultModeTeamIds,
+        (participant, id) => participant.teamId === id,
+      );
 
-  const getSeparatedTeams = (
-    participants: Participant[],
-    teamIds: number[],
-    filterFunc: (participant: Participant, id: number) => boolean
-  ) => {
-    return teamIds.map((id) => {
-      const teams = getTeamParticipants(participants, (participant) => filterFunc(participant, id));
+      const getDetailContentByMode = (mode: string) => {
+        switch (mode) {
+          case 'CHERRY':
+            const cherryModeTeamIds = [1, 2, 3, 4];
+
+            return getSeparatedTeams(
+              participants,
+              cherryModeTeamIds,
+              (participant, id) => participant.playerSubteamId === id,
+            ).map((team: any, index: number) => (
+              <Detail key={index} match={match} participants={team.participants} teamStats={team.stats} />
+            ));
+          default:
+            return (
+              <div className="flex flex-col md:flex-row lg:flex-row">
+                {defaultModeTeams.map((team: any, index: number) => (
+                  <Detail key={index} match={match} participants={team.participants} teamStats={team.stats} />
+                ))}
+              </div>
+            );
+        }
+      };
+
       return {
-        participants: teams,
-        stats: calculateTeamStats(teams),
+        key: matchId,
+        item: match,
+        header: <MatchResult match={match} participant={myInfo} />,
+        content: <MainContent participant={myInfo} match={match} />,
+        subContent: defaultModeTeams.map((team: any, index: number) => (
+          <TeamParticipants key={index} participants={team.participants} />
+        )),
+        detail: getDetailContentByMode(info.gameMode),
       };
     });
   };
 
-  const accordionItems = matches.map((match) => {
-    const { metadata, info } = match;
-    const { participants } = info;
-    const { matchId } = metadata;
-
-    const header = <MatchResult match={match} participant={findMyMatchData(match)} />;
-    const content = <MainContent participant={findMyMatchData(match)} match={match} />;
-
-    const getDetailContentByMode = (mode: string, defaultModeTeams: any[], cherryModeTeams: any[]) => {
-      switch (mode) {
-        case 'CHERRY':
-          return cherryModeTeams.map((team: any, index: number) => (
-            <Detail key={index} match={match} participants={team.participants} teamStats={team.stats} />
-          ));
-        default:
-          return (
-            <div className="flex flex-col md:flex-row lg:flex-row">
-              {defaultModeTeams.map((team: any, index: number) => (
-                <Detail key={index} match={match} participants={team.participants} teamStats={team.stats} />
-              ))}
-            </div>
-          );
-      }
-    };
-
-    const defaultModeTeamIds = [100, 200];
-    const cherryModeTeamIds = [1, 2, 3, 4];
-
-    const defaultModeTeams = getSeparatedTeams(
-      participants,
-      defaultModeTeamIds,
-      (participant, id) => participant.teamId === id
-    );
-    const cherryModeTeams = getSeparatedTeams(
-      participants,
-      cherryModeTeamIds,
-      (participant, id) => participant.playerSubteamId === id
-    );
-
-    const subContent = defaultModeTeams.map((team: any, index: number) => (
-      <TeamParticipants key={index} participants={team.participants} />
-    ));
-
-    const detail = getDetailContentByMode(info.gameMode, defaultModeTeams, cherryModeTeams);
-
-    return {
-      key: matchId,
-      item: match,
-      header,
-      content,
-      subContent,
-      detail,
-    };
-  });
-
   return isNotFound ? (
-    <div>존재하지 않는 유저입니다</div>
+    <Card className="container flex justify-center">
+      <CardHeader>
+        <p>{`'${region.toUpperCase()}'지역 내 '${searchText}'검색 결과가 업습니다.`}</p>
+        <Button className="w-full" onClick={() => router.push('/lol')}>
+          돌아가기
+        </Button>
+      </CardHeader>
+    </Card>
   ) : (
-    summonerInfo.puuid && (
-      <div>
-        <ProfileCard
-          imageSrc={riotService.getImageUrl('profileIcon', summonerInfo.profileIconId)}
-          name={summonerInfo.name}
-        />
+    summoner.puuid && (
+      <div className="container">
+        <ProfileCard imageSrc={riotService.getImageUrl('profileIcon', summoner.profileIconId)} name={summoner.name} />
         <AccordionCard title="매치 이력" type="multiple" items={accordionItems}></AccordionCard>
-        <Button className="w-full" onClick={() => fetchMatchData(summonerInfo.puuid, matches.length)}>
+        <Button className="w-full" onClick={() => loadMatch(summoner)}>
           더 보기
         </Button>
       </div>

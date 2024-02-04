@@ -14,7 +14,7 @@ interface DataTableProps<TData, TValue> {
 
 export const DataTable = forwardRef(function DataTable<TData, TValue>(
   { columns, data }: DataTableProps<TData, TValue>,
-  ref: any
+  ref: any,
 ) {
   const table = useReactTable({
     data,
@@ -32,7 +32,7 @@ export const DataTable = forwardRef(function DataTable<TData, TValue>(
         table: table,
       };
     },
-    [table]
+    [table],
   );
 
   return (

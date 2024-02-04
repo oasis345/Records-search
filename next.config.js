@@ -3,9 +3,6 @@ const nextConfig = {
   images: {
     remotePatterns: [{ protocol: 'https', hostname: 'ddragon.leagueoflegends.com' }],
   },
-  experimental: {
-    serverActions: true,
-  },
   reactStrictMode: false,
   webpack(config) {
     config.experiments = { ...config.experiments, topLevelAwait: true };
@@ -13,13 +10,12 @@ const nextConfig = {
   },
 
   async rewrites() {
+    const protocol = process?.env.NODE_ENV === 'development' ? 'http' : 'https';
     return [
-      process.env.NODE_ENV === 'development'
-        ? {
-            source: '/api/:path*',
-            destination: 'http://localhost:8080/api/:path*',
-          }
-        : { source: '/api/:path*', destination: 'https://server-oasis345.vercel.app/api/:path*' },
+      {
+        source: '/api/:path*',
+        destination: `${protocol}://127.0.0.1:3000/api/:path*`,
+      },
       {
         source: '/lol/riot.txt',
         destination: '/certificate/lol',

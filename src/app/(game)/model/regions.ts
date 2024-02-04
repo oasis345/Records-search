@@ -14,14 +14,4 @@ export const regions = [
     label: '북아메리카',
     parent: 'americas',
   },
-  {
-    name: 'la1',
-    label: '라틴아메리카',
-    parent: 'americas',
-  },
-  {
-    name: 'br1',
-    label: '브라질',
-    parent: 'americas',
-  },
 ];

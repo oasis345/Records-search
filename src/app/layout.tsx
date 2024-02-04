@@ -6,7 +6,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: '전적검색 사이트',
-  description: 'AI를 이용한 전적검색 사이트',
+  description: 'Nextjs를 활용한 전적검색 사이트 입니다',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -20,10 +20,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Navbar></Navbar>
               </header>
 
-              <main className="container flex flex-1 mx-auto px-4 py-8">
-                <article className="w-full mx-auto">
-                  <section>{children}</section>
-                </article>
+              <main>
+                <section className="w-full mx-auto">{children}</section>
               </main>
 
               <footer></footer>

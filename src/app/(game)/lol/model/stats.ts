@@ -6,7 +6,7 @@ export class LolStats extends DefaultGameStats {
     public tier: string,
     public wins: number,
     public losses: number,
-    public leaguePoints: number
+    public leaguePoints: number,
   ) {
     super(summonerName, tier, leaguePoints, wins);
   }

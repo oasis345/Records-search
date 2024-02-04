@@ -8,7 +8,7 @@ export class ValorantStats extends DefaultGameStats {
     public numberOfWins: number,
     public puuid: string,
     public rankedRating: number,
-    public tagLine: string
+    public tagLine: string,
   ) {
     super(gameName, competitiveTier, rankedRating, numberOfWins);
   }

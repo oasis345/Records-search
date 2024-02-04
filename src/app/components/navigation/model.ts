@@ -21,11 +21,18 @@ export const navigation: Navigation = {
           label: '홈',
         },
         {
-          name: 'leaderboards',
-          href: '/lol/leaderboards',
+          name: 'leaderboard',
+          href: '/lol/leaderboard',
           label: '랭킹',
         },
       ],
+      activated: true,
+    },
+    {
+      name: 'tft',
+      label: 'Team Fight Tactics',
+      href: '/tft',
+      menus: [],
       activated: true,
     },
     {
@@ -39,18 +46,11 @@ export const navigation: Navigation = {
           label: '홈',
         },
         {
-          name: 'leaderboards',
-          href: '/val/leaderboards',
+          name: 'leaderboard',
+          href: '/val/leaderboard',
           label: '랭킹',
         },
       ],
-      activated: false,
-    },
-    {
-      name: 'tft',
-      label: 'Team Fight Tactics',
-      href: '/tft',
-      menus: [],
       activated: false,
     },
     {

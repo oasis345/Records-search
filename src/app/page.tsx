@@ -11,7 +11,7 @@ export default function App() {
   });
 
   return (
-    <>
+    <div className="container">
       <Card>
         <CardHeader>
           <CardTitle>
@@ -29,6 +29,6 @@ export default function App() {
           </CardTitle>
         </CardHeader>
       </Card>
-    </>
+    </div>
   );
 }

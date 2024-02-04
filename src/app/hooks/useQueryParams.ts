@@ -13,7 +13,7 @@ export default function useQueryParams() {
 
       return params.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   const setQueryParam = (queryName: string, value: string) => {
