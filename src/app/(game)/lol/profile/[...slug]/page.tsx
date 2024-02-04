@@ -33,6 +33,8 @@ export default function Page({ params }: { params: any }) {
     init();
   }, []);
 
+  123;
+
   const init = async () => {
     await riotService.init();
     const summoner = await fetchSummoner();
