@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "prettier": "prettier --write **/*.{ts,tsx}",
-    "test": "npm run prettier && npm run lint"
+    "test": "npm run prettier && npm run lint && npm run build"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
