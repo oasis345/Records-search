@@ -8,13 +8,13 @@ import { riotService } from '@/app/services/riot.service';
 import { BLUR_IMAGE_PATH } from '@/app/utils';
 
 export default async function Page() {
-  await riotService.init();
-  const result: Record<string, any> = await lolService.getRotationChampions();
+  // await riotService.init();
+  // const result: Record<string, any> = await lolService.getRotationChampions();
 
   return (
     <>
       <TitleHome selectItems={regions} selectedItem={'kr'} keyField="name" labelField="label" />
-      <div className="container py-5">
+      {/* <div className="container py-5">
         <Card>
           <CardHeader>
             <CardTitle>로테이션 챔피언</CardTitle>
@@ -41,7 +41,7 @@ export default async function Page() {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
     </>
   );
 }
