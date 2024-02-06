@@ -28,7 +28,7 @@ export default function Page({ params }: { params: any }) {
   const { currentTitle } = useNavigation();
   const [histories, setHistories] = useRecoilState<SearchItem[]>(searchHistoryState);
   const [region, searchText] = useMemo(() => decodeURIComponent(params.slug).split(','), [params.slug]);
-  const continent = useMemo(() => regions.find((item) => item.name === region)?.parent ?? 'asia', [region]);
+  const continent = useMemo(() => regions.find((item) => item.name === region)?.continent ?? 'asia', [region]);
 
   useEffect(() => {
     init();
