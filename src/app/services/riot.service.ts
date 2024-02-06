@@ -1,4 +1,5 @@
 import { HttpService } from './httpService';
+const API_KEY = process.env.LOL_API_KEY;
 
 export class RiotService extends HttpService {
   private dragonApiVersion: string = '';
@@ -34,6 +35,32 @@ export class RiotService extends HttpService {
     });
 
     return Object.values(result.data);
+  }
+
+  async getAccountByRiotId({
+    region,
+    name,
+    tag,
+  }: {
+    region: string;
+    name: string;
+    tag: string;
+  }): Promise<Record<string, any>> {
+    const result = await this.get<Record<string, any>>({
+      url: `https://${region}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${name}/${tag}`,
+      params: { api_key: API_KEY },
+    });
+
+    return result;
+  }
+
+  async getAccountByPuuid(region: string, puuid: string): Promise<Record<string, any>> {
+    const result = await this.get<Record<string, any>>({
+      url: `https://${region}.api.riotgames.com/riot/account/v1/accounts/by-puuid/${puuid}`,
+      params: { api_key: API_KEY },
+    });
+
+    return result;
   }
 
   getImageUrl(category: 'profileIcon' | 'champion' | 'item' | 'spell', name: string | number): string {

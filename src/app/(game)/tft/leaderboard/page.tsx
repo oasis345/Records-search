@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { regions } from '../../model/regions';
+import { regions } from '../../lol/model/regions';
 import { tiers } from '../model/tiers';
 import { DataTable } from '@/app/components/table/DataTable';
 import { tftColumns } from './columns';

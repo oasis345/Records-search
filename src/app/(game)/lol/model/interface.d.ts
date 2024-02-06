@@ -1,4 +1,6 @@
 export interface Summoner {
+  gameName: string;
+  tagLine: string;
   accountId: string;
   id: string;
   name: string;

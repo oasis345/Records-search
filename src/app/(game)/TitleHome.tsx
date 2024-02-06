@@ -1,6 +1,6 @@
 'use client';
 import DropDown from '@/app/components/buttons/DropDown';
-import SearchBar from '@/app/components/search/SearchBar';
+import SearchBar from '@/app/(game)/components/SearchBar';
 import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';

@@ -4,7 +4,7 @@ export class HttpServiceError extends Error {
     public statusCode: number,
   ) {
     super(message);
-    this.statusCode = statusCode;
+    this.statusCode = statusCode ?? 500;
   }
 }
 
@@ -23,7 +23,7 @@ export class HttpService {
 
       return result;
     } catch (error: any) {
-      throw new HttpServiceError(error.message, error.status ?? 500);
+      throw new HttpServiceError(error.message, error.status);
     }
   }
 }

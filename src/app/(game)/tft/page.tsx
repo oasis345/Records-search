@@ -1,4 +1,4 @@
-import { regions } from '../model/regions';
+import { regions } from '../lol/model/regions';
 import React, { useEffect } from 'react';
 import TitleHome from '../TitleHome';
 

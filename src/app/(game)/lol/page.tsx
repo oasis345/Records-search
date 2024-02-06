@@ -1,5 +1,5 @@
-import { regions } from '../model/regions';
-import React, { useEffect } from 'react';
+import { regions } from './model/regions';
+import React from 'react';
 import TitleHome from '../TitleHome';
 import { lolService } from '@/app/services/lol.service';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,7 +13,13 @@ export default async function Page() {
 
   return (
     <>
-      <TitleHome selectItems={regions} selectedItem={'kr'} keyField="name" labelField="label" />
+      <TitleHome
+        selectItems={regions}
+        selectedItem={'kr'}
+        keyField="name"
+        labelField="label"
+        placeholder="플레이어 이름 + #태그"
+      />
       <div className="container py-5">
         <Card>
           <CardHeader>

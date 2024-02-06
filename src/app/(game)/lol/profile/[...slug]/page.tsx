@@ -1,30 +1,31 @@
 'use client';
 
-import React, { useEffect, useMemo, useCallback } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Summoner, Match, Participant, TeamStats } from '../../model/interface';
 import Image from 'next/image';
 import { gameModes } from '../../model/gameModes';
 import dayjs from '@/app/utils/dayjs';
 import { secondsToMinutes } from '@/app/utils';
 import { Button } from '@/components/ui/button';
-import ProfileCard from '@/app/components/card/ProfileCard';
+import ProfileCard from '@/app/(game)/components/ProfileCard';
 import { useRecoilState } from 'recoil';
 import { searchHistoryState } from '@/app/store/searchHistoryState';
 import { AccordionCard } from '@/app/components/card/AccordionCard';
 import { httpService } from '@/app/services/httpService';
 import { riotService } from '@/app/services/riot.service';
-import { regions } from '../../../model/regions';
+import { regions } from '../../model/regions';
 import { SearchItem } from '@/app/types/interface';
-import { Card, CardHeader } from '@/components/ui/card';
 import { useNavigation } from '@/app/hooks/useNavigation';
 import { BLUR_IMAGE_PATH } from '@/app/utils';
+import { List } from '@/app/components/list/List';
+import { NotFoundUserPage } from '@/app/(game)/components/NotFoundPage';
 
 export default function Page({ params }: { params: any }) {
   const [summoner, setSummoner] = React.useState<Summoner>({} as Summoner);
   const [matches, setMatches] = React.useState<Match[]>([]);
   const [isNotFound, setIsNotFound] = React.useState(false);
   const [accordionItems, setAccordionItems] = React.useState<AccordionCardItemProps[]>([]);
-  const { router, currentTitle } = useNavigation();
+  const { currentTitle } = useNavigation();
   const [histories, setHistories] = useRecoilState<SearchItem[]>(searchHistoryState);
   const [region, searchText] = useMemo(() => decodeURIComponent(params.slug).split(','), [params.slug]);
   const continent = useMemo(() => regions.find((item) => item.name === region)?.parent ?? 'asia', [region]);
@@ -40,8 +41,8 @@ export default function Page({ params }: { params: any }) {
     if (summoner?.puuid) {
       setSummoner(summoner);
 
-      if (!histories.find((item) => item.name === summoner?.name))
-        setHistories([...histories, { title: currentTitle, name: summoner.name, region }]);
+      if (!histories.find((item) => item.name === summoner.gameName))
+        setHistories([...histories, { title: currentTitle, name: summoner.gameName, region, tag: summoner.tagLine }]);
 
       loadMatch(summoner);
     }
@@ -69,36 +70,26 @@ export default function Page({ params }: { params: any }) {
     return result;
   };
 
-  const loadMatch = async (summoner: Summoner) => {
-    const matchData = await fetchMatch(summoner.puuid, matches.length);
+  const loadMatch = async (summoner: Summoner, startIndex: number = 0) => {
+    const matchData = await fetchMatch(summoner.puuid, startIndex);
     setMatches([...matches, ...matchData]);
     setAccordionItems([...accordionItems, ...createAccordionItems(matchData, summoner)]);
   };
 
-  const TeamParticipants: React.FC<{ participants: Participant[] }> = ({ participants }) => {
+  const ParticipantList: React.FC<{ participants: Participant[] }> = ({ participants }) => {
     return (
-      <div className="hidden lg:grid md:grid grid w-40 gap-1">
-        {participants.map((participant) => {
-          return (
-            <div
-              key={participant.puuid}
-              className="flex w-28 cursor-pointer"
-              onClick={() => window.open(`/lol/profile/${region}/${participant.summonerName}`)}
-            >
-              <Image
-                width={18}
-                height={18}
-                style={{ height: '18px' }}
-                src={riotService.getImageUrl('champion', participant.championName)}
-                alt="Participant Image"
-                placeholder="blur"
-                blurDataURL={BLUR_IMAGE_PATH}
-              />
-              <p className="text-xs text-ellipsis overflow-hidden text-nowrap">{participant.riotIdGameName}</p>
-            </div>
-          );
-        })}
-      </div>
+      <List
+        items={participants}
+        keyField="puuid"
+        valueField="riotIdGameName"
+        classes="hidden lg:grid md:grid grid w-40 gap-1"
+        itemClasses="flex w-28 text-xs text-ellipsis overflow-hidden text-nowrap"
+        imageOptions={{
+          getImageSrc: (item: Participant) => riotService.getImageUrl('champion', item.championName),
+          size: 18,
+        }}
+        onItemClick={(item) => window.open(`/lol/profile/${region}/${item.summonerName}`)}
+      />
     );
   };
 
@@ -298,7 +289,7 @@ export default function Page({ params }: { params: any }) {
         header: <MatchResult match={match} participant={myInfo} />,
         content: <MainContent participant={myInfo} match={match} />,
         subContent: defaultModeTeams.map((team: any, index: number) => (
-          <TeamParticipants key={index} participants={team.participants} />
+          <ParticipantList key={index} participants={team.participants} />
         )),
         detail: getDetailContentByMode(info.gameMode),
       };
@@ -306,22 +297,21 @@ export default function Page({ params }: { params: any }) {
   };
 
   return isNotFound ? (
-    <Card className="container flex justify-center">
-      <CardHeader>
-        <p>{`'${region.toUpperCase()}'지역 내 '${searchText}'검색 결과가 업습니다.`}</p>
-        <Button className="w-full" onClick={() => router.push('/lol')}>
-          돌아가기
-        </Button>
-      </CardHeader>
-    </Card>
+    <NotFoundUserPage region={region.toUpperCase()} title={currentTitle} searchText={searchText} />
   ) : (
     summoner.puuid && (
       <div className="container">
-        <ProfileCard imageSrc={riotService.getImageUrl('profileIcon', summoner.profileIconId)} name={summoner.name} />
+        <ProfileCard
+          imageSrc={riotService.getImageUrl('profileIcon', summoner.profileIconId)}
+          name={`${summoner.gameName}#${summoner.tagLine}`}
+          onClick={() => {}}
+        />
         <AccordionCard title="매치 이력" type="multiple" items={accordionItems}></AccordionCard>
-        <Button className="w-full" onClick={() => loadMatch(summoner)}>
-          더 보기
-        </Button>
+        {matches.length < 40 && (
+          <Button className="w-full" onClick={() => loadMatch(summoner, matches.length)}>
+            더 보기
+          </Button>
+        )}
       </div>
     )
   );

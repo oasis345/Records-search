@@ -50,8 +50,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ value, placeholder, onChange, onK
   };
 
   const goToProfilePage = async (item: SearchItem) => {
-    const { region, name } = item;
-    router.push(`/lol/profile/${region}/${name}`);
+    const { region, name, tag } = item;
+    const searchText = tag ? `${name}#${tag}` : name;
+
+    router.push(`/${currentTitle}/profile/${region}/${encodeURIComponent(searchText)}`);
   };
 
   const isAlreadyAdded = (item: SearchItem) => favorites.some((i) => i.name === item.name);
