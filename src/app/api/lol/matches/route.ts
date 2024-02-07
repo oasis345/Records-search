@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   const start = request.nextUrl.searchParams.get('start')!;
 
   try {
-    const result = await lolService.getMatches(puuid, region, start);
+    const result = await lolService.getMatches({ puuid, region, start });
 
     return NextResponse.json(result);
   } catch (error: any) {

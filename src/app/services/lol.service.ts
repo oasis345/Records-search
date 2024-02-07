@@ -2,6 +2,7 @@ import { regions } from '@/app/(game)/lol/model/regions';
 import { HttpService } from './httpService';
 import { riotService } from './riot.service';
 import _ from 'lodash';
+import { Match, Summoner } from '../(game)/lol/model/interface';
 
 const API_KEY = process.env.LOL_API_KEY;
 const API_BASE_URL = 'api.riotgames.com/lol';
@@ -12,10 +13,10 @@ class LOLService extends HttpService {
     return await this.get({ url, params: { api_key: API_KEY } });
   }
 
-  async getSummoner({ region, name }: { region: string; name: string }): Promise<Record<string, any>> {
+  async getSummoner({ region, name }: { region: string; name: string }): Promise<Summoner> {
     const continent = regions.find((item) => item.name === region)!.continent;
     const [summonerName, tag] = name.split('#');
-    let result: Record<string, any> = {};
+    let result: any = {};
 
     if (summonerName && tag) {
       const account = await riotService.getAccountByRiotId({ region: continent, name: summonerName, tag });
@@ -38,19 +39,29 @@ class LOLService extends HttpService {
     return result;
   }
 
-  async getMatches(puuid: string, region: string, start?: string): Promise<any[]> {
+  async getMatches({
+    puuid,
+    region,
+    start = 0,
+  }: {
+    puuid: string;
+    region: string;
+    start?: number | string;
+  }): Promise<Match[]> {
+    const continent = regions.find((item) => item.name === region)!.continent;
+
     const matchIds = await this.get<string[]>({
-      url: `https://${region}.${API_BASE_URL}/match/v5/matches/by-puuid/${puuid}/ids`,
+      url: `https://${continent}.${API_BASE_URL}/match/v5/matches/by-puuid/${puuid}/ids`,
       params: { start, count: 20, api_key: API_KEY },
     });
 
     const matchPromises = matchIds.map((matchId: string) => {
-      const matchUrl = `https://${region}.${API_BASE_URL}/match/v5/matches/${matchId}`;
+      const matchUrl = `https://${continent}.${API_BASE_URL}/match/v5/matches/${matchId}`;
       return this.get({ url: matchUrl, params: { api_key: API_KEY } });
     });
 
     const result = await Promise.all(matchPromises);
-    return result;
+    return result as Match[];
   }
 
   async getRotationChampions(): Promise<any[]> {

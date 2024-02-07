@@ -1,3 +1,9 @@
+export interface RiotApiResource {
+  spells: Record<string, any>;
+  champions: Record<string, any>;
+  apiVersion: string;
+}
+
 export interface Summoner {
   gameName: string;
   tagLine: string;

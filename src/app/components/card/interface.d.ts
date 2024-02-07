@@ -1,9 +1,3 @@
-interface ProfileCardProps {
-  imageSrc: string;
-  name: string;
-  onClick: () => void;
-}
-
 interface AccordionCardProps {
   type: 'multiple' | 'single';
   title: string;

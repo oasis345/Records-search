@@ -2,6 +2,7 @@ export const gameModes = [
   {
     key: 'CLASSIC',
     label: '솔로 랭크',
+    teamIds: [100, 200],
   },
   {
     key: 'ODIN',
@@ -9,10 +10,12 @@ export const gameModes = [
   {
     key: 'ARAM',
     label: '총력전',
+    teamIds: [100, 200],
   },
   {
     key: 'CHERRY',
     label: '아레나',
+    teamIds: [1, 2, 3, 4],
   },
   {
     key: 'TUTORIAL',
