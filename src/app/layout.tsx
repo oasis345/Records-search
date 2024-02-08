@@ -3,6 +3,7 @@ import RecoilRootWrapper from './RecoilRootWrapper';
 import Navbar from './components/navigation/Navbar';
 import { ThemeProvider } from '@/components/ui/theme-provider';
 import './globals.css';
+import NextTopLoader from 'nextjs-toploader';
 
 export const metadata: Metadata = {
   title: '전적검색 사이트',
@@ -21,7 +22,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </header>
 
               <main>
-                <section className="w-full mx-auto">{children}</section>
+                <section className="w-full mx-auto">
+                  <NextTopLoader showSpinner={false} />
+                  {children}
+                </section>
               </main>
 
               <footer></footer>

@@ -33,7 +33,7 @@ export default function Container({
 
   useEffect(() => {
     setAccordionItems([...createAccordionItems(matches, summoner)]);
-  }, []);
+  }, [matches]);
 
   const fetchMatches = async () => {
     try {
@@ -43,8 +43,7 @@ export default function Container({
         params: { region, puuid: summoner.puuid, start: matches.length },
       });
 
-      setMatches([...matches, ...matches]);
-      setAccordionItems([...accordionItems, ...createAccordionItems(result, summoner)]);
+      setMatches([...matches, ...result]);
       setIsLoading(false);
     } catch (error) {
       throw new Error('failed get Matches.');
@@ -58,23 +57,27 @@ export default function Container({
         info: { participants, ...info },
       } = match;
       const myInfo = match.info.participants.find((participant) => participant.puuid === summoner?.puuid)!;
-      const teamIdsByMode = gameModes.find((mode) => mode.key === 'CLASSIC')?.teamIds!;
-      const teams = getSeparatedTeams(participants, teamIdsByMode, (participant, id) => participant.teamId === id);
+      const contents = createContentsByGameMode({
+        participants,
+        mode: info.gameMode,
+        match,
+        resource,
+      });
 
       return {
-        key: matchId,
+        itemKey: matchId,
         item: match,
+        classes: 'h-28',
         header: <MatchResult match={match} participant={myInfo} />,
         content: <MainContent participant={myInfo} match={match} resource={resource} />,
-        subContent: teams.map((team, index) => (
-          <ParticipantList key={index} participants={team.participants} resource={resource} region={region} />
-        )),
-        detail: createContentsByGameMode({
-          participants,
-          mode: info.gameMode,
-          match,
-          resource,
-        }),
+        subContent: (
+          <div className="w-full grid grid-cols-2 gap-2">
+            {contents.teams.map((team, index) => (
+              <ParticipantList key={index} participants={team.participants} resource={resource} region={region} />
+            ))}
+          </div>
+        ),
+        detail: contents.contents,
       };
     });
   };
@@ -112,16 +115,15 @@ export default function Container({
     match: Match;
     resource: RiotApiResource;
   }) => {
+    let teamIds = gameModes.find((gameMode) => gameMode.key === mode)?.teamIds!;
+    if (!teamIds) throw new Error('지원되지 않는 게임모드');
+    let teams;
+    let contents;
+
     switch (mode) {
       case 'CHERRY':
-        const cherryModeTeamIds: number[] = gameModes.find((gameMode) => gameMode.key === mode)?.teamIds!;
-        const cherryModeTeams = getSeparatedTeams(
-          participants,
-          cherryModeTeamIds,
-          (participant, id) => participant.playerSubteamId === id,
-        );
-
-        return cherryModeTeams.map((team: Team, index: number) => (
+        teams = getSeparatedTeams(participants, teamIds, (participant, id) => participant.playerSubteamId === id);
+        contents = teams.map((team: Team, index: number) => (
           <Detail
             key={index}
             match={match}
@@ -130,18 +132,13 @@ export default function Container({
             resource={resource}
           />
         ));
+        break;
 
       default:
-        const classicModeTeamIds: number[] = gameModes.find((gameMode) => gameMode.key === mode)?.teamIds!;
-        const classicModeTeams = getSeparatedTeams(
-          participants,
-          classicModeTeamIds,
-          (participant, id) => participant.teamId === id,
-        );
-
-        return (
+        teams = getSeparatedTeams(participants, teamIds, (participant, id) => participant.teamId === id);
+        contents = (
           <div className="flex flex-col md:flex-row lg:flex-row">
-            {classicModeTeams.map((team: any, index: number) => (
+            {teams.map((team: any, index: number) => (
               <Detail
                 key={index}
                 match={match}
@@ -153,6 +150,8 @@ export default function Container({
           </div>
         );
     }
+
+    return { teams, contents };
   };
 
   return (

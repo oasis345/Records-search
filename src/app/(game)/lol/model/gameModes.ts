@@ -22,6 +22,8 @@ export const gameModes = [
   },
   {
     key: 'URF',
+    label: '우르프',
+    teamIds: [100, 200],
   },
   {
     key: 'DOOMBOTSTEEMO',

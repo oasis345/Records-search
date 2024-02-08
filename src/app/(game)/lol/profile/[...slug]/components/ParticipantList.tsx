@@ -11,14 +11,17 @@ const ParticipantList: React.FC<{ participants: Participant[]; resource: RiotApi
     <List
       items={participants}
       keyField="puuid"
-      valueField="summonerName"
-      classes="hidden lg:grid md:grid grid w-40 gap-1"
-      itemClasses="flex w-28 text-xs text-ellipsis overflow-hidden text-nowrap"
+      valueField="riotIdGameName"
+      classes="hidden lg:grid md:grid"
+      itemClasses="flex w-28 text-xs"
       imageOptions={{
         getImageSrc: (item: Participant) => riotService.getImageUrl('champion', item.championName, resource.apiVersion),
         size: 18,
       }}
-      onItemClick={(item) => window.open(`/lol/profile/${region}/${item.summonerName}`)}
+      onItemClick={(item) => {
+        const name = encodeURIComponent(`${item.riotIdGameName}#${item.riotIdTagline}`);
+        window.open(`/lol/profile/${region}/${name}`);
+      }}
     />
   );
 };

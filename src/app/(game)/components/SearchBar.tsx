@@ -1,14 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useRecoilState } from 'recoil';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Star, Trash } from 'lucide-react';
 import { useNavigation } from '@/app/hooks/useNavigation';
-import { searchHistoryState } from '@/app/store/searchHistoryState';
-import { favoriteListState } from '@/app/store/favoriteListState';
 import { SearchItem } from '@/app/types/interface';
+import { useSearchHistory } from '@/app/hooks/useSearchHistory';
 
 interface SearchBarProps {
   value: string;
@@ -19,9 +17,8 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = ({ value, placeholder, onChange, onKeyUp }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [histories, setHistories] = useRecoilState(searchHistoryState);
-  const [favorites, setFavorites] = useRecoilState(favoriteListState);
   const { router, currentTitle } = useNavigation();
+  const { favorites, histories, isAlreadyAdded, remove, toggleFavorite, setHistories } = useSearchHistory();
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,24 +27,13 @@ const SearchBar: React.FC<SearchBarProps> = ({ value, placeholder, onChange, onK
     };
 
     window.addEventListener('mousedown', handleOutsideClick);
+    const initHistories = window.localStorage.getItem('histories');
+    if (initHistories) setHistories(JSON.parse(initHistories));
 
     return () => {
       window.removeEventListener('mousedown', handleOutsideClick);
     };
   }, [ref, isOpen]);
-
-  const removeItemFromList = (
-    list: SearchItem[],
-    setList: React.Dispatch<React.SetStateAction<SearchItem[]>>,
-    item: SearchItem,
-  ) => {
-    setList(list.filter((i) => i.name !== item.name));
-  };
-
-  const toggleFavoriteStatus = (item: SearchItem) => {
-    const newList = isAlreadyAdded(item) ? favorites.filter((i) => i.name !== item.name) : [...favorites, item];
-    setFavorites(newList);
-  };
 
   const goToProfilePage = async (item: SearchItem) => {
     const { region, name, tag } = item;
@@ -56,27 +42,33 @@ const SearchBar: React.FC<SearchBarProps> = ({ value, placeholder, onChange, onK
     router.push(`/${currentTitle}/profile/${region}/${encodeURIComponent(searchText)}`);
   };
 
-  const isAlreadyAdded = (item: SearchItem) => favorites.some((i) => i.name === item.name);
-
   const TabContentItem: React.FC<{
     item: SearchItem;
-    onClick: () => void;
     buttons: React.ReactNode[];
-  }> = ({ item, onClick, buttons }) => (
-    <div
-      className="flex items-center justify-between cursor-pointer w-full hover:bg-gray-100 dark:hover:bg-gray-500"
-      onClick={onClick}
-    >
-      <p className="w-1/2 text-ellipsis overflow-hidden text-nowrap">{item.name}</p>
-      <div className="flex">
-        {buttons.map((button, index) => (
-          <div key={index} className="ml-2">
-            {button}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+    onClick: () => void;
+  }> = ({ item, onClick, buttons }) => {
+    const { tag, region, name } = item;
+
+    return (
+      <li
+        className="flex items-center w-full justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-500"
+        onClick={onClick}
+      >
+        <p className="w-full text-ellipsis overflow-hidden text-nowrap">
+          {region && <span className="px-1 py-2 bg-sky-300 font-bold uppercase text-sm text-white">{region}</span>}
+          <span className="px-1">{name}</span>
+          {tag && <span className="text-gray-400">{`#${tag}`}</span>}
+        </p>
+        <div className="flex">
+          {buttons.map((button, index) => (
+            <div key={index} className="ml-2">
+              {button}
+            </div>
+          ))}
+        </div>
+      </li>
+    );
+  };
 
   return (
     <div className="w-96" ref={ref}>
@@ -96,66 +88,73 @@ const SearchBar: React.FC<SearchBarProps> = ({ value, placeholder, onChange, onK
             </TabsList>
             <TabsContent value="histories">
               <CardContent>
-                {histories
-                  .filter((item) => item.title === currentTitle)
-                  .map((history) => (
-                    <TabContentItem
-                      key={history.name + history.region}
-                      item={history}
-                      onClick={() => goToProfilePage(history)}
-                      buttons={[
-                        <Button
-                          key="favorite"
-                          variant="ghost"
-                          size="icon"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            toggleFavoriteStatus(history);
-                          }}
-                        >
-                          <Star className="h-4 w-4" style={{ color: isAlreadyAdded(history) ? 'red' : '' }} />
-                        </Button>,
-                        <Button
-                          key="delete"
-                          variant="ghost"
-                          size="icon"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            removeItemFromList(histories, setHistories, history);
-                          }}
-                        >
-                          <Trash className="h-4 w-4" />
-                        </Button>,
-                      ]}
-                    />
-                  ))}
+                <ul className="w-full">
+                  {histories
+                    .filter((item) => item.title === currentTitle)
+                    .map((history) => (
+                      <TabContentItem
+                        key={history.name + history.region}
+                        item={history}
+                        onClick={() => goToProfilePage(history)}
+                        buttons={[
+                          <Button
+                            key="favorite"
+                            variant="ghost"
+                            size="icon"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              toggleFavorite(history);
+                            }}
+                          >
+                            <Star
+                              className="h-4 w-4"
+                              style={{ color: isAlreadyAdded(history, 'favorite') ? 'red' : '' }}
+                            />
+                          </Button>,
+                          <Button
+                            key="delete"
+                            variant="ghost"
+                            size="icon"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              remove(history, 'history');
+                            }}
+                          >
+                            <Trash className="h-4 w-4" />
+                          </Button>,
+                        ]}
+                      />
+                    ))}
+                </ul>
               </CardContent>
             </TabsContent>
             <TabsContent value="Favorites">
               <CardContent>
-                {favorites
-                  .filter((item) => item.title === currentTitle)
-                  .map((favorite) => (
-                    <TabContentItem
-                      key={favorite.name + favorite.region}
-                      item={favorite}
-                      onClick={() => goToProfilePage(favorite)}
-                      buttons={[
-                        <Button
-                          key="delete"
-                          variant="ghost"
-                          size="icon"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            removeItemFromList(favorites, setFavorites, favorite);
-                          }}
-                        >
-                          <Trash className="h-4 w-4" />
-                        </Button>,
-                        ,
-                      ]}
-                    />
-                  ))}
+                <ul className="w-full">
+                  {favorites
+                    .filter((item) => item.title === currentTitle)
+                    .map((favorite) => (
+                      <TabContentItem
+                        key={favorite.name + favorite.region}
+                        item={favorite}
+                        onClick={() => goToProfilePage(favorite)}
+                        buttons={[
+                          <Button
+                            key="delete"
+                            variant="ghost"
+                            size="icon"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              remove(favorite, 'favorite');
+                            }}
+                          >
+                            <Trash className="h-4 w-4" />
+                          </Button>,
+                          ,
+                        ]}
+                      />
+                    ))}
+                </ul>
               </CardContent>
             </TabsContent>
           </Tabs>

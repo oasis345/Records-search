@@ -6,9 +6,8 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Dict } from '../types/interface';
 import { useNavigation } from '../hooks/useNavigation';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
-export default function TitleHome({
+export default function TitleBanner({
   selectItems,
   selectedItem,
   keyField,
@@ -25,7 +24,7 @@ export default function TitleHome({
   const [region, setRegion] = React.useState(selectedItem);
   const { router, currentTitle } = useNavigation();
 
-  const goProfile = async () => {
+  const goToProfilePage = async () => {
     router.push(`/${currentTitle}/profile/${region}/${encodeURIComponent(searchValue)}`);
   };
 
@@ -47,32 +46,13 @@ export default function TitleHome({
             value={searchValue}
             onChange={(value) => setSearchValue(value)}
             onKeyUp={(event) => {
-              if (searchValue && event.code === 'Enter') goProfile();
+              if (searchValue && event.code === 'Enter') goToProfilePage();
             }}
             placeholder={placeholder}
           />
-          <Button onClick={goProfile}>검색</Button>
+          <Button onClick={goToProfilePage}>검색</Button>
         </div>
       </div>
-      {/* <div className="container flex">
-        <Card className="w-1/2">
-          <CardHeader>
-            <CardTitle>패치 노트</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>Card Content</p>
-          </CardContent>
-        </Card>
-
-        <Card className="w-1/2">
-          <CardHeader>
-            <CardTitle>Card Title</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>Card Content</p>
-          </CardContent>
-        </Card>
-      </div> */}
     </div>
   );
 }

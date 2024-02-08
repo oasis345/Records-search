@@ -29,14 +29,14 @@ const ProfileCard = ({
               placeholder="blur"
               blurDataURL={BLUR_IMAGE_PATH}
             />
-            <div className="grid gap-3 px-1">
-              <p className="text-nowrap md:text-lg lg:text-lg text-sm">
+            <div className="px-5">
+              <p className="text-nowrap md:text-lg lg:text-lg text-sm pb-3">
                 <span>{name}</span>
                 <span>#{tag}</span> &nbsp;
                 <span>{region?.toUpperCase()}</span>
               </p>
-              <ProfileCardContents name={name} region={region} />
-              <p className="text-xs">최근 갱신: </p>
+              <ProfileCardContents name={name} region={region} tag={tag} />
+              {/* <p className="text-xs">최근 갱신: </p> */}
             </div>
           </div>
         </CardTitle>

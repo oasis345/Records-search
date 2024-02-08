@@ -5,8 +5,9 @@ interface AccordionCardProps {
 }
 
 interface AccordionCardItemProps {
-  key: string;
   item: any;
+  itemKey: string;
+  classes?: string;
   header: React.ReactNode;
   content: React.ReactNode;
   subContent: React.ReactNode;

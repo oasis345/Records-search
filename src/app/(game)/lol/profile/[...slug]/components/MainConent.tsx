@@ -11,7 +11,9 @@ const MainContent: React.FC<{
 }> = ({ match, participant, isDetail, resource }) => {
   const { spells, apiVersion } = resource;
   const { kills, assists, deaths, riotIdGameName, riotIdTagline, totalDamageTaken, totalMinionsKilled } = participant;
-  const rating = ((kills + assists) / deaths).toFixed(2);
+  const average = (kills + assists) / deaths;
+  const fixedAverage = average.toFixed(2);
+  const rating = isNaN(average) ? 0 : fixedAverage === 'Infinity' ? 'Perfect' : fixedAverage;
   const csPerMinute = (totalMinionsKilled / secondsToMinutes(match.info.gameDuration).minutes).toFixed(1);
   const spell1 = spells.find((spell: Record<string, any>) => spell.key === String(participant.summoner1Id)).id;
   const spell2 = spells.find((spell: Record<string, any>) => spell.key === String(participant.summoner2Id)).id;
@@ -74,7 +76,7 @@ const MainContent: React.FC<{
             />
           </div>
         </div>
-        <div className="items-center text-ellipsis overflow-hidden grow">
+        <div className="items-center grow">
           {isDetail && <p>{`${riotIdGameName}`}</p>}
           <div className="flex font-bold text-xs items-center" style={{ flexDirection: isDetail ? 'row' : 'column' }}>
             <span className="flex">

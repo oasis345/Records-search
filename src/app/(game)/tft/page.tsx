@@ -1,7 +1,7 @@
 import { regions } from '../lol/model/regions';
-import React, { useEffect } from 'react';
-import TitleHome from '../TitleHome';
+import React from 'react';
+import TitleBanner from '../TitleBanner';
 
 export default function Page() {
-  return <TitleHome selectItems={regions} selectedItem={'kr'} keyField="name" labelField="label" />;
+  return <TitleBanner selectItems={regions} selectedItem={'kr'} keyField="name" labelField="label" />;
 }

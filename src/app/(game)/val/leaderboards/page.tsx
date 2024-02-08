@@ -5,7 +5,7 @@ import { regions } from '../model/regions';
 import { Act } from '../model/interface';
 import { DataTable } from '@/app/components/table/DataTable';
 // import { valorantColumns } from './columns';
-import { gameStatsToModel } from '../../model/utils';
+import { gameStatsToModel } from '../../utils/utils';
 // import { ValorantStats } from '../model/stats';
 import DropDown from '../../../components/buttons/DropDown';
 import useQueryParams from '@/app/hooks/useQueryParams';

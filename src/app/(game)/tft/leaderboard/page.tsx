@@ -5,7 +5,7 @@ import { regions } from '../../lol/model/regions';
 import { tiers } from '../model/tiers';
 import { DataTable } from '@/app/components/table/DataTable';
 import { tftColumns } from './columns';
-import { gameStatsToModel } from '../../model/utils';
+import { gameStatsToModel } from '../../utils/utils';
 import { TFTStats } from '../model/stats';
 import { httpService } from '@/app/services/httpService';
 import DropDown from '../../../components/buttons/DropDown';

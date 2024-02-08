@@ -5,4 +5,5 @@ export type SearchItem = {
   name: string;
   region?: string;
   tag?: string;
+  isFavorite: boolean;
 };

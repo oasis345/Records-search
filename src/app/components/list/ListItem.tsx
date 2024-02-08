@@ -7,11 +7,12 @@ export const ListItem: React.FC<ListItem> = ({ item, value, classes, imageSrc, i
         <Image
           width={imageOptions?.size}
           height={imageOptions?.size}
+          style={{ height: `${imageOptions.size}px` }}
           src={imageSrc ?? imageOptions?.getImageSrc(item)}
           alt="List Item Image"
         />
       )}
-      <p>{value}</p>
+      <p className="overflow-hidden whitespace-nowrap text-ellipsis">{value}</p>
     </div>
   );
 };

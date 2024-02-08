@@ -11,14 +11,7 @@ export const AccordionCard: React.FC<AccordionCardProps> = ({ title, type, items
       <CardContent>
         <Accordion type={type} className="w-full">
           {items.map((item) => (
-            <AccordionCardItem
-              key={item.key}
-              item={item}
-              header={item.header}
-              content={item.content}
-              subContent={item.subContent}
-              detail={item.detail}
-            />
+            <AccordionCardItem key={item.itemKey} {...item} />
           ))}
         </Accordion>
       </CardContent>

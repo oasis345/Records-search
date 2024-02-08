@@ -1,6 +1,6 @@
 import { regions } from './model/regions';
 import React from 'react';
-import TitleHome from '../TitleHome';
+import TitleBanner from '../TitleBanner';
 import { lolService } from '@/app/services/lol.service';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
@@ -13,7 +13,7 @@ export default async function Page() {
 
   return (
     <>
-      <TitleHome
+      <TitleBanner
         selectItems={regions}
         selectedItem={'kr'}
         keyField="name"
