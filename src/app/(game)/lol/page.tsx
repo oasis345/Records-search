@@ -5,7 +5,6 @@ import { lolService } from '@/app/services/lol.service';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
 import { riotService } from '@/app/services/riot.service';
-import { BLUR_IMAGE_PATH } from '@/app/utils';
 
 export default async function Page() {
   await riotService.init();
@@ -37,8 +36,6 @@ export default async function Page() {
                       height={65}
                       src={riotService.getImageUrl('champion', champion.id)}
                       alt="Rotation Champion"
-                      placeholder="blur"
-                      blurDataURL={BLUR_IMAGE_PATH}
                     />
                     <p className="text-sm font-semibold">{champion.name}</p>
                   </div>

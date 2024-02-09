@@ -1,4 +1,4 @@
-import { BLUR_IMAGE_PATH, secondsToMinutes } from '@/app/utils';
+import { secondsToMinutes } from '@/app/utils';
 import { Match, Participant, RiotApiResource } from '../../../model/interface';
 import Image from 'next/image';
 import { riotService } from '@/app/services/riot.service';
@@ -35,8 +35,6 @@ const MainContent: React.FC<{
             style={{ height: `${size}px` }}
             src={riotService.getImageUrl('item', itemNumber, apiVersion)}
             alt="Item Image"
-            placeholder="blur"
-            blurDataURL={BLUR_IMAGE_PATH}
           />,
         );
       }
@@ -55,8 +53,6 @@ const MainContent: React.FC<{
             height={isDetail ? 34 : 48}
             src={riotService.getImageUrl('champion', participant.championName, apiVersion)}
             alt="Champion Image"
-            placeholder="blur"
-            blurDataURL={BLUR_IMAGE_PATH}
           />
           <div className="grid grid-cols-1 gap-1 px-1">
             <Image
@@ -64,16 +60,12 @@ const MainContent: React.FC<{
               height={isDetail ? 15 : 22}
               src={riotService.getImageUrl('spell', spell1, apiVersion)}
               alt="spell_1"
-              placeholder="blur"
-              blurDataURL={BLUR_IMAGE_PATH}
             />
             <Image
               width={isDetail ? 15 : 22}
               height={isDetail ? 15 : 22}
               src={riotService.getImageUrl('spell', spell2, apiVersion)}
               alt="spell_2"
-              placeholder="blur"
-              blurDataURL={BLUR_IMAGE_PATH}
             />
           </div>
         </div>

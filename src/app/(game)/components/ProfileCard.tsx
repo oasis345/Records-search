@@ -1,7 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
-import { BLUR_IMAGE_PATH } from '@/app/utils';
 import ProfileCardContents from './ProfileCardContents';
 
 const ProfileCard = ({
@@ -20,15 +19,7 @@ const ProfileCard = ({
       <CardHeader>
         <CardTitle>
           <div className="flex">
-            <Image
-              width={120}
-              height={120}
-              style={{ height: '120px' }}
-              src={imageSrc}
-              alt="Profile Image"
-              placeholder="blur"
-              blurDataURL={BLUR_IMAGE_PATH}
-            />
+            <Image width={120} height={120} style={{ height: '120px' }} src={imageSrc} alt="Profile Image" />
             <div className="px-5">
               <p className="text-nowrap md:text-lg lg:text-lg text-sm pb-3">
                 <span>{name}</span>
