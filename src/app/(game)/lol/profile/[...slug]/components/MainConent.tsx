@@ -1,13 +1,13 @@
 import { secondsToMinutes } from '@/app/utils';
-import { Match, Participant, RiotApiResource } from '../../../model/interface';
+import { Match, Participant, ApiResource } from '../../../model/interface';
 import Image from 'next/image';
-import { riotService } from '@/app/services/riot.service';
+import { lolService } from '@/app/services/lol.service';
 
 const MainContent: React.FC<{
   match: Match;
   participant: Participant;
   isDetail?: boolean;
-  resource: RiotApiResource;
+  resource: ApiResource;
 }> = ({ match, participant, isDetail, resource }) => {
   const { spells, apiVersion } = resource;
   const { kills, assists, deaths, riotIdGameName, riotIdTagline, totalDamageTaken, totalMinionsKilled } = participant;
@@ -33,7 +33,7 @@ const MainContent: React.FC<{
             width={size}
             height={size}
             style={{ height: `${size}px` }}
-            src={riotService.getImageUrl('item', itemNumber, apiVersion)}
+            src={lolService.getImageUrl('item', itemNumber, apiVersion)}
             alt="Item Image"
           />,
         );
@@ -51,20 +51,20 @@ const MainContent: React.FC<{
           <Image
             width={isDetail ? 34 : 48}
             height={isDetail ? 34 : 48}
-            src={riotService.getImageUrl('champion', participant.championName, apiVersion)}
+            src={lolService.getImageUrl('champion', participant.championName, apiVersion)}
             alt="Champion Image"
           />
           <div className="grid grid-cols-1 gap-1 px-1">
             <Image
               width={isDetail ? 15 : 22}
               height={isDetail ? 15 : 22}
-              src={riotService.getImageUrl('spell', spell1, apiVersion)}
+              src={lolService.getImageUrl('spell', spell1, apiVersion)}
               alt="spell_1"
             />
             <Image
               width={isDetail ? 15 : 22}
               height={isDetail ? 15 : 22}
-              src={riotService.getImageUrl('spell', spell2, apiVersion)}
+              src={lolService.getImageUrl('spell', spell2, apiVersion)}
               alt="spell_2"
             />
           </div>

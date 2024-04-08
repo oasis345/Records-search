@@ -1,4 +1,4 @@
-export interface RiotApiResource {
+export interface ApiResource {
   spells: Record<string, any>;
   champions: Record<string, any>;
   apiVersion: string;

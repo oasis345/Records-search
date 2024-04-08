@@ -2,14 +2,15 @@
 import React, { useEffect, useState } from 'react';
 import { gameModes } from '../../../model/gameModes';
 import { AccordionCard } from '@/app/components/card/AccordionCard';
-import { Summoner, Match, Participant, TeamStats, RiotApiResource } from '../../../model/interface';
+import { Summoner, Match, Participant, TeamStats, ApiResource } from '../../../model/interface';
 import MainContent from './MainConent';
-import MatchResult from './MatchResult';
-import ParticipantList from './ParticipantList';
+import MatchResult from '../../../../components/MatchResult';
 import Detail from './Detail';
 import { httpService } from '@/app/services/httpService';
 import { Button } from '@/components/ui/button';
 import { ReloadIcon } from '@radix-ui/react-icons';
+import { List } from '@/app/components/list/List';
+import { lolService } from '@/app/services/lol.service';
 
 interface Team {
   participants: Participant[];
@@ -25,14 +26,14 @@ export default function Container({
   region: string;
   summoner: Summoner;
   matches: Match[];
-  resource: RiotApiResource;
+  resource: ApiResource;
 }) {
   const [accordionItems, setAccordionItems] = React.useState<AccordionCardItemProps[]>([]);
   const [matches, setMatches] = useState<Match[]>(initialMatches);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    setAccordionItems([...createAccordionItems(matches, summoner)]);
+    setAccordionItems([...createAccordionItems(matches)]);
   }, [matches]);
 
   const fetchMatches = async () => {
@@ -50,7 +51,7 @@ export default function Container({
     }
   };
 
-  const createAccordionItems = (matches: Match[], summoner: Summoner) => {
+  const createAccordionItems = (matches: Match[]) => {
     return matches.map((match) => {
       const {
         metadata: { matchId },
@@ -68,12 +69,37 @@ export default function Container({
         itemKey: matchId,
         item: match,
         classes: 'h-28',
-        header: <MatchResult match={match} participant={myInfo} />,
+        header: (
+          <MatchResult
+            matchResult={{
+              creationTime: info.gameCreation,
+              durationTime: info.gameDuration,
+              isWin: myInfo.win,
+              mode: gameModes.find((mode) => mode.key === info.gameMode)?.label ?? info.gameMode,
+            }}
+          />
+        ),
         content: <MainContent participant={myInfo} match={match} resource={resource} />,
         subContent: (
           <div className="w-full grid grid-cols-2 gap-2">
             {contents.teams.map((team, index) => (
-              <ParticipantList key={index} participants={team.participants} resource={resource} region={region} />
+              <List
+                key={index}
+                items={team.participants}
+                keyField="puuid"
+                valueField="riotIdGameName"
+                classes="hidden lg:grid md:grid"
+                itemClasses="flex w-28 text-xs"
+                imageOptions={{
+                  getImageSrc: (item: Participant) =>
+                    lolService.getImageUrl('champion', item.championName, resource.apiVersion),
+                  size: 18,
+                }}
+                onItemClick={(item) => {
+                  const name = encodeURIComponent(`${item.riotIdGameName}#${item.riotIdTagline}`);
+                  window.open(`/lol/profile/${region}/${name}`);
+                }}
+              />
             ))}
           </div>
         ),
@@ -113,7 +139,7 @@ export default function Container({
     participants: Participant[];
     mode: string;
     match: Match;
-    resource: RiotApiResource;
+    resource: ApiResource;
   }) => {
     let teamIds = gameModes.find((gameMode) => gameMode.key === mode)?.teamIds!;
     if (!teamIds) throw new Error('지원되지 않는 게임모드');

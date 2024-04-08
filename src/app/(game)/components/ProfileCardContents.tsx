@@ -8,13 +8,10 @@ import { useSearchHistory } from '@/app/hooks/useSearchHistory';
 const ProfileCardContents = ({ name, region, tag }: { name: string; region: string; tag?: string }) => {
   const { currentTitle } = useNavigation();
   const { isAlreadyAdded, toggleFavorite, setHistories, histories } = useSearchHistory();
-  const searchItem = histories.find((item) => item.name === name);
   const item = { title: currentTitle, name: name, region, tag, isFavorite: false };
 
   useEffect(() => {
-    if (!searchItem) {
-      setHistories([item, ...histories]);
-    }
+    if (!isAlreadyAdded(item, 'history')) setHistories([item, ...histories]);
   }, []);
 
   return (

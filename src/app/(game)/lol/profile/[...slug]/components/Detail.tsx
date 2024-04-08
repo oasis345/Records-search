@@ -1,11 +1,11 @@
-import { Match, Participant, RiotApiResource } from '../../../model/interface';
+import { Match, Participant, ApiResource } from '../../../model/interface';
 import MainContent from './MainConent';
 
 const Detail: React.FC<{
   teamStats: { totalKills: number; totalAssists: number; totalDeaths: number };
   participants: Participant[];
   match: Match;
-  resource: RiotApiResource;
+  resource: ApiResource;
 }> = ({ teamStats, participants, match, resource }) => {
   const { totalKills, totalAssists, totalDeaths } = teamStats;
 

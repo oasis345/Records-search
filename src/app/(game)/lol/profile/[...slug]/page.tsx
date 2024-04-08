@@ -1,7 +1,6 @@
 import { lolService } from '@/app/services/lol.service';
 import NotFoundUserPage from '@/app/(game)/components/NotFoundPage';
 import Container from './components/Container';
-import { riotService } from '@/app/services/riot.service';
 import ProfileCard from '@/app/(game)/components/ProfileCard';
 
 export default async function Page({ params }: { params: { slug: string[] } }) {
@@ -10,9 +9,9 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
   let matches;
 
   try {
+    await lolService.init();
     summoner = await lolService.getSummoner({ name: searchText, region });
     matches = await lolService.getMatches({ puuid: summoner.puuid, region });
-    await riotService.init();
   } catch (error) {
     console.error(error);
   }
@@ -23,7 +22,7 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
     matches && (
       <div className="container">
         <ProfileCard
-          imageSrc={riotService.getImageUrl('profileIcon', summoner.profileIconId)}
+          imageSrc={lolService.getImageUrl('profileIcon', summoner.profileIconId)}
           region={region}
           name={`${summoner.gameName}`}
           tag={summoner.tagLine}
@@ -33,9 +32,9 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
           summoner={summoner}
           matches={matches}
           resource={{
-            champions: riotService.champions,
-            spells: riotService.spells,
-            apiVersion: riotService.dragonApiVersion,
+            champions: lolService.champions,
+            spells: lolService.spells,
+            apiVersion: lolService.dragonApiVersion,
           }}
         ></Container>
       </div>

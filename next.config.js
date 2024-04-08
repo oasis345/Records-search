@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    unoptimized: true,
     remotePatterns: [{ protocol: 'https', hostname: 'ddragon.leagueoflegends.com' }],
   },
   reactStrictMode: false,
@@ -35,6 +36,10 @@ const nextConfig = {
       {
         source: '/lol/riot.txt',
         destination: '/certificate/lol',
+      },
+      {
+        source: '/tft/riot.txt',
+        destination: '/certificate/tft',
       },
       {
         source: '/val/riot.txt',
