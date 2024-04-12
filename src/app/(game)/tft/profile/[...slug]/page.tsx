@@ -1,42 +1,38 @@
-import NotFoundUserPage from '@/app/(game)/components/NotFoundPage';
-import ProfileCard from '@/app/(game)/components/ProfileCard';
+import { Account, Summoner } from '@/app/(game)/shared/model/riot/interface';
+import Container from '@/app/(game)/shared/components/profile/ProfileContainer';
 import { tftService } from '@/app/services/tft.service';
-import Container from './components/Container';
+import { TFTMatchHistory } from './MatchHistory';
+import { Match } from '@/app/(game)/shared/model/match';
 
 export default async function Page({ params }: { params: { slug: string[] } }) {
   const [region, searchText] = decodeURIComponent(params.slug.toString()).split(',');
-  let summoner;
-  let matches;
+  let summoner: Summoner & Account;
+  let matchData: Match[];
 
-  try {
-    await tftService.init();
-    summoner = await tftService.getSummoner({ name: searchText, region });
-    matches = await tftService.getMatches({ puuid: summoner.puuid, region });
-  } catch (error) {
-    console.error(error);
-  }
+  await tftService.init();
+  summoner = await tftService.getSummoner({ name: searchText, region });
+  matchData = await tftService.getMatches({ puuid: summoner.puuid, region });
 
-  return !summoner?.id ? (
-    <NotFoundUserPage region={region} searchText={searchText} />
-  ) : (
-    matches && (
-      <div className="container">
-        <ProfileCard
-          imageSrc={tftService.getImageUrl('profileIcon', summoner.profileIconId + '.png')}
-          region={region}
-          name={`${summoner.gameName}`}
-          tag={summoner.tagLine}
-        />
-        <Container
-          region={region}
-          summoner={summoner}
-          matches={matches}
-          resource={{
-            champions: tftService.champions,
-            apiVersion: tftService.dragonApiVersion,
-          }}
-        />
-      </div>
-    )
+  return (
+    <Container
+      region={region}
+      searchText={searchText}
+      user={{
+        name: summoner.gameName,
+        profileIcon: tftService.getImageUrl('profileIcon', summoner.profileIconId),
+        region,
+        tag: summoner.tagLine,
+      }}
+    >
+      <TFTMatchHistory
+        matchData={matchData}
+        region={region}
+        summoner={summoner}
+        resource={{
+          champions: tftService.champions,
+          apiVersion: tftService.apiVersion,
+        }}
+      />
+    </Container>
   );
 }

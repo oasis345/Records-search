@@ -1,11 +1,12 @@
+import { Account } from '@/app/(game)/shared/model/riot/interface';
 import { HttpService } from './httpService';
 const API_KEY = process.env.LOL_API_KEY;
 
 export abstract class RiotService extends HttpService {
-  dragonApiVersion: string = '';
+  apiVersion: string = '';
 
   async init() {
-    this.dragonApiVersion = await this.getLatestDragonApiVersion();
+    this.apiVersion = await this.getLatestDragonApiVersion();
   }
 
   async getLatestDragonApiVersion() {
@@ -28,8 +29,8 @@ export abstract class RiotService extends HttpService {
     region: string;
     name: string;
     tag: string;
-  }): Promise<Record<string, any>> {
-    const result = await this.get<Record<string, any>>({
+  }): Promise<Account> {
+    const result = await this.get<Account>({
       url: `https://${region}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${name}/${tag}`,
       params: { api_key: API_KEY },
     });
@@ -37,8 +38,8 @@ export abstract class RiotService extends HttpService {
     return result;
   }
 
-  protected async getAccountByPuuid(region: string, puuid: string): Promise<Record<string, any>> {
-    const result = await this.get<Record<string, any>>({
+  protected async getAccountByPuuid(region: string, puuid: string): Promise<Account> {
+    const result = await this.get<Account>({
       url: `https://${region}.api.riotgames.com/riot/account/v1/accounts/by-puuid/${puuid}`,
       params: { api_key: API_KEY },
     });

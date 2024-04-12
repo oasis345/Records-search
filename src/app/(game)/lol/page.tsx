@@ -1,9 +1,9 @@
-import { regions } from './model/regions';
 import React from 'react';
-import TitleBanner from '../TitleBanner';
+import Image from 'next/image';
+import TitleBanner from '../shared/components/TitleBanner';
+import { regions } from '../shared/model/riot/regions';
 import { lolService } from '@/app/services/lol.service';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import Image from 'next/image';
 
 export default async function Page() {
   await lolService.init();

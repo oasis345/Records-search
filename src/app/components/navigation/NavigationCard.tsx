@@ -3,8 +3,8 @@
 import { useNavigation } from '@/app/hooks/useNavigation';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Card } from '@/components/ui/card';
-import Image from 'next/image';
 import { NavigationCardProps } from './interface';
+import Image from 'next/image';
 
 export const NavigationCard: React.FC<NavigationCardProps> = ({ minColWidth, data }) => {
   const { router } = useNavigation();

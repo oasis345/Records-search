@@ -1,6 +1,6 @@
 import { atom, selector } from 'recoil';
 import { localStorageEffect } from './utils';
-import { SearchItem } from '../types/interface';
+import { SearchItem } from '../intrefaces/search/interface';
 
 export const searchHistoryState = atom<SearchItem[]>({
   key: 'searchHistoryState',

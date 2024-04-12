@@ -1,7 +1,7 @@
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { searchHistoryState, favoriteListState } from '../store/searchHistoryState';
-import { SearchItem } from '../types/interface';
 import _ from 'lodash';
+import { SearchItem } from '../intrefaces/search/interface';
 
 type Type = 'history' | 'favorite';
 

@@ -9,7 +9,7 @@ export const List: React.FC<List> = ({
   classes,
   itemClasses,
   onItemClick,
-}) => {
+}: List) => {
   return (
     <div className={classes}>
       {items.map((item) => (
@@ -17,7 +17,7 @@ export const List: React.FC<List> = ({
           key={item[keyField]}
           classes={itemClasses}
           item={item}
-          value={item[valueField]}
+          value={item[valueField ?? keyField]}
           imageSrc={item[imageField]}
           imageOptions={imageOptions}
           onClick={onItemClick}

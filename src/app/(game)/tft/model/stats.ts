@@ -1,16 +1,16 @@
-import { DefaultGameStats } from '../../model/stats';
+import { GameStats } from '../../shared/model/gameStats';
 
 type Stats = {
-  summonerName: string;
-  tier: string;
+  summonerId: string;
+  rank: string;
   wins: number;
   losses: number;
   leaguePoints: number;
 };
 
-export class TFTStats extends DefaultGameStats {
+export class TFTStats extends GameStats {
   constructor(tftStats: Stats) {
-    const { leaguePoints, summonerName, tier, wins, losses } = tftStats;
-    super({ name: summonerName, score: leaguePoints, wins, losses, tier });
+    const { leaguePoints, summonerId, rank, wins, losses } = tftStats;
+    super({ name: summonerId, score: leaguePoints, wins, losses, tier: rank });
   }
 }

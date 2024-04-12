@@ -1,7 +1,7 @@
 interface List {
   items: any[];
   keyField: string;
-  valueField: string;
+  valueField?: string;
   imageField?: string;
   imageOptions?: ImageOptions;
   classes?: string;

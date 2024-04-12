@@ -1,20 +1,20 @@
-import { DefaultGameStats } from '../../model/stats';
+import { GameStats } from '../../shared/model/gameStats';
 
 type Stats = {
-  summonerName: string;
+  summonerId: string;
   tier: string;
   wins: number;
   losses: number;
   leaguePoints: number;
 };
 
-export class LoLStats extends DefaultGameStats {
+export class LoLStats extends GameStats {
   readonly losses: number;
   constructor(lolStats: Stats) {
-    const { summonerName, tier, leaguePoints, wins, losses } = lolStats;
+    const { summonerId, tier, leaguePoints, wins, losses } = lolStats;
 
     super({
-      name: summonerName,
+      name: summonerId,
       tier,
       score: leaguePoints,
       wins,

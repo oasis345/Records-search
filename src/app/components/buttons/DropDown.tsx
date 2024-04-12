@@ -6,20 +6,19 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import React, { useState } from 'react';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Dict } from '@/app/types/interface';
 
 export default function DropDown({
   data,
   value,
-  keyField,
-  labelField,
+  keyField = 'name',
+  labelField = 'label',
   getLabel,
   onSelect,
 }: {
-  data: Dict[];
-  value: string;
-  keyField: string;
-  labelField: string;
+  data: any[];
+  value: any;
+  keyField?: string;
+  labelField?: string;
   getLabel?: (value: any) => string;
   onSelect: (selectedItem: any) => void;
 }) {

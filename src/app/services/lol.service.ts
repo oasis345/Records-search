@@ -1,7 +1,11 @@
-import { regions } from '@/app/(game)/lol/model/regions';
+import { regions } from '@/app/(game)/shared/model/riot/regions';
 import { RiotService } from './riot.service';
 import _ from 'lodash';
-import { Match, Summoner } from '../(game)/lol/model/interface';
+import { LeagueEntry, Match } from '../(game)/lol/model/interface';
+import { LoLStats } from '@/app/(game)/lol/model/stats';
+import { GameStats } from '@/app/(game)/shared/model/gameStats';
+import { Account, Summoner } from '@/app/(game)/shared/model/riot/interface';
+import { LOLMatch } from '../(game)/lol/model/match';
 
 const API_KEY = process.env.LOL_API_KEY;
 const API_BASE_URL = 'api.riotgames.com/lol';
@@ -16,8 +20,8 @@ class LOLService extends RiotService {
 
   async init() {
     await super.init();
-    this.spells = await this.getSpells(this.dragonApiVersion);
-    this.champions = await this.getChampions(this.dragonApiVersion);
+    this.spells = await this.getSpells(this.apiVersion);
+    this.champions = await this.getChampions(this.apiVersion);
   }
 
   private async getSpells(version: string) {
@@ -36,26 +40,28 @@ class LOLService extends RiotService {
     return Object.values(result.data);
   }
 
-  async getRanked({ region, tier }: { region: string; tier: string }): Promise<any[]> {
-    const url = `https://${region}.${API_BASE_URL}/league-exp/v4/entries/RANKED_SOLO_5x5/${tier}/I`;
-    return await this.get({ url, params: { api_key: API_KEY } });
+  async getRanked({ region, tier }: { region: string; tier: string }): Promise<GameStats[]> {
+    const url = `https://${region}.${API_BASE_URL}/league-exp/v4/entries/RANKED_SOLO_5x5/${tier.toUpperCase()}/I`;
+    const result = await this.get<LeagueEntry[]>({ url, params: { api_key: API_KEY } });
+    const data = result.map((stats) => new LoLStats(stats));
+    return data;
   }
 
-  async getSummoner({ region, name }: { region: string; name: string }): Promise<Summoner> {
+  async getSummoner({ region, name }: { region: string; name: string }): Promise<Summoner & Account> {
     const continent = regions.find((item) => item.name === region)!.continent;
     const [summonerName, tag] = name.split('#');
     let result: any = {};
 
     if (summonerName && tag) {
       const account = await this.getAccountByRiotId({ region: continent, name: summonerName, tag });
-      const summoner = await this.get<Record<string, any>>({
+      const summoner = await this.get<Summoner>({
         url: `https://${region}.${API_BASE_URL}/summoner/v4/summoners/by-puuid/${account.puuid}`,
         params: { api_key: API_KEY },
       });
 
       result = _.merge(account, summoner);
     } else if (summonerName) {
-      const summoner = await this.get<Record<string, any>>({
+      const summoner = await this.get<Summoner>({
         url: `https://${region}.${API_BASE_URL}/summoner/v4/summoners/by-name/${summonerName}`,
         params: { api_key: API_KEY },
       });
@@ -75,7 +81,7 @@ class LOLService extends RiotService {
     puuid: string;
     region: string;
     start?: number | string;
-  }): Promise<Match[]> {
+  }): Promise<LOLMatch[]> {
     const continent = regions.find((item) => item.name === region)!.continent;
 
     const matchIds = await this.get<string[]>({
@@ -85,11 +91,18 @@ class LOLService extends RiotService {
 
     const matchPromises = matchIds.map((matchId: string) => {
       const matchUrl = `https://${continent}.${API_BASE_URL}/match/v5/matches/${matchId}`;
-      return this.get({ url: matchUrl, params: { api_key: API_KEY } });
+      return this.get<Match>({ url: matchUrl, params: { api_key: API_KEY } });
     });
 
     const result = await Promise.all(matchPromises);
-    return result as Match[];
+    return result.map((item) => {
+      item = {
+        ...item,
+        user: item.info.participants.find((participant) => participant.puuid === puuid)!,
+      };
+
+      return new LOLMatch(item);
+    });
   }
 
   async getRotationChampions(): Promise<any[]> {
@@ -98,7 +111,7 @@ class LOLService extends RiotService {
   }
 
   getImageUrl(category: 'profileIcon' | 'champion' | 'item' | 'spell', name: string | number, apiVersion?: string) {
-    const dragonImageUrl = `https://ddragon.leagueoflegends.com/cdn/${apiVersion ?? this.dragonApiVersion}/img`;
+    const dragonImageUrl = `https://ddragon.leagueoflegends.com/cdn/${apiVersion ?? this.apiVersion}/img`;
     const categoryMap: Record<string, string> = {
       profileIcon: 'profileicon',
       champion: 'champion',
