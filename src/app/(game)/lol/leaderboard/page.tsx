@@ -1,5 +1,5 @@
 'use client';
-import LeaderBoard from '../../shared/components/leaderboard/Leaderboard';
+import LeaderBoard from '@/app/(game)/shared/components/leaderboard/Leaderboard';
 import { regions } from '../../shared/model/riot/regions';
 import { tiers } from '../../shared/model/riot/tiers';
 import statsColumns from '../model/statsColumns';
