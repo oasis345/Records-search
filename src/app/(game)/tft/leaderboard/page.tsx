@@ -1,6 +1,6 @@
 import { regions } from '../../shared/model/riot/regions';
 import { tiers } from '../model/tiers';
-import LeaderBoard from '../../shared/components/leaderboard/Leaderboard';
+import LeaderBoard from '@/app/(game)/shared/components/leaderboard/Leaderboard';
 
 export default function Page() {
   return (
