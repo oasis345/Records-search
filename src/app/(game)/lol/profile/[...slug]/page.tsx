@@ -11,7 +11,7 @@ export default async function Page({ params }: { params: PageParams }) {
   let matchData: Match[];
 
   await lolService.init();
-  summoner = await lolService.getSummoner({ name: searchText, region });
+  summoner = await lolService.getUser({ name: searchText, region });
   matchData = await lolService.getMatches({ puuid: summoner.puuid, region });
 
   // return !summoner?.id ? (

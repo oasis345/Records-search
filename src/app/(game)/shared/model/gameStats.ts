@@ -14,7 +14,7 @@ export class GameStats {
   losses: number;
 
   constructor(stats: Stats) {
-    const { name, score, tier, wins, losses } = stats;
+    const { name, score, tier, wins, losses, data } = stats;
 
     this.name = name;
     this.tier = tier;

@@ -14,7 +14,7 @@ export class HttpService {
     const fullURL = params ? `${url}?${queryParams.toString()}` : url;
 
     try {
-      const response = await fetch(fullURL, { cache: 'no-store' });
+      const response = await fetch(fullURL, { cache: 'force-cache' });
       const result = await response.json();
       if (!response.ok) {
         console.error(result?.message ?? result?.status?.message);

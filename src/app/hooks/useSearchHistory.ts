@@ -3,14 +3,14 @@ import { searchHistoryState, favoriteListState } from '../store/searchHistorySta
 import _ from 'lodash';
 import { SearchItem } from '../intrefaces/search/interface';
 
-type Type = 'history' | 'favorite';
+type SearchType = 'history' | 'favorite';
 
 export const useSearchHistory = () => {
   const [histories, setHistories] = useRecoilState(searchHistoryState);
   const favorites = useRecoilValue(favoriteListState);
   const titleWithName = (item: SearchItem) => item.title + item.name + item.tag;
 
-  const isAlreadyAdded = (item: SearchItem, type: Type) => {
+  const isAlreadyAdded = (item: SearchItem, type: SearchType) => {
     const list = type === 'history' ? histories : favorites;
     return list.some((listItem: SearchItem) => titleWithName(listItem) === titleWithName(item));
   };
@@ -23,7 +23,7 @@ export const useSearchHistory = () => {
     setHistories(newList);
   };
 
-  const remove = (item: SearchItem, type: Type) => {
+  const remove = (item: SearchItem, type: SearchType) => {
     if (type === 'favorite') toggleFavorite(item);
     else setHistories(histories.filter((i: SearchItem) => titleWithName(i) !== titleWithName(item)));
   };

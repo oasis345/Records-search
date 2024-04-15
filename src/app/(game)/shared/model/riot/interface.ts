@@ -12,3 +12,5 @@ export interface Account {
   tagLine: string;
   puuid: string;
 }
+
+export type RiotUser = Summoner & Account;

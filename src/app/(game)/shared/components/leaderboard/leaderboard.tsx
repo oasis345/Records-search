@@ -1,13 +1,13 @@
 'use client';
 
-import React, { ReactChild, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import DropDown from '../../../../components/buttons/DropDown';
 import useQueryParams from '@/app/hooks/useQueryParams';
 import { useNavigation } from '@/app/hooks/useNavigation';
 import { httpService } from '@/app/services/httpService';
 import { GameStats } from '../../model/gameStats';
 import { DataTable } from '@/app/components/table/DataTable';
-import { defaultStatsColumns } from '../../model/statsColumns';
+import { defaultStatsColumns, skeletonColumns } from '../../model/statsColumns';
 import { ColumnDef, ColumnSort } from '@tanstack/react-table';
 
 export default function LeaderBoard({
@@ -26,14 +26,19 @@ export default function LeaderBoard({
   const [queryParamsMap, setQueryParamsMap] = React.useState(
     new Map<string, any>(queryParams.map((queryParam) => [queryParam.key, queryParam.value])),
   );
+  const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState<GameStats[]>([]);
+  const tableColumns: any = React.useMemo(() => (loading ? skeletonColumns : columns), [columns, loading]);
+  const tableData = React.useMemo(() => (loading ? Array(30).fill({}) : data), [loading, data]);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       const params = Object.fromEntries(queryParamsMap);
       const result = await httpService.get<GameStats[]>({ url: `/api/${currentTitle}/leaderboard`, params });
 
       setData(result);
+      setLoading(false);
     };
 
     fetchData();
@@ -56,7 +61,7 @@ export default function LeaderBoard({
       </div>
       {children}
       <div className="flex flex-col">
-        <DataTable columns={columns} data={data} sort={sort}></DataTable>
+        <DataTable columns={tableColumns} data={tableData} sort={sort}></DataTable>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { GameStats } from './gameStats';
 import { Button } from '@/components/ui/button';
 import { ArrowUpDown } from 'lucide-react';
+import { BaseSkeleton } from '@/app/components/skeleton/Skeleton';
 
 export const defaultStatsColumns: ColumnDef<GameStats>[] = [
   {
@@ -32,3 +33,8 @@ export const defaultStatsColumns: ColumnDef<GameStats>[] = [
     header: '패배',
   },
 ];
+
+export const skeletonColumns = defaultStatsColumns.map((column) => ({
+  ...column,
+  cell: <BaseSkeleton classes="h-4 w-full" />,
+}));

@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { LeagueEntry, Match } from '../(game)/lol/model/interface';
 import { LoLStats } from '@/app/(game)/lol/model/stats';
 import { GameStats } from '@/app/(game)/shared/model/gameStats';
-import { Account, Summoner } from '@/app/(game)/shared/model/riot/interface';
+import { Account, RiotUser, Summoner } from '@/app/(game)/shared/model/riot/interface';
 import { LOLMatch } from '../(game)/lol/model/match';
 
 const API_KEY = process.env.LOL_API_KEY;
@@ -40,14 +40,28 @@ class LOLService extends RiotService {
     return Object.values(result.data);
   }
 
-  async getRanked({ region, tier }: { region: string; tier: string }): Promise<GameStats[]> {
+  async getRanked({ region, tier, page = 1 }: { region: string; tier: string; page: number }): Promise<LoLStats[]> {
     const url = `https://${region}.${API_BASE_URL}/league-exp/v4/entries/RANKED_SOLO_5x5/${tier.toUpperCase()}/I`;
-    const result = await this.get<LeagueEntry[]>({ url, params: { api_key: API_KEY } });
-    const data = result.map((stats) => new LoLStats(stats));
-    return data;
+    const result = await this.get<LeagueEntry[]>({ url, params: { page: 1, api_key: API_KEY } });
+    const summonerIds = result.map((stats) => stats.summonerId);
+    const userPromises = summonerIds.map((id) => this.getUserBySummonerId(region, id));
+    const user = await Promise.all<RiotUser>(userPromises);
+    const statistics = result.map((stats) => {
+      const foundUser = user.find((item: RiotUser) => item.id === stats.summonerId)!;
+      return new LoLStats(stats, foundUser);
+    });
+    return statistics;
   }
 
-  async getSummoner({ region, name }: { region: string; name: string }): Promise<Summoner & Account> {
+  async getUserBySummonerId(region: string, id: string): Promise<RiotUser> {
+    const url = `https://${region}.${API_BASE_URL}/summoner/v4/summoners/${id}`;
+    const continent = regions.find((item) => item.name === region)!.continent;
+    const summoner = await this.get<Summoner>({ url, params: { api_key: API_KEY } });
+    const account = await this.getAccountByPuuid(continent, summoner.puuid);
+    return _.merge(account, summoner);
+  }
+
+  async getUser({ region, name }: { region: string; name: string }): Promise<RiotUser> {
     const continent = regions.find((item) => item.name === region)!.continent;
     const [summonerName, tag] = name.split('#');
     let result: any = {};

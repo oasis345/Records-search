@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   const name = request.nextUrl.searchParams.get('name')!;
 
   try {
-    const result = await lolService.getSummoner({ region, name });
+    const result = await lolService.getUser({ region, name });
 
     return NextResponse.json(result);
   } catch (error: any) {
