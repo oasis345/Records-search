@@ -8,7 +8,7 @@ import { httpService } from '@/app/services/httpService';
 import { GameStats } from '../../model/gameStats';
 import { DataTable } from '@/app/components/table/DataTable';
 import { defaultStatsColumns, skeletonColumns } from '../../model/statsColumns';
-import { ColumnDef, ColumnSort } from '@tanstack/react-table';
+import { ColumnSort } from '@tanstack/react-table';
 
 export default function LeaderBoard({
   queryParams,
