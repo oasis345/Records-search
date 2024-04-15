@@ -40,7 +40,7 @@ class LOLService extends RiotService {
     return Object.values(result.data);
   }
 
-  async getRanked({ region, tier, page = 1 }: { region: string; tier: string; page: number }): Promise<LoLStats[]> {
+  async getRanked({ region, tier, page = 1 }: { region: string; tier: string; page?: number }): Promise<LoLStats[]> {
     const url = `https://${region}.${API_BASE_URL}/league-exp/v4/entries/RANKED_SOLO_5x5/${tier.toUpperCase()}/I`;
     const result = await this.get<LeagueEntry[]>({ url, params: { page: 1, api_key: API_KEY } });
     const summonerIds = result.map((stats) => stats.summonerId);

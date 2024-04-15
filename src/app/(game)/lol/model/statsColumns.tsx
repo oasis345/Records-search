@@ -1,6 +1,7 @@
 import { defaultStatsColumns } from '../../shared/model/statsColumns';
 
 const statsColumns = [...defaultStatsColumns];
+// @ts-ignore
 const nameColumnIndex = statsColumns.findIndex((column) => column.accessorKey === 'name');
 const customNameColumn = {
   accessorKey: 'name',
