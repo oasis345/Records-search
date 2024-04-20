@@ -56,3 +56,5 @@ export class PubgService extends GameService {
     return data;
   }
 }
+
+export const pubgService = new PubgService();

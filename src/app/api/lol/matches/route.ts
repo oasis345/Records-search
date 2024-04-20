@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { LOLService, lolService } from '@/app/services/lol.service';
-import { gameServiceManager } from '@/app/services/serviceManager';
+import { lolService } from '@/app/services/lol.service';
 
 export async function GET(request: NextRequest) {
   const region = request.nextUrl.searchParams.get('region')!;
   const puuid = request.nextUrl.searchParams.get('puuid')!;
   const start = request.nextUrl.searchParams.get('start')!;
-  const service = gameServiceManager.getService<LOLService>('lol');
 
   try {
-    const result = await service.getMatches({ puuid, region, start });
+    const result = await lolService.getMatches({ puuid, region, start });
 
     return NextResponse.json(result);
   } catch (error: any) {

@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { TFTService } from '@/app/services/tft.service';
-import { gameServiceManager } from '@/app/services/serviceManager';
+import { tftService } from '@/app/services/tft.service';
 
 export async function GET(request: NextRequest) {
   const region = request.nextUrl.searchParams.get('region')!;
   const tier = request.nextUrl.searchParams.get('tier')!;
-  const service = gameServiceManager.getService<TFTService>('tft');
 
   try {
-    const result = await service.getLeaderBoard({ region, tier });
+    const result = await tftService.getLeaderBoard({ region, tier });
 
     return NextResponse.json(result);
   } catch (error: any) {
