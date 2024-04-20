@@ -1,8 +1,9 @@
 import { Account } from '@/app/(game)/shared/model/riot/interface';
-import { HttpService } from './httpService';
+import { httpService } from './httpService';
+import { GameService } from './gameService';
 const API_KEY = process.env.LOL_API_KEY;
 
-export abstract class RiotService extends HttpService {
+export abstract class RiotService extends GameService {
   apiVersion: string = '';
 
   async init() {
@@ -11,7 +12,7 @@ export abstract class RiotService extends HttpService {
 
   async getLatestDragonApiVersion() {
     try {
-      const result = await this.get<any[]>({
+      const result = await httpService.get<any[]>({
         url: 'https://ddragon.leagueoflegends.com/api/versions.json',
       });
 
@@ -30,7 +31,7 @@ export abstract class RiotService extends HttpService {
     name: string;
     tag: string;
   }): Promise<Account> {
-    const result = await this.get<Account>({
+    const result = await httpService.get<Account>({
       url: `https://${region}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${name}/${tag}`,
       params: { api_key: API_KEY },
     });
@@ -39,7 +40,7 @@ export abstract class RiotService extends HttpService {
   }
 
   protected async getAccountByPuuid(region: string, puuid: string): Promise<Account> {
-    const result = await this.get<Account>({
+    const result = await httpService.get<Account>({
       url: `https://${region}.api.riotgames.com/riot/account/v1/accounts/by-puuid/${puuid}`,
       params: { api_key: API_KEY },
     });

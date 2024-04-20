@@ -29,6 +29,24 @@ export const navigation: Navigation = {
       activated: true,
     },
     {
+      name: 'pubg',
+      label: 'Battle Grounds',
+      href: '/pubg',
+      menus: [
+        {
+          name: '/',
+          href: '/pubg',
+          label: '홈',
+        },
+        {
+          name: 'leaderboard',
+          href: '/pubg/leaderboard',
+          label: '랭킹',
+        },
+      ],
+      activated: true,
+    },
+    {
       name: 'tft',
       label: 'Team Fight Tactics',
       href: '/tft',
@@ -75,13 +93,6 @@ export const navigation: Navigation = {
       name: 'fortnite',
       label: 'Fortnite',
       href: '/fortnite',
-      menus: [],
-      activated: false,
-    },
-    {
-      name: 'pubg',
-      label: 'Battle Grounds',
-      href: '/pubg',
       menus: [],
       activated: false,
     },

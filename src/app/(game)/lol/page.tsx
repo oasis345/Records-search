@@ -2,12 +2,13 @@ import React from 'react';
 import Image from 'next/image';
 import TitleBanner from '../shared/components/TitleBanner';
 import { regions } from '../shared/model/riot/regions';
-import { lolService } from '@/app/services/lol.service';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { LOLService } from '@/app/services/lol.service';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { gameServiceManager } from '@/app/services/serviceManager';
 
 export default async function Page() {
-  await lolService.init();
-  const result: Record<string, any> = await lolService.getRotationChampions();
+  const service = gameServiceManager.getService<LOLService>('lol');
+  const response = await service.getRotationChampions();
 
   return (
     <>
@@ -25,15 +26,15 @@ export default async function Page() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-8 gap-1">
-              {result.freeChampionIds.map((id: string) => {
-                const champion = lolService.champions.find((champion: any) => champion.key === String(id));
+              {response.freeChampionIds.map((id: string) => {
+                const champion = service.champions.find((champion: any) => champion.key === String(id));
 
                 return (
                   <div key={id}>
                     <Image
                       width={65}
                       height={65}
-                      src={lolService.getImageUrl('champion', champion.id)}
+                      src={service.getImageUrl('champion', champion.id)}
                       alt="Rotation Champion"
                     />
                     <p className="text-sm font-semibold">{champion.name}</p>

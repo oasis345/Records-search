@@ -1,33 +1,28 @@
-import { Account, Summoner } from '@/app/(game)/shared/model/riot/interface';
 import Container from '@/app/(game)/shared/components/profile/ProfileContainer';
-import { tftService } from '@/app/services/tft.service';
+import { TFTService, tftService } from '@/app/services/tft.service';
 import { TFTMatchHistory } from './MatchHistory';
 import { Match } from '@/app/(game)/shared/model/match';
+import { User } from '@/app/(game)/shared/model/user';
+import { gameServiceManager } from '@/app/services/serviceManager';
 
 export default async function Page({ params }: { params: { slug: string[] } }) {
   const [region, searchText] = decodeURIComponent(params.slug.toString()).split(',');
-  let summoner: Summoner & Account;
-  let matchData: Match[];
+  const service = gameServiceManager.getService<TFTService>('tft');
+  let user: User | undefined;
+  let matchData: Match[] | undefined;
 
-  await tftService.init();
-  summoner = await tftService.getSummoner({ name: searchText, region });
-  matchData = await tftService.getMatches({ puuid: summoner.puuid, region });
+  try {
+    user = await service.findUser({ name: searchText, region });
+    matchData = await tftService.getMatches({ puuid: user.data.puuid, region });
+  } catch (error) {
+    console.error('Profile Data is not Found');
+  }
 
   return (
-    <Container
-      region={region}
-      searchText={searchText}
-      user={{
-        name: summoner.gameName,
-        profileIcon: tftService.getImageUrl('profileIcon', summoner.profileIconId),
-        region,
-        tag: summoner.tagLine,
-      }}
-    >
+    <Container region={region} searchText={searchText} user={user}>
       <TFTMatchHistory
         matchData={matchData}
-        region={region}
-        summoner={summoner}
+        user={user!}
         resource={{
           champions: tftService.champions,
           apiVersion: tftService.apiVersion,

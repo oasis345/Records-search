@@ -9,7 +9,6 @@ export default function Page() {
         { key: 'region', items: regions, value: 'kr' },
         { key: 'tier', items: tiers, value: 'challenger' },
       ]}
-      sort={[{ id: 'score', desc: true }]}
     />
   );
 }

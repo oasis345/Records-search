@@ -1,24 +1,14 @@
-import { Dict } from '@/app/intrefaces/intreface';
-import { lolService } from './lol.service';
-import { tftService } from './tft.service';
+import { GameStats } from '../(game)/shared/model/gameStats';
+import { Match } from '../(game)/shared/model/match';
+import { User } from '../(game)/shared/model/user';
 
-export class GameService {
-  currentService: GameService;
+export interface FindUserOption {
+  region: string;
+  name: string;
+}
 
-  private serviceMap: Dict = {
-    lol: lolService,
-    tft: tftService,
-  };
-
-  constructor(title: string) {
-    this.currentService = this.serviceMap[title];
-  }
-
-  // async init() {
-  //   await this.currentService.init?.();
-  // }
-
-  async findUser() {
-    return;
-  }
+export abstract class GameService {
+  abstract init(): Promise<void>;
+  abstract findUser(findUserOption: FindUserOption): Promise<User | undefined>;
+  abstract getLeaderBoard(findOption: any): Promise<GameStats[] | undefined>;
 }

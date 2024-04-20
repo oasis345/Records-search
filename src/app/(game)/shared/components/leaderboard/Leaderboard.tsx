@@ -13,7 +13,7 @@ import { ColumnSort } from '@tanstack/react-table';
 export default function LeaderBoard({
   queryParams,
   columns = defaultStatsColumns,
-  sort,
+  sort = [{ id: 'score', desc: true }],
   children,
 }: {
   queryParams: { key: string; value: any; items: any[] }[];
@@ -21,10 +21,12 @@ export default function LeaderBoard({
   sort?: ColumnSort[];
   children?: React.ReactNode;
 }) {
-  const { setQueryParam } = useQueryParams();
+  const { setQueryParam, searchParams } = useQueryParams();
   const { currentTitle } = useNavigation();
   const [queryParamsMap, setQueryParamsMap] = React.useState(
-    new Map<string, any>(queryParams.map((queryParam) => [queryParam.key, queryParam.value])),
+    new Map<string, any>(
+      queryParams.map((queryParam) => [queryParam.key, searchParams.get(queryParam.key) ?? queryParam.value]),
+    ),
   );
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState<GameStats[]>([]);

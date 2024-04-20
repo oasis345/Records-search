@@ -30,6 +30,8 @@ export const gameModes = [
   },
   {
     key: 'ONEFORALL',
+    label: '단일 챔피언',
+    teamIds: [100, 200],
   },
   {
     key: 'ASCENSION',

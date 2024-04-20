@@ -3,23 +3,21 @@ import MatchHistory from '@/app/(game)/shared/components/match/MatchHistory';
 import { TFTMatchHistoryItemBuilder } from '../../model/match';
 import { Match } from '@/app/(game)/shared/model/match';
 import { httpService } from '@/app/services/httpService';
-import { Summoner } from '@/app/(game)/shared/model/riot/interface';
+import { User } from '@/app/(game)/shared/model/user';
 
 export function TFTMatchHistory({
-  matchData,
-  region,
-  summoner,
+  matchData = [],
+  user,
   resource,
 }: {
-  matchData: Match[];
-  region: string;
-  summoner: Summoner;
+  matchData?: Match[];
+  user: User;
   resource: any;
 }) {
   const fetchMatchData = async (startIndex: number) => {
     const result = await httpService.get<Match[]>({
       url: '/api/tft/matches',
-      params: { region, puuid: summoner.puuid, start: startIndex },
+      params: { region: user.region, puuid: user.data.puuid, start: startIndex },
     });
 
     return result;

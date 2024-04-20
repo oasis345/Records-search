@@ -10,11 +10,17 @@ const ProfileCard = ({ user }: { user: User }) => {
       <CardHeader>
         <CardTitle>
           <div className="flex">
-            <Image width={120} height={120} style={{ height: '120px' }} src={user.profileIcon} alt="Profile Image" />
+            <Image
+              width={120}
+              height={120}
+              style={{ height: '120px' }}
+              src={user.profileIcon ?? '/profile.jpg'}
+              alt="Profile Image"
+            />
             <div className="px-5">
               <p className="text-nowrap md:text-lg lg:text-lg text-sm pb-3">
-                <span>{user.name}</span>
-                <span>#{user.tag}</span> &nbsp;
+                <span>{user.name}</span> &nbsp;
+                <span>{user.tag}</span> &nbsp;
                 <span>{user.region.toUpperCase()}</span>
               </p>
               <ProfileCardContents user={user} />

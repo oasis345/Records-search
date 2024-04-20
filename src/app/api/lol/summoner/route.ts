@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { lolService } from '@/app/services/lol.service';
+import { LOLService, lolService } from '@/app/services/lol.service';
+import { gameServiceManager } from '@/app/services/serviceManager';
 
 export async function GET(request: NextRequest) {
   const region = request.nextUrl.searchParams.get('region')!;
   const name = request.nextUrl.searchParams.get('name')!;
+  const service = gameServiceManager.getService<LOLService>('lol');
 
   try {
-    const result = await lolService.getUser({ region, name });
+    const result = await service.findUser({ region, name });
 
     return NextResponse.json(result);
   } catch (error: any) {

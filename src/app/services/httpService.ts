@@ -9,12 +9,20 @@ export class HttpServiceError extends Error {
 }
 
 export class HttpService {
-  async get<T>({ url, params }: { url: string; params?: any }): Promise<T> {
+  async get<T = any>({
+    url,
+    params,
+    init = { cache: 'force-cache' },
+  }: {
+    url: string;
+    params?: any;
+    init?: RequestInit;
+  }): Promise<T> {
     const queryParams = new URLSearchParams(params);
     const fullURL = params ? `${url}?${queryParams.toString()}` : url;
 
     try {
-      const response = await fetch(fullURL, { cache: 'force-cache' });
+      const response = await fetch(fullURL, init);
       const result = await response.json();
       if (!response.ok) {
         console.error(result?.message ?? result?.status?.message);

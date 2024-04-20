@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { LOLService, lolService } from '@/app/services/lol.service';
 import { gameServiceManager } from '@/app/services/serviceManager';
+import { PubgService } from '@/app/services/pubg.service';
 
 export async function GET(request: NextRequest) {
   const region = request.nextUrl.searchParams.get('region')!;
-  const puuid = request.nextUrl.searchParams.get('puuid')!;
-  const start = request.nextUrl.searchParams.get('start')!;
-  const service = gameServiceManager.getService<LOLService>('lol');
+  const gameMode = request.nextUrl.searchParams.get('gameMode')!;
+  const service = gameServiceManager.getService<PubgService>('pubg');
 
   try {
-    const result = await service.getMatches({ puuid, region, start });
+    const result = await service.getLeaderBoard({ region, gameMode });
 
     return NextResponse.json(result);
   } catch (error: any) {
