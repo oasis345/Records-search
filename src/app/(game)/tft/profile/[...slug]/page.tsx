@@ -13,7 +13,7 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
 
   try {
     user = await service.findUser({ name: searchText, region });
-    matchData = await tftService.getMatches({ puuid: user.data.puuid, region });
+    matchData = await service.getMatches({ puuid: user.data.puuid, region });
   } catch (error) {
     console.error('Profile Data is not Found');
   }
@@ -24,8 +24,8 @@ export default async function Page({ params }: { params: { slug: string[] } }) {
         matchData={matchData}
         user={user!}
         resource={{
-          champions: tftService.champions,
-          apiVersion: tftService.apiVersion,
+          champions: service.champions,
+          apiVersion: service.apiVersion,
         }}
       />
     </Container>
