@@ -4,11 +4,12 @@ import TitleBanner from '../shared/components/TitleBanner';
 import { regions } from '../shared/model/riot/regions';
 import { LOLService } from '@/app/services/lol.service';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { gameServiceManager } from '@/app/services/serviceManager';
+import gameServiceManager from '@/app/services/serviceManager';
+import { httpService } from '@/app/services/httpService';
 
 export default async function Page() {
-  const service = gameServiceManager.getService<LOLService>('lol');
-  const response = await service.getRotationChampions();
+  const service = await gameServiceManager.getService<LOLService>('lol');
+  const response = await service.getRotationChampions(httpService.getRevalidateMap('weekend'));
 
   return (
     <>

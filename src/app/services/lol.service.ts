@@ -25,7 +25,7 @@ export class LOLService extends RiotService {
     this.champions = await this.getChampions(this.apiVersion);
   }
 
-  private async getSpells(version: string) {
+  async getSpells(version: string) {
     const result = await httpService.get<Record<string, any>>({
       url: `https://ddragon.leagueoflegends.com/cdn/${version}/data/ko_KR/summoner.json`,
     });
@@ -33,7 +33,7 @@ export class LOLService extends RiotService {
     return Object.values(result.data);
   }
 
-  private async getChampions(version: string) {
+  async getChampions(version: string) {
     const result = await httpService.get<Record<string, any>>({
       url: `https://ddragon.leagueoflegends.com/cdn/${version}/data/ko_KR/champion.json`,
     });
@@ -51,7 +51,7 @@ export class LOLService extends RiotService {
     page?: number;
   }): Promise<LoLStats[]> {
     const url = `https://${region}.${API_BASE_URL}/league-exp/v4/entries/RANKED_SOLO_5x5/${tier.toUpperCase()}/I`;
-    const result = await httpService.get<LeagueEntry[]>({ url, params: { page: 1, api_key: API_KEY } });
+    const result = await httpService.get<LeagueEntry[]>({ url, params: { page: 1, api_key: API_KEY }});
     const summonerIds = result.map((stats) => stats.summonerId);
     const userPromises = summonerIds.map((id) => this.getUserBySummonerId(region, id));
     const user = await Promise.all<RiotUser>(userPromises);
@@ -139,10 +139,9 @@ export class LOLService extends RiotService {
     });
   }
 
-  async getRotationChampions(): Promise<Record<string, any>> {
+  async getRotationChampions(revalidate: number): Promise<Record<string, any>> {
     const url = `https://kr.${API_BASE_URL}/platform/v3/champion-rotations`;
-    const WeekendSeconds = 604800;
-    return await httpService.get({ url, params: { api_key: API_KEY }, init: { next: { revalidate: WeekendSeconds } } });
+    return await httpService.get({ url, params: { api_key: API_KEY }, init: { next: { revalidate } } });
   }
 
   getImageUrl(category: 'profileIcon' | 'champion' | 'item' | 'spell', name: string | number, apiVersion?: string) {

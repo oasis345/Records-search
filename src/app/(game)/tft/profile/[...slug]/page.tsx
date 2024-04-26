@@ -3,11 +3,11 @@ import { TFTService, tftService } from '@/app/services/tft.service';
 import { TFTMatchHistory } from './MatchHistory';
 import { Match } from '@/app/(game)/shared/model/match';
 import { User } from '@/app/(game)/shared/model/user';
-import { gameServiceManager } from '@/app/services/serviceManager';
+import gameServiceManager from '@/app/services/serviceManager';
 
 export default async function Page({ params }: { params: { slug: string[] } }) {
   const [region, searchText] = decodeURIComponent(params.slug.toString()).split(',');
-  const service = gameServiceManager.getService<TFTService>('tft');
+  const service = await gameServiceManager.getService<TFTService>('tft');
   let user: User | undefined;
   let matchData: Match[] | undefined;
 

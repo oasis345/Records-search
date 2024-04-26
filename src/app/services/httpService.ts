@@ -1,3 +1,5 @@
+type Revalidate = 'hour' | 'day' | 'weekend'
+
 export class HttpServiceError extends Error {
   constructor(
     message: string,
@@ -9,6 +11,16 @@ export class HttpServiceError extends Error {
 }
 
 export class HttpService {
+  getRevalidateMap(revalidate: Revalidate) {
+    const revalidateMap: Record<Revalidate, number> = {
+      hour: 3600,
+      day: 86400,
+      weekend: 604800
+    }
+
+    return revalidateMap[revalidate]
+  }
+
   async get<T = any>({
     url,
     params,

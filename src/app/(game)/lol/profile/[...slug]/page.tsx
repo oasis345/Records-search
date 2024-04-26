@@ -4,11 +4,11 @@ import Container from '@/app/(game)/shared/components/profile/ProfileContainer';
 import { Match } from '@/app/(game)/shared/model/match';
 import { LOLMatchHistory } from './MatchHistory';
 import { User } from '@/app/(game)/shared/model/user';
-import { gameServiceManager } from '@/app/services/serviceManager';
+import gameServiceManager from '@/app/services/serviceManager';
 
 export default async function Page({ params }: { params: PageParams }) {
   const [region, searchText] = decodeURIComponent(params.slug.toString()).split(',');
-  const service = gameServiceManager.getService<LOLService>('lol');
+  const service = await gameServiceManager.getService<LOLService>('lol');
   let user: User | undefined;
   let matchData: Match[] | undefined;
 

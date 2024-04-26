@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    instrumentationHook: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  compiler: {
+    removeConsole: false,
   },
   images: {
     unoptimized: true,
