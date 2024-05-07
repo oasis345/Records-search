@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useNavigation } from '../../../hooks/useNavigation';
 import { Dict } from '@/app/intrefaces/intreface';
+import Link from 'next/link';
 
 export default function TitleBanner({
   selectItems,
@@ -23,10 +24,7 @@ export default function TitleBanner({
   const [searchValue, setSearchValue] = React.useState('');
   const [region, setRegion] = React.useState(selectedItem);
   const { router, currentTitle } = useNavigation();
-
-  const goToProfilePage = async () => {
-    router.push(`/${currentTitle}/profile/${region}/${encodeURIComponent(searchValue)}`);
-  };
+  const profilePageUrl = `/${currentTitle}/profile/${region}/${encodeURIComponent(searchValue)}`;
 
   return (
     <div className="flex flex-col h-full">
@@ -46,11 +44,13 @@ export default function TitleBanner({
             value={searchValue}
             onChange={(value) => setSearchValue(value)}
             onKeyUp={(event) => {
-              if (searchValue && event.code === 'Enter') goToProfilePage();
+              if (searchValue && event.code === 'Enter') router.push(profilePageUrl);
             }}
             placeholder={placeholder}
           />
-          <Button onClick={goToProfilePage}>검색</Button>
+          <Link href={profilePageUrl}>
+            <Button>검색</Button>
+          </Link>
         </div>
       </div>
     </div>

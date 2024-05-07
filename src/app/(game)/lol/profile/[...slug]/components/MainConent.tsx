@@ -28,14 +28,15 @@ const MainContent: React.FC<{
 
       if (itemNumber !== 0) {
         items.push(
-          <Image
-            key={itemKey}
-            width={size}
-            height={size}
-            style={{ height: `${size}px` }}
-            src={lolService.getImageUrl('item', itemNumber, apiVersion)}
-            alt="Item Image"
-          />,
+          <div key={itemKey} className="border-blue-300 border">
+            <Image
+              width={size}
+              height={size}
+              style={{ height: `${size}px` }}
+              src={lolService.getImageUrl('item', itemNumber, apiVersion)}
+              alt="Item Image"
+            />
+          </div>,
         );
       }
     }
@@ -48,25 +49,31 @@ const MainContent: React.FC<{
     <div className="flex w-full p-2 items-center justify-between">
       <div className="flex text-xs text-nowrap items-center grow shrink-0">
         <div className="flex">
-          <Image
-            width={isDetail ? 34 : 48}
-            height={isDetail ? 34 : 48}
-            src={lolService.getImageUrl('champion', participant.championName, apiVersion)}
-            alt="Champion Image"
-          />
+          <div className="border-blue-300 border">
+            <Image
+              width={isDetail ? 34 : 48}
+              height={isDetail ? 34 : 48}
+              src={lolService.getImageUrl('champion', participant.championName, apiVersion)}
+              alt="Champion Image"
+            />
+          </div>
           <div className="grid grid-cols-1 gap-1 px-1">
-            <Image
-              width={isDetail ? 15 : 22}
-              height={isDetail ? 15 : 22}
-              src={lolService.getImageUrl('spell', spell1, apiVersion)}
-              alt="spell_1"
-            />
-            <Image
-              width={isDetail ? 15 : 22}
-              height={isDetail ? 15 : 22}
-              src={lolService.getImageUrl('spell', spell2, apiVersion)}
-              alt="spell_2"
-            />
+            <div className="border-blue-300 border">
+              <Image
+                width={isDetail ? 15 : 22}
+                height={isDetail ? 15 : 22}
+                src={lolService.getImageUrl('spell', spell1, apiVersion)}
+                alt="spell_1"
+              />
+            </div>
+            <div className="border-blue-300 border">
+              <Image
+                width={isDetail ? 15 : 22}
+                height={isDetail ? 15 : 22}
+                src={lolService.getImageUrl('spell', spell2, apiVersion)}
+                alt="spell_2"
+              />
+            </div>
           </div>
         </div>
         <div className="items-center grow">

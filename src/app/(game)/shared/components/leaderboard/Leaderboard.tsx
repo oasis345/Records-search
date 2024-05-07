@@ -10,7 +10,7 @@ import { DataTable } from '@/app/components/table/DataTable';
 import { defaultStatsColumns, skeletonColumns } from '../../model/statsColumns';
 import { ColumnSort } from '@tanstack/react-table';
 
-export default function LeaderBoard({
+export default function Leaderboard({
   queryParams,
   columns = defaultStatsColumns,
   sort = [{ id: 'score', desc: true }],

@@ -2,11 +2,11 @@ import { regions } from '@/app/(game)/shared/model/riot/regions';
 import { RiotService } from './riot.service';
 import _ from 'lodash';
 import { LeagueEntry, Match } from '../(game)/lol/model/interface';
-import { LoLStats } from '@/app/(game)/lol/model/stats';
 import { RiotUser, Summoner } from '@/app/(game)/shared/model/riot/interface';
 import { LOLMatch } from '../(game)/lol/model/match';
 import { User } from '../(game)/shared/model/user';
 import { httpService } from './httpService';
+import { LoLStats } from '../(game)/lol/model/stats';
 
 const API_KEY = process.env.LOL_API_KEY;
 const API_BASE_URL = 'api.riotgames.com/lol';
@@ -41,7 +41,7 @@ export class LOLService extends RiotService {
     return Object.values(result.data);
   }
 
-  async getLeaderBoard({
+  async getLeaderboard({
     region,
     tier,
     page = 1,
@@ -51,14 +51,30 @@ export class LOLService extends RiotService {
     page?: number;
   }): Promise<LoLStats[]> {
     const url = `https://${region}.${API_BASE_URL}/league-exp/v4/entries/RANKED_SOLO_5x5/${tier.toUpperCase()}/I`;
-    const result = await httpService.get<LeagueEntry[]>({ url, params: { page: 1, api_key: API_KEY }});
+    const result = await httpService.get<LeagueEntry[]>({ url, params: { page: 1, api_key: API_KEY } });
     const summonerIds = result.map((stats) => stats.summonerId);
     const userPromises = summonerIds.map((id) => this.getUserBySummonerId(region, id));
     const user = await Promise.all<RiotUser>(userPromises);
     const statistics = result.map((stats) => {
       const foundUser = user.find((item: RiotUser) => item.id === stats.summonerId)!;
-      return new LoLStats(stats, foundUser);
+      return this.createStats({ stats, user: foundUser });
     });
+    return statistics;
+  }
+
+  createStats({ stats, user }: { stats: LeagueEntry; user: RiotUser }) {
+    const lolStats = new LoLStats(stats, user);
+    return lolStats;
+  }
+
+  async getUserStatistics<LoLStats>({ region, user }: { region: string; user: User }): Promise<LoLStats[]> {
+    const url = `https://${region}.${API_BASE_URL}/league/v4/entries/by-summoner/${user.id}`;
+    const result = await httpService.get<LeagueEntry[]>({ url, params: { api_key: API_KEY } });
+    const statistics = result.map((stats) => {
+      return this.createStats({ stats, user: user.data });
+    });
+
+    // @ts-ignore
     return statistics;
   }
 
@@ -99,7 +115,7 @@ export class LOLService extends RiotService {
       name: userData.gameName,
       region: region,
       tag: userData.tagLine,
-      id: userData.accountId,
+      id: userData.id,
       profileIcon: this.getImageUrl('profileIcon', userData.profileIconId),
       data: userData,
     });

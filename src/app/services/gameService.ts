@@ -2,13 +2,14 @@ import { GameStats } from '../(game)/shared/model/gameStats';
 import { Match } from '../(game)/shared/model/match';
 import { User } from '../(game)/shared/model/user';
 
-export interface FindUserOption {
+type findUserStatsOption = {
   region: string;
-  name: string;
-}
+  user: User;
+};
 
 export abstract class GameService {
   abstract init(): Promise<void>;
-  abstract findUser(findUserOption: FindUserOption): Promise<User | undefined>;
-  abstract getLeaderBoard(findOption: any): Promise<GameStats[] | undefined>;
+  abstract findUser({ region, name }: { region: string; name: string }): Promise<User | undefined>;
+  abstract getLeaderboard(findOption: any): Promise<GameStats[] | undefined>;
+  abstract getUserStatistics<T extends GameStats>(findOption: findUserStatsOption): Promise<T[] | undefined>;
 }

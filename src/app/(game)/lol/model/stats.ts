@@ -1,7 +1,7 @@
 import { GameStats } from '../../shared/model/gameStats';
 import { RiotUser } from '../../shared/model/riot/interface';
 
-type Stats = {
+export type Stats = {
   summonerId: string;
   tier: string;
   rank: string;
@@ -23,6 +23,7 @@ export class LoLStats extends GameStats {
       score: leaguePoints,
       wins,
       losses,
+      data: lolStats,
     });
   }
 }

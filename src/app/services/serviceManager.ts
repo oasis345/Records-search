@@ -1,7 +1,4 @@
-import { GameStats } from '../(game)/shared/model/gameStats';
-import { Match } from '../(game)/shared/model/match';
-import { User } from '../(game)/shared/model/user';
-import { FindUserOption, GameService } from './gameService';
+import { GameService } from './gameService';
 import { registerServices as registerService } from './serviceRegister';
 
 export class GameServiceManager<T extends GameService = GameService> {
@@ -27,13 +24,13 @@ export class GameServiceManager<T extends GameService = GameService> {
     const service = this.services.get(serviceName);
 
     if (!service) {
-      await registerService(serviceName)
-      return await this.getService(serviceName)
+      await registerService(serviceName);
+      return await this.getService(serviceName);
     }
 
     return service;
   }
 }
 
-const gameServiceManager = new GameServiceManager()
+const gameServiceManager = new GameServiceManager();
 export default gameServiceManager;

@@ -33,12 +33,13 @@ export default async function Page() {
                 return (
                   <div key={id}>
                     <Image
+                      className="w-[35px] md:w-[65px] h-auto border-blue-300 border"
                       width={65}
                       height={65}
                       src={service.getImageUrl('champion', champion.id)}
                       alt="Rotation Champion"
                     />
-                    <p className="text-sm font-semibold">{champion.name}</p>
+                    <p className="text-sm md:font-thin">{champion.name}</p>
                   </div>
                 );
               })}

@@ -2,7 +2,7 @@ import { defaultStatsColumns } from '../../shared/model/statsColumns';
 
 const statsColumns = [
   // @ts-ignore
-  ...defaultStatsColumns.filter((column) => column.accessorKey !== 'losses'),
+  ...defaultStatsColumns,
   {
     accessorKey: 'averageDamage',
     accessorFn: (data: any) => {

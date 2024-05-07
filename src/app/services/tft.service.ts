@@ -7,11 +7,15 @@ import { Account, Summoner } from '@/app/(game)/shared/model/riot/interface';
 import { TFTMatch } from '@/app/(game)/tft/model/match';
 import { User } from '../(game)/shared/model/user';
 import { httpService } from './httpService';
+import { GameStats } from '../(game)/shared/model/gameStats';
 
 const API_KEY = process.env.TFT_API_KEY;
 const API_BASE_URL = 'api.riotgames.com/tft';
 
 export class TFTService extends RiotService {
+  getUserStatistics<T extends GameStats>(findOption: { region: string; user: User }): Promise<T[] | undefined> {
+    throw new Error('Method not implemented.');
+  }
   champions: Record<string, any> = {};
 
   constructor() {
@@ -31,7 +35,7 @@ export class TFTService extends RiotService {
     return Object.values(result.data);
   }
 
-  async getLeaderBoard({ region, tier }: { region: string; tier: string }): Promise<any[]> {
+  async getLeaderboard({ region, tier }: { region: string; tier: string }): Promise<any[]> {
     const url = `https://${region}.${API_BASE_URL}/league/v1/${tier}`;
     const result = await httpService.get<LeagueList>({ url, params: { queue: 'RANKED_TFT', api_key: API_KEY } });
     const data = result.entries.map((stats) => new TFTStats(stats));

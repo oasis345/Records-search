@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   const tier = request.nextUrl.searchParams.get('tier')!;
 
   try {
-    const result = await lolService.getLeaderBoard({ region, tier });
+    const result = await lolService.getLeaderboard({ region, tier });
 
     return NextResponse.json(result);
   } catch (error: any) {

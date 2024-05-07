@@ -1,4 +1,5 @@
-import { Season } from '../(game)/pubg/model/season';
+import { Match, Season } from '../(game)/pubg/model/interface';
+import { PUBGMatch } from '../(game)/pubg/model/match';
 import { PubgStats } from '../(game)/pubg/model/stats';
 import { GameStats } from '../(game)/shared/model/gameStats';
 import { User } from '../(game)/shared/model/user';
@@ -13,9 +14,10 @@ const headers = {
 };
 
 export class PubgService extends GameService {
-  async init(): Promise<void> {
-    console.log('pubg service init.');
+  getUserStatistics<T extends GameStats>(findOption: { region: string; user: User }): Promise<T[] | undefined> {
+    throw new Error('Method not implemented.');
   }
+  async init(): Promise<void> {}
 
   async findUser({ region, name }: { region: string; name: string }): Promise<User | undefined> {
     let user: User | undefined;
@@ -37,6 +39,26 @@ export class PubgService extends GameService {
     return user;
   }
 
+  async getMatches({ userId, region, matches }: { userId: string; region: string; matches: string[] }) {
+    const matchPromises = matches.map((id: string) => {
+      const matchUrl = `${API_BASE_URL}/${region}/matches/${id}`;
+      return httpService.get({ url: matchUrl, init: { headers } });
+    });
+
+    const response = await Promise.all(matchPromises);
+    const matchesMap = response.map((match: Match) => {
+      const item = {
+        ...match,
+        user: match.included
+          .filter((item) => item.type === 'participant')
+          .find((item) => item.attributes.stats.playerId === userId),
+      };
+
+      return new PUBGMatch(item);
+    });
+    return matchesMap;
+  }
+
   async getSeason(region: string) {
     const response = await httpService.get({ url: `${API_BASE_URL}/${region}/seasons`, init: { headers } });
     const data = response.data as Season[];
@@ -44,10 +66,10 @@ export class PubgService extends GameService {
     return data;
   }
 
-  async getLeaderBoard({ region, gameMode }: { region: string; gameMode: string }): Promise<GameStats[] | undefined> {
+  async getLeaderboard({ region, gameMode }: { region: string; gameMode: string }): Promise<GameStats[] | undefined> {
     const seasons = await this.getSeason(region);
     const currentSeason = seasons.find((season) => season.attributes.isCurrentSeason);
-    const response = await httpService.get<any>({
+    const response = await httpService.get({
       url: `${API_BASE_URL}/${region}/leaderboards/${currentSeason!.id}/${gameMode}`,
       init: { headers },
     });

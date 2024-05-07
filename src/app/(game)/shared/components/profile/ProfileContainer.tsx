@@ -16,7 +16,7 @@ export default async function ProfileContainer({
   return !user ? (
     <NotFoundUser region={region} searchText={searchText} />
   ) : (
-    <div className="container flex flex-col">
+    <div className="container flex flex-col gap-2">
       <ProfileCard user={user} />
       {children}
     </div>

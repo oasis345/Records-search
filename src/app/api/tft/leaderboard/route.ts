@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   const tier = request.nextUrl.searchParams.get('tier')!;
 
   try {
-    const result = await tftService.getLeaderBoard({ region, tier });
+    const result = await tftService.getLeaderboard({ region, tier });
 
     return NextResponse.json(result);
   } catch (error: any) {

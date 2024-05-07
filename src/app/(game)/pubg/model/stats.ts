@@ -7,6 +7,8 @@ type Stats = {
     stats: any;
     averageDamage: number;
     kda: number;
+    wins: number;
+    games: number;
   };
   id: string;
 };
@@ -20,6 +22,7 @@ export class PubgStats extends GameStats {
       tier: attributes.stats.tier,
       score: attributes.stats.rankPoints,
       wins: attributes.stats.wins,
+      losses: attributes.stats.games - attributes.stats.wins,
       data: pubgStats,
     });
   }

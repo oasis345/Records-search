@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   const gameMode = request.nextUrl.searchParams.get('gameMode')!;
 
   try {
-    const result = await pubgService.getLeaderBoard({ region, gameMode });
+    const result = await pubgService.getLeaderboard({ region, gameMode });
 
     return NextResponse.json(result);
   } catch (error: any) {

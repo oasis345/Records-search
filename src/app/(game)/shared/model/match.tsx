@@ -3,7 +3,7 @@ import MatchResult from '../components/match/MatchResult';
 
 export class Match {
   id: string;
-  creationTime: number;
+  creationTime: number | string;
   durationTime: number;
   mode?: string;
   isWin?: boolean;
@@ -28,7 +28,7 @@ interface Participant {
   icon?: string;
 }
 
-export abstract class MatchHistoryItemBuilder<T extends Match = any> {
+export abstract class MatchHistoryItemBuilder<T extends Match = Match> {
   constructor(public resource: any) {}
 
   protected getHeader(match: T) {
@@ -38,14 +38,7 @@ export abstract class MatchHistoryItemBuilder<T extends Match = any> {
   protected getSubContent(match: T) {
     if (!match.participants) return;
 
-    return (
-      <List
-        items={match.participants}
-        keyField="name"
-        classes="hidden grid-cols-2 lg:grid md:grid"
-        itemClasses="flex w-28 text-xs"
-      />
-    );
+    return <List items={match.participants} keyField="name" classes="hidden md:grid" itemClasses="flex w-28 text-xs" />;
   }
 
   abstract getContents(data: any): React.ReactNode;

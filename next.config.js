@@ -7,6 +7,7 @@ const nextConfig = {
     removeConsole: false,
   },
   images: {
+    // vercel 비용문제로인한 최적화 없애기.
     unoptimized: true,
     remotePatterns: [{ protocol: 'https', hostname: 'ddragon.leagueoflegends.com' }],
   },

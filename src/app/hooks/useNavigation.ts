@@ -1,9 +1,23 @@
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter as useBaseRouter } from 'next/navigation';
+import * as NProgress from 'nprogress';
 
 export interface RouteParams {
   title: string;
   menu: string;
   region: string;
+}
+
+function useRouter() {
+  const router = useBaseRouter();
+
+  const { push } = router;
+
+  router.push = async (...args: Parameters<typeof push>) => {
+    NProgress.start();
+    return push(...args);
+  };
+
+  return router;
 }
 
 export const useNavigation = () => {

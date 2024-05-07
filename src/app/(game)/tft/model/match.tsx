@@ -18,7 +18,7 @@ export class TFTMatchHistoryItemBuilder extends MatchHistoryItemBuilder<TFTMatch
             this.resource.apiVersion,
           );
           return (
-            <div key={Math.random()} className="relative w-12 h-12">
+            <div key={Math.random()} className="relative aspect-[1/1] w-6 md:w-12 h-auto border-blue-300 border">
               <Image fill src={url} alt="character" objectPosition="right" objectFit="cover" />
             </div>
           );

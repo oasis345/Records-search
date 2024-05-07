@@ -3,7 +3,7 @@ export class GameStats {
   tier: string | number;
   score: number;
   wins: number;
-  losses?: number;
+  losses: number;
   data?: any;
 
   constructor(stats: GameStats) {
