@@ -41,12 +41,11 @@ const MainContent: React.FC<{
       }
     }
 
-    //
     return items;
   };
 
   return (
-    <div className="flex w-full p-2 items-center justify-between">
+    <div className="flex w-full items-center justify-between">
       <div className="flex text-xs text-nowrap items-center grow shrink-0">
         <div className="flex">
           <div className="border-blue-300 border">

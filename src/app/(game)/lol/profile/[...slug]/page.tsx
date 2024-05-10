@@ -2,12 +2,13 @@ import { LOLService } from '@/app/services/lol.service';
 import { PageParams } from '@/app/intrefaces/intreface';
 import Container from '@/app/(game)/shared/components/profile/ProfileContainer';
 import { Match } from '@/app/(game)/shared/model/match';
-import { LOLMatchHistory } from './MatchHistory';
 import { User } from '@/app/(game)/shared/model/user';
 import gameServiceManager from '@/app/services/serviceManager';
 import StatsCard from '@/app/(game)/shared/components/profile/StatsCard';
 import { LoLStats } from '../../model/stats';
 import { queueType } from '../../model/queueType';
+import dynamic from 'next/dynamic';
+const LOLMatchHistory = dynamic(() => import('./MatchHistory'), { ssr: false });
 
 export default async function Page({ params }: { params: PageParams }) {
   const [region, searchText] = decodeURIComponent(params.slug.toString()).split(',');

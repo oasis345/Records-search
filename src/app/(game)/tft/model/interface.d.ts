@@ -33,7 +33,9 @@ export interface Participant {
   level: number;
   placement: number;
   players_eliminated: number;
+  augments: string[];
   puuid: string;
+  user: RiotUser;
   time_eliminated: number;
   total_damage_to_players: number;
   traits: Trait[];
@@ -53,7 +55,7 @@ interface Trait {
 }
 
 interface Unit {
-  items: number[];
+  itemNames: string[];
   character_id: string;
   chosen: string | null;
   name: string;
@@ -76,6 +78,7 @@ interface LeagueItem {
   veteran: boolean;
   hotStreak: boolean;
   rank: string;
+  tier: string;
   leaguePoints: number;
   losses: number; // 2등부터 8등까지 횟수
   summonerId: string; // 플레이어의 암호화된 소환사 ID

@@ -11,7 +11,7 @@ const ProfileCard = ({ user }: { user: User }) => {
         <CardTitle>
           <div className="flex">
             <div className="border-blue-300 border">
-              <Image width={120} height={120} src={user.profileIcon ?? '/profile.jpg'} alt="Profile Image" />
+              <Image width={120} height={120} src={user.profileIcon ?? '/profile.jpg'} alt="Profile Image" priority />
             </div>
             <div className="px-5">
               <p className="text-nowrap md:text-lg lg:text-lg text-sm pb-3">

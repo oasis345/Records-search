@@ -20,7 +20,6 @@ export class LOLMatchHistoryItemBuilder extends MatchHistoryItemBuilder<LOLMatch
 
   getSubContent(match: LOLMatch) {
     const { info } = match.data as LOLMatchInterface;
-
     const contents = createContentsByGameMode({
       participants: info.participants,
       mode: info.gameMode,
@@ -44,8 +43,8 @@ export class LOLMatchHistoryItemBuilder extends MatchHistoryItemBuilder<LOLMatch
               size: 18,
             }}
             onItemClick={(item) => {
-              // const name = encodeURIComponent(`${item.riotIdGameName}#${item.riotIdTagline}`);
-              // window.open(`/lol/profile/${region}/${name}`);
+              const name = encodeURIComponent(`${item.riotIdGameName}#${item.riotIdTagline}`);
+              window.open(`/lol/profile/${info.platformId.toLowerCase()}/${name}`);
             }}
           />
         ))}

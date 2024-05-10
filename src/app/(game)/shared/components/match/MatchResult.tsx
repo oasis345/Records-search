@@ -3,7 +3,7 @@ import { secondsToMinutes } from '@/app/utils';
 import { Match } from '../../model/match';
 
 const MatchResult: React.FC<{ match: Match }> = ({ match }) => {
-  const { creationTime, durationTime, mode, isWin, ranking } = match;
+  const { creationTime, durationTime, mode, isWin } = match;
   const formattedGameCreationDate = dayjs(creationTime).format('MM월 DD일');
   const { minutes: durationMinutes, remainingSeconds: durationSeconds } = secondsToMinutes(durationTime);
 

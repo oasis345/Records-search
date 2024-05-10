@@ -1,16 +1,20 @@
 import { GameStats } from '../../shared/model/gameStats';
+import { RiotUser } from '../../shared/model/riot/interface';
 
 type Stats = {
   summonerId: string;
-  rank: string;
+  tier: string;
   wins: number;
   losses: number;
   leaguePoints: number;
 };
 
 export class TFTStats extends GameStats {
-  constructor(tftStats: Stats) {
-    const { leaguePoints, summonerId, rank, wins, losses } = tftStats;
-    super({ name: summonerId, score: leaguePoints, wins, losses, tier: rank });
+  constructor(
+    tftStats: Stats,
+    public user: RiotUser,
+  ) {
+    const { leaguePoints, tier, wins, losses } = tftStats;
+    super({ name: user?.gameName, score: leaguePoints, wins, losses, tier, data: tftStats });
   }
 }

@@ -5,7 +5,7 @@ import { Match } from '@/app/(game)/shared/model/match';
 import { httpService } from '@/app/services/httpService';
 import { User } from '@/app/(game)/shared/model/user';
 
-export function LOLMatchHistory({
+export default function LOLMatchHistory({
   matchData = [],
   user,
   resource,

@@ -2,10 +2,9 @@
 import { AccordionCard } from '@/app/components/card/AccordionCard';
 import { Button } from '@/components/ui/button';
 import { ReloadIcon } from '@radix-ui/react-icons';
-import { Suspense, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Match, MatchHistoryItemBuilder } from '../../model/match';
 import React from 'react';
-import { BaseSkeleton } from '@/app/components/skeleton/Skeleton';
 
 export default function MatchHistory({
   matchData: initialMatches = [],
@@ -40,7 +39,7 @@ export default function MatchHistory({
       const responseData = await fetchMatchData!(data.length);
       setData([...data, ...responseData]);
     } catch (error) {
-      console.error('fetch failed');
+      console.error('Fetch Match Data Failed');
     } finally {
       setIsLoading(false);
     }
@@ -53,13 +52,9 @@ export default function MatchHistory({
 
   return (
     <div className="flex flex-col">
-      {isLoading ? (
-        <BaseSkeleton classes="h-4 w-full" />
-      ) : (
-        <AccordionCard title="매치 이력" type="multiple" items={items} />
-      )}
+      <AccordionCard title="매치 이력" type="multiple" items={items} />
 
-      {disableFetch ?? (
+      {!disableFetch && (
         <Button disabled={isLoading} className="w-full" onClick={onBtnClicked}>
           {isLoading ? <ReloadIcon className="mr-2 h-4 w-4 animate-spin" /> : `더 보기`}
         </Button>

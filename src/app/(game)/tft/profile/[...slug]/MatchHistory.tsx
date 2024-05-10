@@ -5,7 +5,7 @@ import { Match } from '@/app/(game)/shared/model/match';
 import { httpService } from '@/app/services/httpService';
 import { User } from '@/app/(game)/shared/model/user';
 
-export function TFTMatchHistory({
+export default function TFTMatchHistory({
   matchData = [],
   user,
   resource,
