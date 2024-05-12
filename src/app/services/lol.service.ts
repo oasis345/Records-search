@@ -136,7 +136,7 @@ export class LOLService extends RiotService {
 
     const matchIds = await httpService.get<string[]>({
       url: `https://${continent}.${API_BASE_URL}/match/v5/matches/by-puuid/${puuid}/ids`,
-      params: { start, count: 20, api_key: API_KEY },
+      params: { start, count: 10, api_key: API_KEY },
     });
 
     const matchPromises = matchIds.map((matchId: string) => {

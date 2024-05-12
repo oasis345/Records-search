@@ -1,5 +1,5 @@
 import { LOLService } from '@/app/services/lol.service';
-import { PageParams } from '@/app/intrefaces/intreface';
+import { PageProps } from '@/app/intrefaces/intreface';
 import Container from '@/app/(game)/shared/components/profile/ProfileContainer';
 import { Match } from '@/app/(game)/shared/model/match';
 import { User } from '@/app/(game)/shared/model/user';
@@ -8,10 +8,16 @@ import StatsCard from '@/app/(game)/shared/components/profile/StatsCard';
 import { LoLStats } from '../../model/stats';
 import { queueType } from '../../model/queueType';
 import dynamic from 'next/dynamic';
+import { generateProfileMetadata } from '@/app/utils/generateMetadata';
+import { decodeSearchParams } from '@/app/utils';
 const LOLMatchHistory = dynamic(() => import('./MatchHistory'), { ssr: false });
 
-export default async function Page({ params }: { params: PageParams }) {
-  const [region, searchText] = decodeURIComponent(params.slug.toString()).split(',');
+export async function generateMetadata(pageProps: PageProps) {
+  return generateProfileMetadata(pageProps);
+}
+
+export default async function Page({ params }: PageProps) {
+  const [region, searchText] = decodeSearchParams(params.slug);
   const service = await gameServiceManager.getService<LOLService>('lol');
   let user: User | undefined;
   let matchData: Match[] | undefined;

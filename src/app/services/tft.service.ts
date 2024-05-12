@@ -158,7 +158,7 @@ export class TFTService extends RiotService {
     const continent = regions.find((item) => item.name === region)!.continent;
     const matchIds = await httpService.get<string[]>({
       url: `https://${continent}.${API_BASE_URL}/match/v1/matches/by-puuid/${puuid}/ids`,
-      params: { start, count: 20, api_key: API_KEY },
+      params: { start, count: 10, api_key: API_KEY },
     });
     const matchPromises = matchIds.map((matchId: string) => {
       const matchUrl = `https://${continent}.${API_BASE_URL}/match/v1/matches/${matchId}`;

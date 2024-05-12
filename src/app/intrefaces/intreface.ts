@@ -1,3 +1,6 @@
 export type Dict<T = any> = { [k: string]: T };
 
-export type PageParams = { slug: string[] };
+export type PageProps = {
+  params: { slug: string[] };
+  searchParams: { [key: string]: string | string[] | undefined };
+};

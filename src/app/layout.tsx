@@ -4,6 +4,7 @@ import Navbar from './components/navigation/Navbar';
 import { ThemeProvider } from '@/components/ui/theme-provider';
 import './globals.css';
 import NextTopLoader from 'nextjs-toploader';
+import { InterFont } from './utils/font';
 
 export const metadata: Metadata = {
   title: '전적검색 사이트',
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html suppressHydrationWarning>
-      <body>
+      <body className={InterFont.className}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <RecoilRootWrapper>
             <div className="flex flex-col h-screen">

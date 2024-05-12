@@ -7,14 +7,22 @@ import dynamic from 'next/dynamic';
 import { TFTStats } from '../../model/stats';
 import StatsCard from '@/app/(game)/shared/components/profile/StatsCard';
 import { queueType } from '../../model/queueType';
+import { decodeSearchParams } from '@/app/utils';
+import { generateProfileMetadata } from '@/app/utils/generateMetadata';
+import { PageProps } from '@/app/intrefaces/intreface';
 const TFTMatchHistory = dynamic(() => import('./MatchHistory'), { ssr: false });
 
-export default async function Page({ params }: { params: { slug: string[] } }) {
-  const [region, searchText] = decodeURIComponent(params.slug.toString()).split(',');
+export async function generateMetadata(pageProps: PageProps) {
+  return generateProfileMetadata(pageProps);
+}
+
+export default async function Page({ params }: PageProps) {
+  const [region, searchText] = decodeSearchParams(params.slug);
   const service = await gameServiceManager.getService<TFTService>('tft');
   let user: User | undefined;
   let matchData: Match[] | undefined;
   let statistics: TFTStats[] = [];
+
   try {
     user = await service.findUser({ name: searchText, region });
     if (user) {

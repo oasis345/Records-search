@@ -1,12 +1,18 @@
-import { PageParams } from '@/app/intrefaces/intreface';
 import Container from '@/app/(game)/shared/components/profile/ProfileContainer';
 import { User } from '@/app/(game)/shared/model/user';
 import gameServiceManager from '@/app/services/serviceManager';
 import { PubgService } from '@/app/services/pubg.service';
 import PUBGMatchHistory from './MatchHistory';
+import { PageProps } from '@/app/intrefaces/intreface';
+import { decodeSearchParams } from '@/app/utils';
+import { generateProfileMetadata } from '@/app/utils/generateMetadata';
 
-export default async function Page({ params }: { params: PageParams }) {
-  const [region, searchText] = decodeURIComponent(params.slug.toString()).split(',');
+export async function generateMetadata(pageProps: PageProps) {
+  return generateProfileMetadata(pageProps);
+}
+
+export default async function Page({ params }: PageProps) {
+  const [region, searchText] = decodeSearchParams(params.slug);
   const service = await gameServiceManager.getService<PubgService>('pubg');
   let user: User | undefined;
   let matches: any[] = [];
