@@ -6,7 +6,7 @@ const nameColumnIndex = statsColumns.findIndex((column) => column.accessorKey ==
 const customNameColumn = {
   accessorKey: 'name',
   accessorFn: (data: any) => {
-    let name = `${data.name}#${data.user.tagLine}`;
+    let name = data.user ? `${data.name}#${data.user.tagLine}` : 'Unknown';
 
     return name;
   },

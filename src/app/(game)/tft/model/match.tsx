@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { gameModes } from './gameModes';
 import { List } from '@/app/components/list/List';
 import { Star as StarIcon } from 'lucide-react';
+import { BLUR_IMAGE_PATH } from '@/app/utils';
 
 export class TFTMatchHistoryItemBuilder extends MatchHistoryItemBuilder<TFTMatch> {
   getContents(data: TFTMatchInterface): ReactNode {
@@ -37,14 +38,30 @@ export class TFTMatchHistoryItemBuilder extends MatchHistoryItemBuilder<TFTMatch
           <div className="flex">
             {augmentsUrls.map((url, idx) => (
               <div key={idx} className="border-blue-300 border">
-                <Image className="w-4 md:w-6" width={24} height={24} src={url} alt="augment" />
+                <Image
+                  className="w-4 md:w-6"
+                  width={24}
+                  height={24}
+                  src={url}
+                  alt="augment"
+                  placeholder="blur"
+                  blurDataURL={BLUR_IMAGE_PATH}
+                />
               </div>
             ))}
           </div>
           <div className="flex gap-2 text-xs">
             {traitsMap.map((trait, idx) => (
               <div key={idx} className="flex gap-1 items-center">
-                <Image className="w-4 md:w-6" width={24} height={24} src={trait.url} alt="trait" />
+                <Image
+                  className="w-4 md:w-6"
+                  width={24}
+                  height={24}
+                  src={trait.url}
+                  alt="trait"
+                  placeholder="blur"
+                  blurDataURL={BLUR_IMAGE_PATH}
+                />
                 <span className="hidden md:block">{trait.name}</span>
                 <span>{trait.length}</span>
               </div>
@@ -76,11 +93,22 @@ export class TFTMatchHistoryItemBuilder extends MatchHistoryItemBuilder<TFTMatch
                     src={url}
                     alt="character"
                     className="w-6 md:w-12 object-right object-cover"
+                    placeholder="blur"
+                    blurDataURL={BLUR_IMAGE_PATH}
                   />
                 </div>
                 <div className="flex justify-between">
                   {itemUrls.map((url, idx) => (
-                    <Image key={idx} className="w-2 md:w-4" width={16} height={16} src={url} alt="item" />
+                    <Image
+                      key={idx}
+                      className="w-2 md:w-4"
+                      width={16}
+                      height={16}
+                      src={url}
+                      alt="item"
+                      placeholder="blur"
+                      blurDataURL={BLUR_IMAGE_PATH}
+                    />
                   ))}
                 </div>
               </div>

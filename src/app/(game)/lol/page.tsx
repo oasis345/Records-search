@@ -6,6 +6,7 @@ import { LOLService } from '@/app/services/lol.service';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import gameServiceManager from '@/app/services/serviceManager';
 import { httpService } from '@/app/services/httpService';
+import { BLUR_IMAGE_PATH } from '@/app/utils';
 
 export default async function Page() {
   const service = await gameServiceManager.getService<LOLService>('lol');
@@ -38,6 +39,8 @@ export default async function Page() {
                       height={65}
                       src={service.getImageUrl('champion', champion.id)}
                       alt="Rotation Champion"
+                      placeholder="blur"
+                      blurDataURL={BLUR_IMAGE_PATH}
                     />
                     <p className="text-sm md:font-thin">{champion.name}</p>
                   </div>

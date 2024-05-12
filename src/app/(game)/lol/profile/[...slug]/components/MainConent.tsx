@@ -2,6 +2,7 @@ import { secondsToMinutes } from '@/app/utils';
 import { Match, Participant, ApiResource } from '../../../model/interface';
 import Image from 'next/image';
 import { lolService } from '@/app/services/lol.service';
+import { BLUR_IMAGE_PATH } from '@/app/utils';
 
 const MainContent: React.FC<{
   match: Match;
@@ -35,6 +36,8 @@ const MainContent: React.FC<{
               style={{ height: `${size}px` }}
               src={lolService.getImageUrl('item', itemNumber, apiVersion)}
               alt="Item Image"
+              placeholder="blur"
+              blurDataURL={BLUR_IMAGE_PATH}
             />
           </div>,
         );
@@ -54,6 +57,8 @@ const MainContent: React.FC<{
               height={isDetail ? 34 : 48}
               src={lolService.getImageUrl('champion', participant.championName, apiVersion)}
               alt="Champion Image"
+              placeholder="blur"
+              blurDataURL={BLUR_IMAGE_PATH}
             />
           </div>
           <div className="grid grid-cols-1 gap-1 px-1">
@@ -63,6 +68,8 @@ const MainContent: React.FC<{
                 height={isDetail ? 15 : 22}
                 src={lolService.getImageUrl('spell', spell1, apiVersion)}
                 alt="spell_1"
+                placeholder="blur"
+                blurDataURL={BLUR_IMAGE_PATH}
               />
             </div>
             <div className="border-blue-300 border">
@@ -71,6 +78,8 @@ const MainContent: React.FC<{
                 height={isDetail ? 15 : 22}
                 src={lolService.getImageUrl('spell', spell2, apiVersion)}
                 alt="spell_2"
+                placeholder="blur"
+                blurDataURL={BLUR_IMAGE_PATH}
               />
             </div>
           </div>
