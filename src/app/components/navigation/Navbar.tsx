@@ -5,6 +5,7 @@ import * as React from 'react';
 import { navigation } from './model';
 import ThemeToggle from './ThemeToggle';
 import { useNavigation } from '@/app/hooks/useNavigation';
+import Image from 'next/image';
 
 export default function Navbar() {
   const { currentTitle, currentMenu } = useNavigation();
@@ -15,7 +16,7 @@ export default function Navbar() {
       <nav className="flex justify-between border-b border-gray-300 px-4 py-2 items-center">
         <div className="flex space-x-4">
           <Link href={'/'}>
-            <p className="text-lg text-gray-900 font-bold">logo</p>
+            <p className="text-lg text-gray-900 font-bold">RS.GG</p>
           </Link>
           <ul className="flex space-x-4">
             {navigation.titles
@@ -23,7 +24,10 @@ export default function Navbar() {
               .map((title) => (
                 <li key={title.name}>
                   <Link href={`/${title.name}`} className="text-gray-500 hover:text-gray-700">
-                    {title.label}
+                    <div className="flex gap-2">
+                      {title.icon && <Image src={title.icon} width={24} height={24} alt="logo" />}
+                      <span className="hidden md:block">{title.label}</span>
+                    </div>
                   </Link>
                 </li>
               ))}

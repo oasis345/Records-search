@@ -59,11 +59,12 @@ export class LOLService extends RiotService {
       const foundUser = user.find((item: RiotUser) => item.id === stats.summonerId)!;
       return this.createStats({ stats, user: foundUser });
     });
+
     return statistics;
   }
 
   createStats({ stats, user }: { stats: LeagueEntry; user: RiotUser }) {
-    const lolStats = new LoLStats(stats, user);
+    const lolStats = _.toPlainObject(new LoLStats(stats, user));
     return lolStats;
   }
 
@@ -120,7 +121,7 @@ export class LOLService extends RiotService {
       data: userData,
     });
 
-    return user;
+    return _.toPlainObject(user);
   }
 
   async getMatches({
@@ -151,7 +152,7 @@ export class LOLService extends RiotService {
         user: item.info.participants.find((participant) => participant.puuid === puuid)!,
       };
 
-      return new LOLMatch(item);
+      return _.toPlainObject(new LOLMatch(item));
     });
   }
 

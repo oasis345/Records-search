@@ -5,6 +5,7 @@ import { ReloadIcon } from '@radix-ui/react-icons';
 import { useCallback, useEffect, useState } from 'react';
 import { Match, MatchHistoryItemBuilder } from '../../model/match';
 import React from 'react';
+import { MatchSkeleton } from './MatchSkeleton';
 
 export default function MatchHistory({
   matchData: initialMatches = [],
@@ -50,10 +51,13 @@ export default function MatchHistory({
     setItems([...matchItem]);
   }, [data]);
 
-  return (
+  return !items.length ? (
+    <AccordionCard title="매치 이력" type="multiple" items={[]}>
+      <MatchSkeleton />
+    </AccordionCard>
+  ) : (
     <div className="flex flex-col">
       <AccordionCard title="매치 이력" type="multiple" items={items} />
-
       {!disableFetch && (
         <Button disabled={isLoading} className="w-full" onClick={onBtnClicked}>
           {isLoading ? <ReloadIcon className="mr-2 h-4 w-4 animate-spin" /> : `더 보기`}

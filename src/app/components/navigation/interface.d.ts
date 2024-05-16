@@ -9,6 +9,7 @@ type Title = {
   menus: Menu[];
   href: string;
   activated?: boolean;
+  icon?: string;
 };
 
 type Menu = {

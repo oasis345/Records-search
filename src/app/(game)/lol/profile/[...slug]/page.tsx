@@ -8,9 +8,10 @@ import StatsCard from '@/app/(game)/shared/components/profile/StatsCard';
 import { LoLStats } from '../../model/stats';
 import { queueType } from '../../model/queueType';
 import dynamic from 'next/dynamic';
-import { generateProfileMetadata } from '@/app/utils/generateMetadata';
+import { generateProfileMetadata } from '@/app/meta/generateMetadata';
 import { decodeSearchParams } from '@/app/utils';
-const LOLMatchHistory = dynamic(() => import('./MatchHistory'), { ssr: false });
+import { MatchSkeleton } from '@/app/(game)/shared/components/match/MatchSkeleton';
+import LOLMatchHistory from './MatchHistory';
 
 export async function generateMetadata(pageProps: PageProps) {
   return generateProfileMetadata(pageProps);
@@ -36,13 +37,13 @@ export default async function Page({ params }: PageProps) {
   return (
     <Container region={region} searchText={searchText} user={user}>
       <div className="flex flex-col w-full gap-2">
-        <div className="flex flex-col md:flex-row gap-2">
+        <section className="flex flex-col md:flex-row gap-2">
           {statistics.map((stats) => {
             const type = queueType.find((type) => type.key === stats.data.queueType);
             return <StatsCard key={type?.key} mode={type?.label ?? ''} stats={stats} />;
           })}
-        </div>
-        <div>
+        </section>
+        <section>
           <LOLMatchHistory
             matchData={matchData}
             user={user!}
@@ -52,7 +53,7 @@ export default async function Page({ params }: PageProps) {
               apiVersion: service.apiVersion,
             }}
           />
-        </div>
+        </section>
       </div>
     </Container>
   );

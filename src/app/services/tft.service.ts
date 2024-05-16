@@ -73,7 +73,7 @@ export class TFTService extends RiotService {
   }
 
   createStats({ stats, user }: { stats: LeagueItem; user: RiotUser }) {
-    const lolStats = new TFTStats(stats, user);
+    const lolStats = _.toPlainObject(new TFTStats(stats, user));
     return lolStats;
   }
 
@@ -143,7 +143,7 @@ export class TFTService extends RiotService {
       data: userData,
     });
 
-    return user;
+    return _.toPlainObject(user);
   }
 
   async getMatches({
@@ -158,7 +158,7 @@ export class TFTService extends RiotService {
     const continent = regions.find((item) => item.name === region)!.continent;
     const matchIds = await httpService.get<string[]>({
       url: `https://${continent}.${API_BASE_URL}/match/v1/matches/by-puuid/${puuid}/ids`,
-      params: { start, count: 10, api_key: API_KEY },
+      params: { start, count: 5, api_key: API_KEY },
     });
     const matchPromises = matchIds.map((matchId: string) => {
       const matchUrl = `https://${continent}.${API_BASE_URL}/match/v1/matches/${matchId}`;
@@ -184,7 +184,7 @@ export class TFTService extends RiotService {
         user: item.info.participants.find((participant) => participant.puuid === puuid)!,
       };
 
-      return new TFTMatch(item);
+      return _.toPlainObject(new TFTMatch(item));
     });
   }
 

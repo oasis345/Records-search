@@ -7,8 +7,14 @@ import NextTopLoader from 'nextjs-toploader';
 import { InterFont } from './utils/font';
 
 export const metadata: Metadata = {
-  title: '전적검색 사이트',
-  description: 'Nextjs를 활용한 전적검색 사이트 입니다',
+  title: {
+    default: `RS.GG 다양한 게임 전적 검색`,
+    template: `%s - RS.GG`,
+  },
+  description: 'LOL, TFT, PUBG등 다양한 전적을 조회하세요!.',
+  twitter: {
+    card: 'summary_large_image',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

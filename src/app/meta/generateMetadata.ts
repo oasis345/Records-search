@@ -6,7 +6,6 @@ export async function generateProfileMetadata({ params }: PageProps): Promise<Me
   const [region, user] = decodeSearchParams(params.slug);
 
   return {
-    creator: 'June Chae',
     title: `${region.toUpperCase()} ${user}의 프로필`,
     description: `${region}지역 ${user}의 최근 프로필 조회 정보입니다.`,
   };

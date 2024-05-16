@@ -2,6 +2,7 @@ interface AccordionCardProps {
   type: 'multiple' | 'single';
   title: string;
   items: AccordionCardItemProps[];
+  children?: React.ReactNode;
 }
 
 interface AccordionCardItemProps {

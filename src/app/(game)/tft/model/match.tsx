@@ -62,7 +62,7 @@ export class TFTMatchHistoryItemBuilder extends MatchHistoryItemBuilder<TFTMatch
                   placeholder="blur"
                   blurDataURL={BLUR_IMAGE_PATH}
                 />
-                <span className="hidden md:block">{trait.name}</span>
+                <span className="hidden xl:block">{trait.name}</span>
                 <span>{trait.length}</span>
               </div>
             ))}
@@ -92,7 +92,7 @@ export class TFTMatchHistoryItemBuilder extends MatchHistoryItemBuilder<TFTMatch
                     height={48}
                     src={url}
                     alt="character"
-                    className="w-6 md:w-12 object-right object-cover"
+                    className="w-6 md:w-8 lg:w-12 object-right object-cover"
                     placeholder="blur"
                     blurDataURL={BLUR_IMAGE_PATH}
                   />
@@ -101,7 +101,7 @@ export class TFTMatchHistoryItemBuilder extends MatchHistoryItemBuilder<TFTMatch
                   {itemUrls.map((url, idx) => (
                     <Image
                       key={idx}
-                      className="w-2 md:w-4"
+                      className="w-2 lg:w-4"
                       width={16}
                       height={16}
                       src={url}

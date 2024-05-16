@@ -1,3 +1,4 @@
+'use client';
 import { defaultStatsColumns } from '../../shared/model/statsColumns';
 
 const statsColumns = [...defaultStatsColumns];

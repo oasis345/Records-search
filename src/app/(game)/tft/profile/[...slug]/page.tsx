@@ -3,14 +3,13 @@ import { TFTService, tftService } from '@/app/services/tft.service';
 import { Match } from '@/app/(game)/shared/model/match';
 import { User } from '@/app/(game)/shared/model/user';
 import gameServiceManager from '@/app/services/serviceManager';
-import dynamic from 'next/dynamic';
 import { TFTStats } from '../../model/stats';
 import StatsCard from '@/app/(game)/shared/components/profile/StatsCard';
 import { queueType } from '../../model/queueType';
 import { decodeSearchParams } from '@/app/utils';
-import { generateProfileMetadata } from '@/app/utils/generateMetadata';
+import { generateProfileMetadata } from '@/app/meta/generateMetadata';
 import { PageProps } from '@/app/intrefaces/intreface';
-const TFTMatchHistory = dynamic(() => import('./MatchHistory'), { ssr: false });
+import TFTMatchHistory from './MatchHistory';
 
 export async function generateMetadata(pageProps: PageProps) {
   return generateProfileMetadata(pageProps);

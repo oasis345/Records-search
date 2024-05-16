@@ -12,10 +12,10 @@ export const AccordionCardItem: React.FC<AccordionCardItemProps> = ({
   return (
     <AccordionItem value={itemKey}>
       <div className={`${classes} flex`}>
-        <div className="flex w-full flex-col md:flex-row lg:flex-row my-1 justify-between">
+        <div className="flex w-full flex-col md:flex-row lg:flex-row my-1 gap-2 justify-between">
           <div className="flex items-center basis-auto">{header}</div>
-          <div className="flex p-3 items-center grow">{content}</div>
-          <div className="flex justify-end items-center w-1/4">{subContent}</div>
+          <div className="flex items-center grow">{content}</div>
+          <div className="flex items-center">{subContent}</div>
         </div>
         {detail ? <AccordionTrigger /> : null}
       </div>

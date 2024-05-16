@@ -5,7 +5,7 @@ import { PubgService } from '@/app/services/pubg.service';
 import PUBGMatchHistory from './MatchHistory';
 import { PageProps } from '@/app/intrefaces/intreface';
 import { decodeSearchParams } from '@/app/utils';
-import { generateProfileMetadata } from '@/app/utils/generateMetadata';
+import { generateProfileMetadata } from '@/app/meta/generateMetadata';
 
 export async function generateMetadata(pageProps: PageProps) {
   return generateProfileMetadata(pageProps);

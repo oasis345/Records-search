@@ -30,7 +30,7 @@ export default function TitleBanner({
     <div className="flex flex-col h-full">
       <div className="relative flex flex-col h-80 items-center justify-center">
         <Image fill src={`/${currentTitle}_main.jpg`} alt="Image" priority className="relative object-cover" />
-        <p className="relative text-6xl font-bold z-1 bottom-10">logo</p>
+        <p className="relative text-6xl font-bold z-1 bottom-10">RS.GG</p>
         <div className="relative w-full px-5 flex justify-center z-1">
           <DropDown
             data={selectItems}

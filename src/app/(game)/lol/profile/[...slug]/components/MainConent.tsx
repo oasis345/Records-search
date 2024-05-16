@@ -29,11 +29,10 @@ const MainContent: React.FC<{
 
       if (itemNumber !== 0) {
         items.push(
-          <div key={itemKey} className="border-blue-300 border">
+          <div key={itemKey} className="flex border-blue-300 border">
             <Image
               width={size}
               height={size}
-              style={{ height: `${size}px` }}
               src={lolService.getImageUrl('item', itemNumber, apiVersion)}
               alt="Item Image"
               placeholder="blur"

@@ -14,6 +14,7 @@ export const navigation: Navigation = {
       name: 'lol',
       label: 'League of legends',
       href: '/lol',
+      icon: 'lol-logo.svg',
       menus: [
         {
           name: '/',
@@ -32,6 +33,7 @@ export const navigation: Navigation = {
       name: 'pubg',
       label: 'Battle Grounds',
       href: '/pubg',
+      icon: 'pubg-logo.svg',
       menus: [
         {
           name: '/',
@@ -48,8 +50,9 @@ export const navigation: Navigation = {
     },
     {
       name: 'tft',
-      label: 'Team Fight Tactics',
+      label: 'Teamfight Tactics',
       href: '/tft',
+      icon: 'tft-logo.svg',
       menus: [
         {
           name: '/',

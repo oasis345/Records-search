@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { Match, Season } from '../(game)/pubg/model/interface';
 import { PUBGMatch } from '../(game)/pubg/model/match';
 import { PubgStats } from '../(game)/pubg/model/stats';
@@ -36,7 +37,7 @@ export class PubgService extends GameService {
       });
     }
 
-    return user;
+    return _.toPlainObject(user);
   }
 
   async getMatches({ userId, region, matches }: { userId: string; region: string; matches: string[] }) {
@@ -54,7 +55,7 @@ export class PubgService extends GameService {
           .find((item) => item.attributes.stats.playerId === userId),
       };
 
-      return new PUBGMatch(item);
+      return _.toPlainObject(new PUBGMatch(item));
     });
     return matchesMap;
   }
@@ -74,7 +75,7 @@ export class PubgService extends GameService {
       init: { headers },
     });
 
-    const data = response.included.map((user: any) => new PubgStats(user)) as GameStats[];
+    const data = response?.included?.map((user: any) => _.toPlainObject(new PubgStats(user)));
     return data;
   }
 }
