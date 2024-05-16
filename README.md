@@ -14,6 +14,18 @@ Nextjs13의 App라우터를 이용해 다이나믹하게 원하는 게임을 추
 <br/>
 <br/>
 
+# SEO 처리
+Facebook, Twitter등 다양한 소셜 미디어에서 카드형태로 조회가능 및 sitemap, robots 처리등 검색엔진 최적화도 적용하였습니다
+<br/>
+<br/>
+![image](https://github.com/oasis345/Records-search/assets/51695127/741edae3-f7fd-43f1-a43b-4bb2838bbd85)
+![image](https://github.com/oasis345/Records-search/assets/51695127/debb5791-d88d-44d3-b0e4-557703db5679)
+![image](https://github.com/oasis345/Records-search/assets/51695127/1ac05d16-7cf5-4d64-b9f6-b10fe114f748)
+
+<br/>
+<br/>
+
+
 
 # 공통 컴포넌트 개발
 예를들어 각 게임 서비스별로 공통적으로 프로필 페이지, 리더보드 페이지가 있습니다.
@@ -47,7 +59,8 @@ Nextjs13의 App라우터를 이용해 다이나믹하게 원하는 게임을 추
    모바일, 태블릿 등과 호환되게 반응형으로 개발중입니다.
 <br/>
 <br/>
-<img width="320" alt="image" src="https://github.com/oasis345/Records-search/assets/51695127/667d9247-ec3d-4914-afbd-a66f645cdd7b">
+![image](https://github.com/oasis345/Records-search/assets/51695127/2073e624-6627-4ced-86a9-c88633c04668)
+
 
 <br/>
 <br/>
@@ -60,10 +73,5 @@ Nextjs13의 App라우터를 이용해 다이나믹하게 원하는 게임을 추
    <br/>
    <br/>
 <img width="379" alt="image" src="https://github.com/oasis345/Records-search/assets/51695127/2ccf6109-b4e1-49eb-9d2b-7d0c27314d78">
-
-
-<br/>
-그밖에 nextjs의 캐시전략,  메타데이터 처리등 여러가지를 배우며 현재 프로젝트를 진행중입니다.
-   
-
-
+ <br/>
+   <br/>
