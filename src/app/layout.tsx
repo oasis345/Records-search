@@ -8,8 +8,8 @@ import { InterFont } from './utils/font';
 
 export const metadata: Metadata = {
   title: {
-    default: `RS.GG 다양한 게임 전적 검색`,
     template: `%s - RS.GG`,
+    default: `RS.GG 다양한 게임 전적 검색`,
   },
   description: 'LOL, TFT, PUBG등 다양한 전적을 조회하세요!.',
   twitter: {

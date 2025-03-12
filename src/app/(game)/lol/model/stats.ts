@@ -1,5 +1,5 @@
-import { GameStats } from '../../shared/model/gameStats';
-import { RiotUser } from '../../shared/model/riot/interface';
+import { GameStats } from '@/app/(game)/shared/model/gameStats';
+import { RiotUser } from '@/app/(game)/shared/model/riot/interface';
 
 export type Stats = {
   summonerId: string;

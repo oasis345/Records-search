@@ -8,10 +8,10 @@ export default function useQueryParams() {
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams);
+      const params = new URLSearchParams(searchParams.toString());
       params.set(name, value);
 
-      return params.toString();
+      return params;
     },
     [searchParams],
   );

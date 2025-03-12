@@ -56,7 +56,7 @@ export default function MatchHistory({
       <MatchSkeleton />
     </AccordionCard>
   ) : (
-    <div className="flex flex-col">
+    <div className="container flex flex-col">
       <AccordionCard title="매치 이력" type="multiple" items={items} />
       {!disableFetch && (
         <Button disabled={isLoading} className="w-full" onClick={onBtnClicked}>
