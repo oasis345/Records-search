@@ -60,7 +60,7 @@ export class TFTService extends RiotService {
     const summonerIds = result.entries.map((stats) => stats.summonerId);
     const userPromises = summonerIds.map((id) => this.getUserBySummonerId(region, id));
     const user = (await Promise.allSettled<RiotUser>(userPromises))
-      .filter((item) => item.status === 'fulfilled')
+      .filter((item): item is PromiseFulfilledResult<RiotUser> => item.status === 'fulfilled')
       .map((item) => item.value);
     const statistics = result.entries.map((stats) => {
       const foundUser = user.find((item: RiotUser) => item.id === stats.summonerId);
