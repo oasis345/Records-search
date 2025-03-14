@@ -55,7 +55,11 @@ export class LOLService extends RiotService {
     page?: number;
   }): Promise<LoLStats[]> {
     const url = `https://${region}.${API_BASE_URL}/league-exp/v4/entries/RANKED_SOLO_5x5/${tier.toUpperCase()}/I`;
-    const result = await httpService.get<LeagueEntry[]>({ url, params: { page: 1, api_key: API_KEY } });
+    const result = await httpService.get<LeagueEntry[]>({
+      url,
+      params: { page: 1, api_key: API_KEY },
+      init: { next: { revalidate: 1800 } },
+    });
     const summonerIds = result.map((stats) => stats.summonerId);
     const userPromises = summonerIds.map((id) => this.getUserBySummonerId(region, id));
     const user = await Promise.all<RiotUser>(userPromises);
@@ -137,18 +141,16 @@ export class LOLService extends RiotService {
     start?: number | string;
   }): Promise<LOLMatch[]> {
     const continent = regions.find((item) => item.name === region)!.continent;
-
     const matchIds = await httpService.get<string[]>({
       url: `https://${continent}.${API_BASE_URL}/match/v5/matches/by-puuid/${puuid}/ids`,
       params: { start, count: 10, api_key: API_KEY },
     });
-
     const matchPromises = matchIds.map((matchId: string) => {
       const matchUrl = `https://${continent}.${API_BASE_URL}/match/v5/matches/${matchId}`;
       return httpService.get<Match>({ url: matchUrl, params: { api_key: API_KEY } });
     });
-
     const result = await Promise.all(matchPromises);
+
     return result.map((item) => {
       item = {
         ...item,

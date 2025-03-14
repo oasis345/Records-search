@@ -4,6 +4,7 @@ export interface ApiResource {
 }
 
 export interface Match {
+  mode: string | undefined;
   metadata: Metadata;
   info: Info;
   user: Participant;
@@ -27,6 +28,9 @@ interface Info {
 }
 
 export interface Participant {
+  riotIdTagline: any;
+  riotIdGameName: any;
+  win: boolean | undefined;
   companion: Companion;
   gold_left: number;
   last_round: number;

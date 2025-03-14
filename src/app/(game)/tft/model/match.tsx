@@ -8,113 +8,85 @@ import { List } from '@/app/components/list/List';
 import { Star as StarIcon } from 'lucide-react';
 import { BLUR_IMAGE_PATH } from '@/app/utils';
 
+const MIN_TIER_THRESHOLD = 1;
+
 export class TFTMatchHistoryItemBuilder extends MatchHistoryItemBuilder<TFTMatch> {
   getContents(data: TFTMatchInterface): ReactNode {
     const { user } = data;
     const apiVersion = this.resource.apiVersion;
-    const augmentsUrls = user.augments.map((userAugment) =>
-      tftService.getImageUrl(
-        'augment',
-        this.resource.augments
-          .find((augment: Record<string, any>) => augment.id === userAugment)
-          ?.image?.full.slice(0, -4),
-        apiVersion,
-      ),
-    );
     const traitsMap = user.traits
-      .filter((item) => item.tier_current > 0)
+      .filter((item) => item.tier_current >= MIN_TIER_THRESHOLD)
       .map((userTrait) => {
         const trait = this.resource.traits.find((trait: Record<string, any>) => trait.id === userTrait.name);
-        return {
-          url: tftService.getImageUrl('trait', trait.image?.full.slice(0, -4), apiVersion),
-          name: trait.name,
-          length: userTrait.num_units,
-        };
-      });
+        const { image } = trait;
+        const url = tftService.getImageUrl('trait', image.full, apiVersion);
+
+        return (
+          <div key={trait.name} className="flex gap-1 items-center">
+            <Image className="w-4 md:w-6" width={image.w} height={image.h} src={url} alt="trait" />
+            <span className="hidden xl:block">{trait.name}</span>
+            <span>{userTrait.num_units}</span>
+          </div>
+        );
+      })
+      .filter(Boolean);
+
+    const unitsMap = user.units
+      .map((unit) => {
+        const champion = this.resource.champions.find(
+          (champ: Record<string, any>) => champ.id.toLowerCase() === unit.character_id.toLowerCase(),
+        );
+        if (!champion) return null;
+
+        const { image: championImg } = champion;
+        const championUrl = tftService.getImageUrl('sprite', champion.image?.sprite, apiVersion);
+        const itemUrls = unit.itemNames.map((itemName) => tftService.getImageUrl('item', itemName, apiVersion));
+
+        return (
+          <div key={unit.character_id} className="flex flex-col items-center">
+            <div className="flex">
+              {Array.from({ length: unit.tier }).map((_, index) => (
+                <StarIcon key={index} className="h-3 w-3 text-yellow-400" />
+              ))}
+            </div>
+            <div className="flex aspect-[1/1] border-blue-300 border">
+              <Image
+                src={championUrl}
+                width={championImg.x}
+                height={championImg.y}
+                alt="character"
+                style={{
+                  objectFit: 'none',
+                  objectPosition: `-${championImg.x}px -${championImg.y}px`,
+                  width: `${championImg.w}px`,
+                  height: `${championImg.h}px`,
+                }}
+                placeholder="blur"
+                blurDataURL={BLUR_IMAGE_PATH}
+              />
+            </div>
+            <div className="flex justify-between">
+              {itemUrls.map((url, idx) => (
+                <Image
+                  key={idx}
+                  className="w-4"
+                  src={url}
+                  width={12}
+                  height={12}
+                  alt="item"
+                  blurDataURL={BLUR_IMAGE_PATH}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })
+      .filter(Boolean);
 
     return (
       <div className="flex flex-col w-full h-full gap-2">
-        <div className="flex gap-2">
-          <div className="flex">
-            {augmentsUrls.map((url, idx) => (
-              <div key={idx} className="border-blue-300 border">
-                <Image
-                  className="w-4 md:w-6"
-                  width={24}
-                  height={24}
-                  src={url}
-                  alt="augment"
-                  placeholder="blur"
-                  blurDataURL={BLUR_IMAGE_PATH}
-                />
-              </div>
-            ))}
-          </div>
-          <div className="flex gap-2 text-xs">
-            {traitsMap.map((trait, idx) => (
-              <div key={idx} className="flex gap-1 items-center">
-                <Image
-                  className="w-4 md:w-6"
-                  width={24}
-                  height={24}
-                  src={trait.url}
-                  alt="trait"
-                  placeholder="blur"
-                  blurDataURL={BLUR_IMAGE_PATH}
-                />
-                <span className="hidden xl:block">{trait.name}</span>
-                <span>{trait.length}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="flex gap-x-2">
-          {user.units.map((unit) => {
-            const url = tftService.getImageUrl(
-              'champion',
-              this.resource.champions
-                .find((champion: Record<string, any>) => champion.id === unit.character_id)
-                ?.image?.full.slice(0, -4),
-              apiVersion,
-            );
-            const stars = Array(unit.tier)
-              // @ts-ignore
-              .fill()
-              .map(() => <StarIcon key={Math.random()} className="h-3 w-3" style={{ color: 'yellow' }} />);
-            const itemUrls = unit.itemNames.map((itemName) => tftService.getImageUrl('item', itemName, apiVersion));
-
-            return (
-              <div key={Math.random()} className="flex flex-col items-center">
-                <div className="flex">{stars.map((item) => item)}</div>
-                <div className="flex aspect-[1/1] border-blue-300 border">
-                  <Image
-                    width={48}
-                    height={48}
-                    src={url}
-                    alt="character"
-                    className="w-6 md:w-8 lg:w-12 object-right object-cover"
-                    placeholder="blur"
-                    blurDataURL={BLUR_IMAGE_PATH}
-                  />
-                </div>
-                <div className="flex justify-between">
-                  {itemUrls.map((url, idx) => (
-                    <Image
-                      key={idx}
-                      className="w-2 lg:w-4"
-                      width={16}
-                      height={16}
-                      src={url}
-                      alt="item"
-                      placeholder="blur"
-                      blurDataURL={BLUR_IMAGE_PATH}
-                    />
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <div className="flex gap-2 text-xs">{traitsMap}</div>
+        <div className="flex gap-x-2">{unitsMap}</div>
       </div>
     );
   }
@@ -122,11 +94,15 @@ export class TFTMatchHistoryItemBuilder extends MatchHistoryItemBuilder<TFTMatch
   getSubContent(match: TFTMatch) {
     return (
       <List
-        items={match.data.info.participants.map((item: any) => item.user)}
-        keyField="id"
-        valueField="gameName"
+        items={match.participants}
+        keyField="name"
+        valueField="name"
         classes="hidden md:grid"
         itemClasses="w-28 text-xs"
+        onItemClick={(item) => {
+          const region = match.id.split('_')[0].toLowerCase();
+          window.open(`/tft/profile/${region}/${encodeURIComponent(item.name)}`);
+        }}
       />
     );
   }
@@ -140,11 +116,13 @@ export class TFTMatch extends Match {
       creationTime: info.game_datetime,
       durationTime: info.game_length,
       id: metadata.match_id,
-      participants: info.participants.map((participant) => ({ name: participant.user.gameName })),
+      participants: info.participants.map((participant) => ({
+        name: `${participant.riotIdGameName}#${participant.riotIdTagline}`,
+      })),
       mode:
         gameModes.find((mode) => mode.key === info.tft_game_type)?.label ?? info.tft_game_type ?? info.tft_game_type,
       data: match,
-      isWin: match.user.placement <= 4,
+      isWin: match.user.win,
     });
   }
 }

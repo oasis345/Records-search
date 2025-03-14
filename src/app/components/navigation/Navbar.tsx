@@ -25,7 +25,15 @@ export default function Navbar() {
                 <li key={title.name}>
                   <Link href={`/${title.name}`} className="text-gray-500 hover:text-gray-700">
                     <div className="flex gap-2">
-                      {title.icon && <Image src={title.icon} width={24} height={24} alt="logo" />}
+                      {title.icon && (
+                        <Image
+                          src={title.icon}
+                          width={24}
+                          height={24}
+                          style={{ height: 'auto', width: 'auto' }}
+                          alt="logo"
+                        />
+                      )}
                       <span className="hidden md:block">{title.label}</span>
                     </div>
                   </Link>

@@ -21,7 +21,9 @@ export class TFTService extends RiotService {
   }
 
   async init() {
-    this.apiVersion = '14.9.1';
+    await super.init();
+
+    this.apiVersion = this.apiVersion;
     this.champions = await this.getChampions(this.apiVersion);
     this.augments = await this.getAugments(this.apiVersion);
     this.traits = await this.getTraits(this.apiVersion);
@@ -56,6 +58,7 @@ export class TFTService extends RiotService {
     const result = await httpService.get<LeagueList>({
       url,
       params: { queue: 'RANKED_TFT', api_key: API_KEY },
+      init: { next: { revalidate: 1800 } },
     });
     const summonerIds = result.entries.map((stats) => stats.summonerId);
     const userPromises = summonerIds.map((id) => this.getUserBySummonerId(region, id));
@@ -165,17 +168,18 @@ export class TFTService extends RiotService {
     });
 
     const result = await Promise.all(matchPromises);
-    for (const match of result) {
-      const ids = match.metadata.participants.map((participantId) => participantId);
-      const userPromises = ids.map((id) => this.getUserByPuuid(region, id));
-      const users = await Promise.all(userPromises);
-      match.info.participants = match.info.participants.map((participant) => {
-        return {
-          ...participant,
-          user: users.find((item) => item.puuid === participant.puuid),
-        };
-      });
-    }
+
+    // for (const match of result) {
+    //   const ids = match.metadata.participants.map((participantId) => participantId);
+    //   const userPromises = ids.map((id) => this.getUserByPuuid(region, id));
+    //   const users = await Promise.all(userPromises);
+    //   match.info.participants = match.info.participants.map((participant) => {
+    //     return {
+    //       ...participant,
+    //       user: users.find((item) => item.puuid === participant.puuid),
+    //     };
+    //   });
+    // }
 
     return result.map((item) => {
       item = {
@@ -188,7 +192,7 @@ export class TFTService extends RiotService {
   }
 
   getImageUrl(
-    category: 'profileIcon' | 'champion' | 'item' | 'augment' | 'trait',
+    category: 'profileIcon' | 'champion' | 'item' | 'augment' | 'trait' | 'sprite',
     name: string | number,
     apiVersion?: string,
   ) {
@@ -199,10 +203,13 @@ export class TFTService extends RiotService {
       item: 'tft-item',
       augment: 'tft-augment',
       trait: 'tft-trait',
+      sprite: 'sprite',
     };
 
     const categoryPath = categoryMap[category];
-    let imageSrc: string = `${dragonImageUrl}/${categoryPath}/${name}.png`;
+    let imageSrc: string = `${dragonImageUrl}/${categoryPath}/${name}`;
+    if (!imageSrc.includes('.png')) imageSrc += '.png';
+
     return imageSrc;
   }
 }
