@@ -15,7 +15,7 @@ export default async function Page(props: PageProps) {
 
   return (
     <Leaderboard
-      queryParams={[
+      params={[
         { key: 'region', items: leaderboardRegions, value: 'pc-kakao' },
         { key: 'gameMode', items: gameModes, value: 'squad' },
       ]}

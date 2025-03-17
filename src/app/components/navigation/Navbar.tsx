@@ -27,7 +27,7 @@ export default function Navbar() {
                     <div className="flex gap-2">
                       {title.icon && (
                         <Image
-                          src={title.icon}
+                          src={'/' + title.icon}
                           width={24}
                           height={24}
                           style={{ height: 'auto', width: 'auto' }}

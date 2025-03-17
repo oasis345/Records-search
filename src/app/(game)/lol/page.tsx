@@ -5,12 +5,13 @@ import { regions } from '../shared/model/riot/regions';
 import { LOLService } from '@/app/services/lol.service';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import gameServiceManager from '@/app/services/serviceManager';
-import { httpService } from '@/app/services/httpService';
 import { BLUR_IMAGE_PATH } from '@/app/utils';
+import Link from 'next/link';
 
 export default async function Page() {
   const service = await gameServiceManager.getService<LOLService>('lol');
-  const response = await service.getRotationChampions(httpService.getRevalidateMap('weekend'));
+  const response = await service.getRotationChampions();
+  const patchNotes = await service.patchNotes();
 
   return (
     <>
@@ -22,6 +23,22 @@ export default async function Page() {
         placeholder="플레이어 이름 + #태그"
       />
       <div className="container py-5">
+        <Card>
+          <CardHeader>
+            <CardTitle>최신 패치 노트</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {patchNotes.map((patchNode) => (
+              <li key={patchNode.title} className="underline">
+                <Link href={`https://www.leagueoflegends.com/${patchNode.link}`} target="_blank">
+                  {patchNode.title}
+                </Link>
+              </li>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+      <div className="container">
         <Card>
           <CardHeader>
             <CardTitle>로테이션 챔피언</CardTitle>

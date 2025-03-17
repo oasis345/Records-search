@@ -2,30 +2,28 @@
 
 import React from 'react';
 import DropDown from '../../../../components/buttons/DropDown';
-import useQueryParams from '@/app/hooks/useQueryParams';
-export default function LeaderboardFilters({
-  queryParams,
-}: {
-  queryParams: { key: string; value: any; items: any[] }[];
-}) {
-  const { setQueryParam, searchParams } = useQueryParams();
-  const [queryParamsMap, setQueryParamsMap] = React.useState(
-    new Map<string, any>(
-      queryParams.map((queryParam) => [queryParam.key, searchParams.get(queryParam.key) ?? queryParam.value]),
-    ),
-  );
+import { useRouter } from 'next/navigation';
+import { useNavigation } from '@/app/hooks/useNavigation';
+
+export default function LeaderboardFilters({ params }: { params: { key: string; value: any; items: any[] }[] }) {
+  const router = useRouter();
+  const navigation = useNavigation();
+
+  const onSelect = (key: string, selectedItem: string) => {
+    const updatedParams = params.map((param) => (param.key === key ? { key: key, value: selectedItem } : param));
+    const updatedPath = `${navigation.currentTitle}/${navigation.currentMenu}/${updatedParams.map((param) => param.value).join('/')}`;
+
+    router.push(`/${updatedPath}`);
+  };
 
   return (
     <div className="flex">
-      {queryParams.map((queryParam) => (
+      {params.map((param) => (
         <DropDown
-          key={queryParam.key}
-          data={queryParam.items}
-          value={queryParamsMap.get(queryParam.key)}
-          onSelect={(selectedItem: string) => {
-            setQueryParamsMap(new Map(queryParamsMap.set(queryParam.key, selectedItem)));
-            setQueryParam(queryParam.key, selectedItem);
-          }}
+          key={param.key}
+          data={param.items}
+          value={param.value}
+          onSelect={(selectedItem: string) => onSelect(param.key, selectedItem)}
         ></DropDown>
       ))}
     </div>

@@ -7,6 +7,7 @@ import { LOLMatch } from '../(game)/lol/model/match';
 import { User } from '../(game)/shared/model/user';
 import { httpService } from './httpService';
 import { LoLStats } from '@lol/model/stats';
+import * as cheerio from 'cheerio';
 
 const API_KEY = process.env.LOL_API_KEY;
 const API_BASE_URL = 'api.riotgames.com/lol';
@@ -58,9 +59,9 @@ export class LOLService extends RiotService {
     const result = await httpService.get<LeagueEntry[]>({
       url,
       params: { page: 1, api_key: API_KEY },
-      init: { next: { revalidate: 1800 } },
+      revalidate: 'day',
     });
-    const summonerIds = result.map((stats) => stats.summonerId);
+    const summonerIds = result.map((stats) => stats.summonerId).slice(0, 10);
     const userPromises = summonerIds.map((id) => this.getUserBySummonerId(region, id));
     const user = await Promise.all<RiotUser>(userPromises);
     const statistics = result.map((stats) => {
@@ -161,9 +162,26 @@ export class LOLService extends RiotService {
     });
   }
 
-  async getRotationChampions(revalidate: number): Promise<Record<string, any>> {
+  async getRotationChampions(): Promise<Record<string, any>> {
     const url = `https://kr.${API_BASE_URL}/platform/v3/champion-rotations`;
-    return await httpService.get({ url, params: { api_key: API_KEY }, init: { next: { revalidate } } });
+    return await httpService.get({ url, params: { api_key: API_KEY }, revalidate: 'day' });
+  }
+
+  async patchNotes() {
+    const url = 'https://www.leagueoflegends.com/ko-kr/news/tags/patch-notes';
+    const response = await httpService.get({ url, revalidate: 'day' });
+    const $ = cheerio.load(response);
+
+    const patchNotes = $('a')
+      .map((_, el) => {
+        return {
+          title: $(el).attr('aria-label'),
+          link: $(el).attr('href'),
+        };
+      })
+      .get();
+
+    return patchNotes;
   }
 
   getImageUrl(category: 'profileIcon' | 'champion' | 'item' | 'spell', name: string | number, apiVersion?: string) {

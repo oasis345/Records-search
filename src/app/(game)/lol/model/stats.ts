@@ -18,7 +18,7 @@ export class LoLStats extends GameStats {
     const { tier, leaguePoints, wins, losses } = lolStats;
 
     super({
-      name: user.gameName,
+      name: user?.gameName,
       tier,
       score: leaguePoints,
       wins,

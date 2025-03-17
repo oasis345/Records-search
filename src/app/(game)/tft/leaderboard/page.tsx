@@ -15,7 +15,7 @@ export default async function Page(props: PageProps) {
 
   return (
     <Leaderboard
-      queryParams={[
+      params={[
         { key: 'region', items: regions, value: 'kr' },
         { key: 'tier', items: tiers, value: 'challenger' },
       ]}

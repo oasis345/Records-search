@@ -5,13 +5,13 @@ import { ColumnSort } from '@tanstack/react-table';
 import LeaderboardFilters from './LeaderboardFilters';
 
 export default function Leaderboard({
-  queryParams,
+  params,
   data = [],
   columns = defaultStatsColumns,
   sort = [{ id: 'score', desc: true }],
   children,
 }: {
-  queryParams: { key: string; value: any; items: any[] }[];
+  params: { key: string; value: any; items: any[] }[];
   data?: any[];
   columns?: any[];
   sort?: ColumnSort[];
@@ -19,7 +19,7 @@ export default function Leaderboard({
 }) {
   return (
     <div className="container">
-      <LeaderboardFilters queryParams={queryParams} />
+      <LeaderboardFilters params={params} />
       {children}
       <div className="flex flex-col">
         <DataTable columns={columns} data={data} sort={sort}></DataTable>

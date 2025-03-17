@@ -58,7 +58,7 @@ export class TFTService extends RiotService {
     const result = await httpService.get<LeagueList>({
       url,
       params: { queue: 'RANKED_TFT', api_key: API_KEY },
-      init: { next: { revalidate: 1800 } },
+      revalidate: 'day',
     });
     const summonerIds = result.entries.map((stats) => stats.summonerId);
     const userPromises = summonerIds.map((id) => this.getUserBySummonerId(region, id));
