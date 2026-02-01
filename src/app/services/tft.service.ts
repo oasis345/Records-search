@@ -12,66 +12,138 @@ const API_KEY = process.env.TFT_API_KEY;
 const API_BASE_URL = 'api.riotgames.com/tft';
 
 export class TFTService extends RiotService {
-  champions: Record<string, any> = {};
-  augments: Record<string, any> = {};
-  traits: Record<string, any> = {};
+  champions: any[] = [];
+  augments: any[] = [];
+  traits: any[] = [];
+  items: any[] = [];
 
   constructor() {
     super();
   }
 
+  protected getApiKey(): string | undefined {
+    return API_KEY;
+  }
+
   async init() {
     await super.init();
 
-    this.apiVersion = this.apiVersion;
-    this.champions = await this.getChampions(this.apiVersion);
-    this.augments = await this.getAugments(this.apiVersion);
-    this.traits = await this.getTraits(this.apiVersion);
+    try {
+      const [champions, augments, traits, items] = await Promise.all([
+        this.getChampions(this.apiVersion),
+        this.getAugments(this.apiVersion),
+        this.getTraits(this.apiVersion),
+        this.getItems(this.apiVersion),
+      ]);
+      this.champions = champions;
+      this.augments = augments;
+      this.traits = traits;
+      this.items = items;
+    } catch (error) {
+      console.error('Failed to load TFT data:', error);
+      this.champions = [];
+      this.augments = [];
+      this.traits = [];
+      this.items = [];
+    }
   }
 
   private async getChampions(apiVersion: string) {
-    const result = await httpService.get<Record<string, any>>({
-      url: `https://ddragon.leagueoflegends.com/cdn/${apiVersion}/data/ko_KR/tft-champion.json`,
-    });
-
-    return Object.values(result.data);
+    try {
+      const result = await httpService.get<Record<string, any>>({
+        url: `https://ddragon.leagueoflegends.com/cdn/${apiVersion}/data/ko_KR/tft-champion.json`,
+        revalidate: 'weekend',
+      });
+      return Object.values(result.data);
+    } catch {
+      return [];
+    }
   }
 
   private async getAugments(apiVersion: string) {
-    const result = await httpService.get<Record<string, any>>({
-      url: `https://ddragon.leagueoflegends.com/cdn/${apiVersion}/data/ko_KR/tft-augments.json`,
-    });
-
-    return Object.values(result.data);
+    try {
+      const result = await httpService.get<Record<string, any>>({
+        url: `https://ddragon.leagueoflegends.com/cdn/${apiVersion}/data/ko_KR/tft-augments.json`,
+        revalidate: 'weekend',
+      });
+      return Object.values(result.data);
+    } catch {
+      return [];
+    }
   }
 
   private async getTraits(apiVersion: string) {
-    const result = await httpService.get<Record<string, any>>({
-      url: `https://ddragon.leagueoflegends.com/cdn/${apiVersion}/data/ko_KR/tft-trait.json`,
-    });
-
-    return Object.values(result.data);
+    try {
+      const result = await httpService.get<Record<string, any>>({
+        url: `https://ddragon.leagueoflegends.com/cdn/${apiVersion}/data/ko_KR/tft-trait.json`,
+        revalidate: 'weekend',
+      });
+      return Object.values(result.data);
+    } catch {
+      return [];
+    }
   }
 
-  async getLeaderboard({ region, tier }: { region: string; tier: string }): Promise<any[]> {
-    const url = `https://${region}.${API_BASE_URL}/league/v1/${tier}`;
-    const result = await httpService.get<LeagueList>({
-      url,
-      params: { queue: 'RANKED_TFT', api_key: API_KEY },
-      revalidate: 'day',
-    });
-    const summonerIds = result.entries.map((stats) => stats.summonerId);
-    const userPromises = summonerIds.map((id) => this.getUserBySummonerId(region, id));
-    const user = (await Promise.allSettled<RiotUser>(userPromises))
-      .filter((item): item is PromiseFulfilledResult<RiotUser> => item.status === 'fulfilled')
-      .map((item) => item.value);
-    const statistics = result.entries.map((stats) => {
-      const foundUser = user.find((item: RiotUser) => item.id === stats.summonerId);
+  private async getItems(apiVersion: string) {
+    try {
+      const result = await httpService.get<Record<string, any>>({
+        url: `https://ddragon.leagueoflegends.com/cdn/${apiVersion}/data/ko_KR/tft-item.json`,
+        revalidate: 'weekend',
+      });
+      return Object.values(result.data);
+    } catch {
+      return [];
+    }
+  }
+
+  async getLeaderboard({ region, tier }: { region: string; tier: string }): Promise<TFTStats[]> {
+    let result: LeagueList;
+
+    try {
+      const url = `https://${region}.${API_BASE_URL}/league/v1/${tier}`;
+      result = await httpService.get<LeagueList>({
+        url,
+        params: { api_key: API_KEY },
+        revalidate: 'hour',
+      });
+    } catch (error) {
+      console.error('Failed to fetch TFT leaderboard:', error);
+      return [];
+    }
+
+    if (!result?.entries || result.entries.length === 0) {
+      return [];
+    }
+
+    // LP 기준 정렬 후 상위 50명 (Vercel Free Tier 10초 타임아웃 고려)
+    const sortedEntries = result.entries
+      .sort((a, b) => (b.leaguePoints || 0) - (a.leaguePoints || 0))
+      .slice(0, 50);
+
+    // 유저 정보 배치 조회 (10명씩 나눠서 처리)
+    const BATCH_SIZE = 10;
+    const users: RiotUser[] = [];
+
+    for (let i = 0; i < sortedEntries.length; i += BATCH_SIZE) {
+      const batch = sortedEntries.slice(i, i + BATCH_SIZE);
+      const batchResults = await Promise.allSettled(
+        batch.map((stats) => this.getUserByPuuid(region, stats.puuid))
+      );
+
+      const batchUsers = batchResults
+        .filter((item): item is PromiseFulfilledResult<RiotUser> => item.status === 'fulfilled')
+        .map((item) => item.value);
+
+      users.push(...batchUsers);
+    }
+
+    const statistics = sortedEntries.map((stats) => {
+      const foundUser = users.find((item: RiotUser) => item.puuid === stats.puuid);
       stats.tier = result.tier;
       return this.createStats({ stats, user: foundUser! });
     });
 
-    return statistics;
+    return statistics.filter((stat) => stat.user);
   }
 
   createStats({ stats, user }: { stats: LeagueItem; user: RiotUser }) {
@@ -80,17 +152,23 @@ export class TFTService extends RiotService {
   }
 
   async getUserStatistics<TFTStats>({ region, user }: { region: string; user: User }): Promise<TFTStats[]> {
-    const result = await httpService.get<LeagueItem[]>({
-      url: `https://${region}.${API_BASE_URL}/league/v1/entries/by-summoner/${user.id}`,
-      params: { api_key: API_KEY },
-    });
+    try {
+      const result = await httpService.get<LeagueItem[]>({
+        url: `https://${region}.${API_BASE_URL}/league/v1/entries/by-summoner/${user.id}`,
+        params: { api_key: API_KEY },
+      });
 
-    const statistics = result.map((stats) => {
-      return this.createStats({ stats, user: user.data });
-    });
+      const statistics = result.map((stats) => {
+        return this.createStats({ stats, user: user.data });
+      });
 
-    // @ts-ignore
-    return statistics;
+      // @ts-ignore
+      return statistics;
+    } catch (error) {
+      console.error('Failed to fetch user statistics:', error);
+      // @ts-ignore
+      return [];
+    }
   }
 
   async getUserBySummonerId(region: string, id: string): Promise<RiotUser> {

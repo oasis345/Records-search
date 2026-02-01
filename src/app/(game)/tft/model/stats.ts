@@ -2,7 +2,8 @@ import { GameStats } from '../../shared/model/gameStats';
 import { RiotUser } from '../../shared/model/riot/interface';
 
 type Stats = {
-  summonerId: string;
+  summonerId?: string;
+  puuid?: string;
   tier: string;
   wins: number;
   losses: number;

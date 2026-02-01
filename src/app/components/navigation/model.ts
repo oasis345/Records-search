@@ -46,7 +46,7 @@ export const navigation: Navigation = {
           label: '랭킹',
         },
       ],
-      activated: true,
+      activated: false,
     },
     {
       name: 'tft',

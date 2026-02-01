@@ -49,6 +49,7 @@ export interface Participant {
   teamId: number;
   playerSubteamId: number;
   championName: string;
+  champLevel: number;
   riotIdGameName: string;
   riotIdTagline: string;
   summonerName: string;
@@ -131,18 +132,28 @@ interface MiniSeries {
 }
 
 export interface LeagueEntry {
-  leagueId: string;
-  summonerId: string; // Player's summonerId (Encrypted)
-  queueType: string;
-  tier: string;
-  rank: string; // The player's division within a tier
+  leagueId?: string;
+  summonerId?: string; // Player's summonerId (Encrypted)
+  puuid: string; // Player's puuid (Encrypted)
+  queueType?: string;
+  tier?: string;
+  rank?: string; // The player's division within a tier
   leaguePoints: number;
   wins: number; // Winning team on Summoners Rift. First placement in Teamfight Tactics
   losses: number; // Losing team on Summoners Rift. Second through eighth placement in Teamfight Tactics
-  hotStreak: boolean;
-  veteran: boolean;
-  freshBlood: boolean;
-  inactive: boolean;
-  summonerName: string;
+  hotStreak?: boolean;
+  veteran?: boolean;
+  freshBlood?: boolean;
+  inactive?: boolean;
+  summonerName?: string;
   miniSeries?: MiniSeries; // Mini series details, optional as it might not always be present
+}
+
+// 상위 티어 (Challenger, Grandmaster, Master) API 응답
+export interface LeagueList {
+  leagueId: string;
+  tier: string;
+  name: string;
+  queue: string;
+  entries: LeagueEntry[];
 }

@@ -13,13 +13,25 @@ interface Team {
 }
 
 export class LOLMatchHistoryItemBuilder extends MatchHistoryItemBuilder<LOLMatch> {
+  private currentMatch?: LOLMatch;
+
   getContents(data: LOLMatchInterface): ReactNode {
     const { user } = data;
     return <MainContent participant={user} match={data} resource={this.resource} />;
   }
 
+  getClasses(): string {
+    const isWin = this.currentMatch?.isWin;
+    return isWin ? 'border-l-4 border-l-blue-500' : 'border-l-4 border-l-red-500';
+  }
+
+  build(match: LOLMatch) {
+    this.currentMatch = match;
+    return super.build(match);
+  }
+
   getSubContent(match: LOLMatch) {
-    const { info } = match.data as LOLMatchInterface;
+    const { info, user } = match.data as LOLMatchInterface;
     const contents = createContentsByGameMode({
       participants: info.participants,
       mode: info.gameMode,
@@ -28,25 +40,35 @@ export class LOLMatchHistoryItemBuilder extends MatchHistoryItemBuilder<LOLMatch
     });
 
     return (
-      <div className="w-full grid grid-cols-2 gap-2">
-        {contents.teams.map((team, index) => (
-          <List
-            key={index}
-            items={team.participants}
-            keyField="puuid"
-            valueField="riotIdGameName"
-            classes="hidden lg:grid md:grid"
-            itemClasses="flex w-28 text-xs"
-            imageOptions={{
-              getImageSrc: (item: Participant) =>
-                lolService.getImageUrl('champion', item.championName, this.resource.apiVersion),
-              size: 18,
-            }}
-            onItemClick={(item) => {
-              const name = encodeURIComponent(`${item.riotIdGameName}#${item.riotIdTagline}`);
-              window.open(`/lol/profile/${info.platformId.toLowerCase()}/${name}`);
-            }}
-          />
+      <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
+        {contents.teams.map((team, teamIndex) => (
+          <div key={teamIndex} className="flex flex-col gap-0.5">
+            {team.participants.map((p) => {
+              const isCurrentUser = p.puuid === user?.puuid;
+
+              return (
+                <div
+                  key={p.puuid}
+                  className={`flex items-center gap-1 px-1 py-0.5 rounded text-[11px] cursor-pointer hover:bg-muted/50 ${
+                    isCurrentUser ? 'bg-primary/10 font-medium' : ''
+                  }`}
+                  onClick={() => {
+                    const name = encodeURIComponent(`${p.riotIdGameName}#${p.riotIdTagline}`);
+                    window.open(`/lol/profile/${info.platformId.toLowerCase()}/${name}`);
+                  }}
+                >
+                  <img
+                    src={lolService.getImageUrl('champion', p.championName, this.resource.apiVersion)}
+                    alt=""
+                    className="w-4 h-4 rounded"
+                  />
+                  <span className={`truncate w-16 ${isCurrentUser ? 'text-foreground' : 'text-muted-foreground'}`}>
+                    {p.riotIdGameName}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         ))}
       </div>
     );
@@ -67,7 +89,7 @@ export class LOLMatchHistoryItemBuilder extends MatchHistoryItemBuilder<LOLMatch
 
 export class LOLMatch extends Match {
   constructor(match: LOLMatchInterface) {
-    const { metadata, info } = match;
+    const { metadata, info, user } = match;
 
     super({
       creationTime: info.gameCreation,
@@ -75,6 +97,7 @@ export class LOLMatch extends Match {
       id: metadata.matchId,
       participants: info.participants.map((participant) => ({ name: participant.puuid })),
       mode: gameModes.find((mode) => mode.key === info.gameMode)?.label ?? info.gameMode,
+      isWin: user?.win ?? false,
       data: match,
     });
   }
@@ -113,10 +136,8 @@ const createContentsByGameMode = ({
   match: LOLMatchInterface;
   resource: ApiResource;
 }) => {
-  let teamIds = gameModes.find((gameMode) => gameMode.key === mode)?.teamIds!;
-  if (!teamIds) {
-    throw new Error('지원되지 않는 게임모드');
-  }
+  // 기본 teamIds는 [100, 200] (대부분의 게임모드)
+  const teamIds = gameModes.find((gameMode) => gameMode.key === mode)?.teamIds ?? [100, 200];
   let teams;
   let contents;
 

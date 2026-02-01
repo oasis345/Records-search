@@ -85,7 +85,8 @@ interface LeagueItem {
   tier: string;
   leaguePoints: number;
   losses: number; // 2등부터 8등까지 횟수
-  summonerId: string; // 플레이어의 암호화된 소환사 ID
+  summonerId?: string; // 플레이어의 암호화된 소환사 ID
+  puuid: string; // 플레이어의 암호화된 puuid
 }
 
 interface LeagueList {

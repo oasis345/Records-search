@@ -47,6 +47,7 @@ export default async function Page({ params }: PageProps) {
           champions: service.champions,
           augments: service.augments,
           traits: service.traits,
+          items: service.items,
           apiVersion: service.apiVersion,
         }}
       />

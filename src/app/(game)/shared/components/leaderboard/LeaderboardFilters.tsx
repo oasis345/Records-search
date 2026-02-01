@@ -16,15 +16,22 @@ export default function LeaderboardFilters({ params }: { params: { key: string; 
     router.push(`/${updatedPath}`);
   };
 
+  const labelMap: Record<string, string> = {
+    region: '지역',
+    tier: '티어',
+  };
+
   return (
-    <div className="flex">
+    <div className="flex flex-wrap gap-2">
       {params.map((param) => (
-        <DropDown
-          key={param.key}
-          data={param.items}
-          value={param.value}
-          onSelect={(selectedItem: string) => onSelect(param.key, selectedItem)}
-        ></DropDown>
+        <div key={param.key} className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground hidden sm:inline">{labelMap[param.key] || param.key}:</span>
+          <DropDown
+            data={param.items}
+            value={param.value}
+            onSelect={(selectedItem: string) => onSelect(param.key, selectedItem)}
+          />
+        </div>
       ))}
     </div>
   );

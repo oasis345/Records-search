@@ -16,9 +16,11 @@ export default async function ProfileContainer({
   return !user ? (
     <NotFoundUser region={region} searchText={searchText} />
   ) : (
-    <div className="container flex flex-col gap-2">
-      <ProfileCard user={user} />
-      {children}
+    <div className="container py-6 px-4">
+      <div className="flex flex-col gap-6">
+        <ProfileCard user={user} />
+        {children}
+      </div>
     </div>
   );
 }

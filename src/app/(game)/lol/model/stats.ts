@@ -2,9 +2,10 @@ import { GameStats } from '@/app/(game)/shared/model/gameStats';
 import { RiotUser } from '@/app/(game)/shared/model/riot/interface';
 
 export type Stats = {
-  summonerId: string;
-  tier: string;
-  rank: string;
+  summonerId?: string;
+  puuid?: string;
+  tier?: string;
+  rank?: string;
   wins: number;
   losses: number;
   leaguePoints: number;
@@ -15,7 +16,7 @@ export class LoLStats extends GameStats {
     lolStats: Stats,
     public user: RiotUser,
   ) {
-    const { tier, leaguePoints, wins, losses } = lolStats;
+    const { tier = 'UNRANKED', leaguePoints, wins, losses } = lolStats;
 
     super({
       name: user?.gameName,
